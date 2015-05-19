@@ -15,23 +15,30 @@
         "ms":"86400000"
     },
 
-    //The setting of sending notification mail.
+    //The Setting of database query. You can add more than one query.
 
-    "Mail":{
-        "Alive":{
-            "Receiver":"hello@mail.com",
-            "Title":"You have done!",
-            "Content":"Yes, you have done."
-        },
+    "QueryList":[
+        {"query":"SELECT * FROM targetTable"},
+        {"query":"INSERT INTO targetTable (target) VALUES ('value')"},
+        {"query":"DELETE FROM targetTable Where target = 'value'"}],
 
-        "Dead":{
-            "Receiver":"hello@mail.com",
-            "Title":"We are failed.",
-            "Content":"No, we are failed."
+        //The setting of sending notification mail.
+
+        "Mail":{
+            "Alive":{
+                "Receiver":["hello@mail.com","hey@mail.com"],
+                "Title":"You have done!",
+                "Content":"Yes, you have done."
+            },
+
+            "Dead":{
+                "Receiver":["hello@mail.com","hey@mail.com"],
+                "Title":"We are failed.",
+                "Content":"No, we are failed."
+
+            }
 
         }
-
-    }
 }
 
 
