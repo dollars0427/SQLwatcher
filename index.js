@@ -12,7 +12,6 @@ var mysql = require('mysql');
 var log4js = require('log4js');
 var promise = require('promised-io');
 
-
 var logger = log4js.getLogger('Logging');
 
 connectDatabase();
@@ -23,11 +22,11 @@ function connectDatabase(){
 
     var connection = mysql.createConnection({
 
-        host:dbConfig.host,
-        port:dbConfig.port,
-        user:dbConfig.username,
-        password:dbConfig.password,
-        database:dbConfig.dbName
+        host:dbConfig.Host,
+        port:dbConfig.Port,
+        user:dbConfig.Username,
+        password:dbConfig.Password,
+        database:dbConfig.DbName
 
     });
 
@@ -91,8 +90,13 @@ function startTesting(promise,db,query){
 
 function sendAliveMail(){
 
-    console.log('Yes!');
+    var receiverList = mailConfig.Alive.Receiver;
 
+    var receiverListString = receiverList.toString();
+
+    console.log(receiverListString);
+
+}
 function sendWarningMail(){
 
     console.log('No!');
