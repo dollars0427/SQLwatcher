@@ -6,7 +6,7 @@
   "dependencies": {
       "log4js":"0.6.21",
       "emailjs":"0.3.16",
-      "node-config":"0.0.2",
+      "config":"1.13.0",
       "promised-io":"0.3.4"
   },
   "license": "MIT",
