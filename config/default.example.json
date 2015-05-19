@@ -4,9 +4,9 @@
     "Database": {
         "host":"localhost",
         "port":"3306",
-        "dbName":"Enter Your Database Name Here.",
-        "username":"Enter Your Database Username Here.",
-        "password":"Enter Your Database Password Here."
+        "dbName":"Enter Your Database Name At Here.",
+        "username":"Enter Your Database Username At Here.",
+        "password":"Enter Your Database Password At Here."
     },
 
     //The setting when will the sciprt run again.
@@ -22,9 +22,17 @@
         {"query":"INSERT INTO targetTable (target) VALUES ('value')"},
         {"query":"DELETE FROM targetTable Where target = 'value'"}],
 
-        //The setting of sending notification mail.
+        //The setting of sending notification mail. Host is unnecessary to fillin if you want to using gmail.
 
         "Mail":{
+
+            "Server":{
+                "User":"Enter Your mail address at Here.",
+                "Password":"Enter Your mail password at Here.",
+                "Host":"",
+                "Service":"Gmail"
+            },
+
             "Alive":{
                 "Receiver":["hello@mail.com","hey@mail.com"],
                 "Title":"You have done!",
