@@ -1,0 +1,21 @@
+{
+  "name": "SqlWatcher",
+  "description": "A script of watching the status of mysql database",
+  "version": "0.0.1",
+  "author": "Sardo Ip<sardo.ip@nxtomo.hk>",
+  "dependencies": {
+      "log4js":"0.6.21",
+      "emailjs":"0.3.16",
+      "node-config":"0.0.2",
+      "promised-io":"0.3.4",
+      "nodeunit":"0.9.1"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
