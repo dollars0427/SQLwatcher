@@ -12,13 +12,6 @@ var mysql = require('mysql');
 var log4js = require('log4js');
 var promise = require('promised-io');
 
-log4js.configure({
-    appenders:[
-        {type:'console'}],
-        replaceConsole:true
-});
-
-var mysqlDB = null;
 
 var logger = log4js.getLogger('Logging');
 
@@ -54,33 +47,51 @@ function connectDatabase(){
 
 function testDatabase(db){
 
+    var plist = [];
+
     var queryList = queryConfig;
+
+    for(var i = 0; i < queryList.length; i++ ){
+
+        var p = new promise.defer();
+        
+        plist.push(p);
+    }
+
+    var pAll = new promise.all(plist);
+    pAll.then(sendAliveMail,sendWarningMail);
  
     for(var i = 0 ; i < queryList.length; i++){
 
+        var p = plist[i];
+
         var query = queryList[i].query;
 
-        startTesting(db,query);
+        startTesting(p,db,query);
     }
 }
 
-function startTesting(db,query){
+function startTesting(promise,db,query){
+
+    var p = promise;
 
     db.query(query,function(err){
 
         if(err){
             logger.error(err);
+            p.reject();
+            return;
         }
 
-        console.log(query);
-
+        p.resolve();
     });
+
+    return p;
 }
 
 function sendAliveMail(){
 
-    console.log('YES');
-}
+    console.log('Yes!');
 
 function sendWarningMail(){
 
