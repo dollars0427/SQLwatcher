@@ -22,7 +22,7 @@
         {"query":"INSERT INTO targetTable (target) VALUES ('value')"},
         {"query":"DELETE FROM targetTable Where target = 'value'"}],
 
-        //The setting of sending notification mail. Host is unnecessary to fillin if you want to using gmail.
+        //The setting of sending notification mail. 
 
         "Mail":{
 
@@ -30,16 +30,18 @@
                 "User":"Enter Your mail address at Here.",
                 "Password":"Enter Your mail password at Here.",
                 "Host":"",
-                "Service":"Gmail"
+                "Port":""
             },
 
             "Alive":{
+                "Sender":"You",
                 "Receiver":["hello@mail.com","hey@mail.com"],
                 "Title":"You have done!",
                 "Content":"Yes, you have done."
             },
 
             "Dead":{
+                "Sender":"You",
                 "Receiver":["hello@mail.com","hey@mail.com"],
                 "Title":"We are failed.",
                 "Content":"No, we are failed."
