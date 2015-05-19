@@ -1,0 +1,36 @@
+{
+    //The setting of database
+
+    "Database": {
+        "host":"localhost",
+        "dbName":"Enter Your Database Name Here.",
+        "username":"Enter Your Database Username Here.",
+        "password":"Enter Your Database Password Here."
+    },
+
+    //The setting when will the sciprt run again.
+
+    "RepeatTimer":{
+        "ms":"86400000"
+    },
+
+    //The setting of sending notification mail.
+
+    "Mail":{
+        "Alive":{
+            "Receiver":"hello@mail.com",
+            "Title":"You have done!",
+            "Content":"Yes, you have done."
+        },
+
+        "Dead":{
+            "Receiver":"hello@mail.com",
+            "Title":"We are failed.",
+            "Content":"No, we are failed."
+
+        }
+
+    }
+}
+
+
