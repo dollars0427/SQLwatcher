@@ -3,6 +3,7 @@
 
     "Database": {
         "host":"localhost",
+        "port":"3306",
         "dbName":"Enter Your Database Name Here.",
         "username":"Enter Your Database Username Here.",
         "password":"Enter Your Database Password Here."
