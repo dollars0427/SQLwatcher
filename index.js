@@ -19,3 +19,35 @@ log4js.configure({
 
 var logger = log4js.getLogger('Logging');
 
+connectDatabase();
+
+function connectDatabase(){
+
+    //Create Connection with mysql database
+
+    var connection = mysql.createConnection({
+
+        host:dbConfig.host,
+        port:dbConfig.port,
+        user:dbConfig.username,
+        password:dbConfig.password,
+        database:dbConfig.dbName
+
+    });
+
+    connection.connect(startConnect);
+
+    function startConnect(err){
+
+        if(err){
+
+            logger.error('Cannot Connect To Database !',err);
+            process.exit(1);
+        }
+
+        console.log('OK!');
+
+    }
+}
+
+
