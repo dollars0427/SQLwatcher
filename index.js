@@ -2,6 +2,7 @@
 
 var config = require('config');
 var dbConfig = config.get('Database');
+var queryConfig = config.get('QueryList');
 var timerConfig = config.get('RepeatTimer');
 var mailConfig = config.get('Mail');
 
@@ -16,6 +17,8 @@ log4js.configure({
         {type:'console'}],
         replaceConsole:true
 });
+
+var mysqlDB = null;
 
 var logger = log4js.getLogger('Logging');
 
@@ -35,9 +38,9 @@ function connectDatabase(){
 
     });
 
-    connection.connect(startConnect);
+    connection.connect(startConnection);
 
-    function startConnect(err){
+    function startConnection(err){
 
         if(err){
 
@@ -45,9 +48,41 @@ function connectDatabase(){
             process.exit(1);
         }
 
-        console.log('OK!');
-
+        testDatabase(connection);
     }
 }
 
+function testDatabase(db){
 
+    var queryList = queryConfig;
+ 
+    for(var i = 0 ; i < queryList.length; i++){
+
+        var query = queryList[i].query;
+
+        startTesting(db,query);
+    }
+}
+
+function startTesting(db,query){
+
+    db.query(query,function(err){
+
+        if(err){
+            logger.error(err);
+        }
+
+        console.log(query);
+
+    });
+}
+
+function sendAliveMail(){
+
+    console.log('YES');
+}
+
+function sendWarningMail(){
+
+    console.log('No!');
+}
