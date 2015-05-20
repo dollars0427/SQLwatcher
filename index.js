@@ -11,6 +11,16 @@ var mailConfig = config.get('Mail');
 var mysql = require('mysql');
 var log4js = require('log4js');
 var promise = require('promised-io');
+var email = require('emailjs');
+
+var server = email.server.connect({
+    user:mailConfig.Server.user,
+    password:mailConfig.Server.password,
+    host:mailConfig.Server.host,
+    port:mailConfig.Server.port,
+    ssl:mailConfig.Server.ssl,
+    tls:mailConfig.Server.tls
+});
 
 var logger = log4js.getLogger('Logging');
 
@@ -22,11 +32,11 @@ function connectDatabase(){
 
     var connection = mysql.createConnection({
 
-        host:dbConfig.Host,
-        port:dbConfig.Port,
-        user:dbConfig.Username,
-        password:dbConfig.Password,
-        database:dbConfig.DbName
+        host:dbConfig.host,
+        port:dbConfig.port,
+        user:dbConfig.username,
+        password:dbConfig.password,
+        database:dbConfig.dbName
 
     });
 
@@ -53,13 +63,13 @@ function testDatabase(db){
     for(var i = 0; i < queryList.length; i++ ){
 
         var p = new promise.defer();
-        
+
         plist.push(p);
     }
 
     var pAll = new promise.all(plist);
     pAll.then(sendAliveMail,sendWarningMail);
- 
+
     for(var i = 0 ; i < queryList.length; i++){
 
         var p = plist[i];
@@ -74,13 +84,17 @@ function startTesting(promise,db,query){
 
     var p = promise;
 
-    db.query(query,function(err){
+    logger.debug('Testing Query:', query);
+
+    db.query(query,function(err,result){
 
         if(err){
             logger.error(err);
-            p.reject();
+            p.reject(err);
             return;
         }
+
+        logger.debug('Sucess! The result is:',result);
 
         p.resolve();
     });
@@ -90,14 +104,54 @@ function startTesting(promise,db,query){
 
 function sendAliveMail(){
 
-    var receiverList = mailConfig.Alive.Receiver;
+    var receiverList = mailConfig.Alive.to;
 
     var receiverListString = receiverList.toString();
 
-    console.log(receiverListString);
+    var opt = {   
+        text:    mailConfig.Alive.text, 
+        from:    mailConfig.Alive.from, 
+        to:      mailConfig.Alive.to,
+        subject: mailConfig.Alive.subject
+    };
+
+    logger.debug('Sending Alive Mail....');
+
+    server.send(opt,sendMail);
 
 }
-function sendWarningMail(){
 
-    console.log('No!');
+function sendWarningMail(err){
+
+
+    var receiverList = mailConfig.Dead.to;
+
+    var receiverListString = receiverList.toString();
+
+    var text = mailConfig.Dead.text + err;
+
+    var opt = {   
+        text:    mailConfig.Dead.text, 
+        from:    mailConfig.Dead.from, 
+        to:      mailConfig.Dead.to,
+        subject: mailConfig.Dead.subject
+    };
+
+    logger.debug('Sending Warning Mail.....');
+    
+    server.send(opt,sendMail);
+}
+
+function sendMail(err,message){
+
+    if(err){
+
+        logger.error(err);
+
+        return;
+    }
+
+    logger.debug('Sucess! The result of messages is:');
+
+    logger.debug(message);
 }
