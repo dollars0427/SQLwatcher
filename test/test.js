@@ -126,26 +126,35 @@ exports['Test SQL'] = {
 
         });
     },
-    /*
-       'Test SQL success(delete)': function(test){
 
-       var query = 'DELETE FROM TestTable Where FirstName = "Sardo"';
+    'Test SQL success(delete)': function(test){
 
-       var result = database.excuteMySQLQuery(connection,query);
+        var query = 'DELETE FROM TestTable Where FirstName = "Hiei"';
 
-       test.equal(err,null,'The result should be success.');
-       logger.debug('Excute Query Result: ',result);
+        var result = database.excuteMySQLQuery(connection,query,function(err,result){
 
-       test.done();
-       },
+            test.ok(result.affectedRows !== 0,'The affectedRows should not be 0.');
+            test.equal(err,null,'The result should be success.');
+            logger.debug('Excute Query Result: ',result);
 
-       'Test SQL success(insert,select,delete)':function(test){
+            test.done();
 
-       var querys = ['SELECT * FROM TestTable','INSERT INTO TestTable (FirstName, LastName, Age) VALUES ("Sardo", "Ip", "21")',
-       'DELETE FROM TestTable Where FirstName = "Sardo"'];
-       }
+        });
+    },
 
-*/
+    'Test SQL failed(delete)': function(test){
+
+        var query = 'DELETE FROM Test Where FirstName = "Sardo"';
+
+        var result = database.excuteMySQLQuery(connection,query,function(err,result){
+
+            test.ok(err !== null,'The result should be failed.');
+            logger.debug('Excute Query Result: ',result);
+
+            test.done();
+
+        });
+    },
 }
 
     exports['Terminate DB connection'] = function(test){
