@@ -1,7 +1,7 @@
 {
     //The setting of database
 
-    "Database": {
+    "database": {
         "host":"localhost",
         "port":"3306",
         "dbName":"Enter Your Database Name At Here.",
@@ -11,22 +11,21 @@
 
     //The setting when will the sciprt run again.
 
-    "RepeatTimer":{
+    "repeatTimer":{
         "ms":"86400000"
     },
 
     //The Setting of database query. You can add more than one query.
 
-    "QueryList":[
+    "queryList":[
         {"query":"SELECT * FROM targetTable"},
         {"query":"INSERT INTO targetTable (target) VALUES ('value')"},
         {"query":"DELETE FROM targetTable Where target = 'value'"}],
 
         //The setting of sending notification mail.
 
-        "Mail":{
-
-            "Server":{
+        "mail":{
+            "server":{
                 "user":"Enter Your mail address at here.",
                 "password":"Enter Your mail password at here.",
                 "host":"Enter your smtp server address at here",
@@ -35,14 +34,14 @@
                 "tls":false
             },
 
-            "Alive":{
+            "alive":{
                 "from":"You <username@your-email.com>",
                 "to":["hello@mail.com","hey@mail.com"],
                 "subject":"You have done!",
                 "text":"Yes, you have done."
             },
 
-            "Dead":{
+            "dead":{
                 "from":"You <username@your-email.com>",
                 "to":["hello@mail.com","hey@mail.com"],
                 "subject":"We are failed.",
