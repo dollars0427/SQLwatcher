@@ -1,6 +1,4 @@
 {
-    //The setting of database
-
     "database": {
         "host":"localhost",
         "port":"3306",
@@ -9,13 +7,11 @@
         "password":"Enter Your Database Password At Here."
     },
 
-    //The setting when will the sciprt run again.
 
     "repeatTimer":{
         "ms":"86400000"
     },
 
-        //The setting of sending notification mail.
 
         "mail":{
             "server":{
