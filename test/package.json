@@ -5,8 +5,7 @@
   "author": "Sardo Ip<sardo.ip@nxtomo.hk>",
   "dependencies": {
       "log4js":"0.6.21",
-      "mailjs":"0.3.16",
-      "config":"1.13.0",
+      "mailjs":"0.1.6",
       "promised-io":"0.3.4",
       "nodeunit":"0.9.1",
       "mysql":"2.6.2"
