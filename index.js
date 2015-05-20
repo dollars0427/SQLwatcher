@@ -84,7 +84,7 @@ function startTesting(promise,db,query){
 
     var p = promise;
 
-    logger.debug('Testing Query:', query);
+    logger.info('Testing Query:', query);
 
     db.query(query,function(err,result){
 
@@ -115,7 +115,7 @@ function sendAliveMail(){
         subject: mailConfig.Alive.subject
     };
 
-    logger.debug('Sending Alive Mail....');
+    logger.info('Sending Alive Mail....');
 
     server.send(opt,sendMail);
 
@@ -137,7 +137,7 @@ function sendWarningMail(err){
         subject: mailConfig.Dead.subject
     };
 
-    logger.debug('Sending Warning Mail.....');
+    logger.info('Sending Warning Mail.....');
     
     server.send(opt,sendMail);
 }
