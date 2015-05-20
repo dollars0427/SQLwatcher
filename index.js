@@ -1,10 +1,10 @@
 //Load the config file
 
 var config = require('config');
-var dbConfig = config.get('Database');
-var queryConfig = config.get('QueryList');
-var timerConfig = config.get('RepeatTimer');
-var mailConfig = config.get('Mail');
+var dbConfig = config.get('database');
+var queryConfig = config.get('queryList');
+var timerConfig = config.get('repeatTimer');
+var mailConfig = config.get('mail');
 
 //Require Module
 
@@ -14,12 +14,12 @@ var promise = require('promised-io');
 var email = require('emailjs');
 
 var server = email.server.connect({
-    user:mailConfig.Server.user,
-    password:mailConfig.Server.password,
-    host:mailConfig.Server.host,
-    port:mailConfig.Server.port,
-    ssl:mailConfig.Server.ssl,
-    tls:mailConfig.Server.tls
+    user:mailConfig.server.user,
+    password:mailConfig.server.password,
+    host:mailConfig.server.host,
+    port:mailConfig.server.port,
+    ssl:mailConfig.server.ssl,
+    tls:mailConfig.server.tls
 });
 
 var logger = log4js.getLogger('Logging');
@@ -104,15 +104,11 @@ function startTesting(promise,db,query){
 
 function sendAliveMail(){
 
-    var receiverList = mailConfig.Alive.to;
-
-    var receiverListString = receiverList.toString();
-
     var opt = {   
-        text:    mailConfig.Alive.text, 
-        from:    mailConfig.Alive.from, 
-        to:      mailConfig.Alive.to,
-        subject: mailConfig.Alive.subject
+        text:    mailConfig.alive.text, 
+        from:    mailConfig.alive.from, 
+        to:      mailConfig.alive.to,
+        subject: mailConfig.alive.subject
     };
 
     logger.info('Sending Alive Mail....');
@@ -123,18 +119,13 @@ function sendAliveMail(){
 
 function sendWarningMail(err){
 
-
-    var receiverList = mailConfig.Dead.to;
-
-    var receiverListString = receiverList.toString();
-
-    var text = mailConfig.Dead.text + err;
+    var text = mailConfig.dead.text + err;
 
     var opt = {   
-        text:    mailConfig.Dead.text, 
-        from:    mailConfig.Dead.from, 
-        to:      mailConfig.Dead.to,
-        subject: mailConfig.Dead.subject
+        text:    mailConfig.dead.text, 
+        from:    mailConfig.dead.from, 
+        to:      mailConfig.dead.to,
+        subject: mailConfig.dead.subject
     };
 
     logger.info('Sending Warning Mail.....');
@@ -151,7 +142,7 @@ function sendMail(err,message){
         return;
     }
 
-    logger.debug('Sucess! The result of messages is:');
+    logger.debug('Success! The result of messages is:');
 
     logger.debug(message);
 }
