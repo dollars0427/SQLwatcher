@@ -7,8 +7,6 @@ var settingFile = JSON.parse(fs.readFileSync('../config/setting.json'));
 var queryListFile = JSON.parse(fs.readFileSync('../config/querylist.json'));
 
 var dbConfig = settingFile['database']
-var timerConfig = settingFile['repeatTimer'];
-var mailConfig = settingFile['mail'];
 
 //Require Module
 
@@ -16,8 +14,6 @@ var log4js = require('log4js');
 var logger = log4js.getLogger('unit-test');
 
 var mysql = require('mysql');
-var email = require('emailjs');
-
 var database = require('../database');
 
 var mysqlOpt = {
