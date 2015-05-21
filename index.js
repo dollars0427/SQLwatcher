@@ -248,8 +248,6 @@ function runSQL(){
             + ' \n'
             +'Result Time: '
             + result['time']
-            +' \n Error Message: '
-            + result['err'] 
             +' \n'
             +' \n Excuted Query:'
             + result['sql'];
@@ -271,6 +269,32 @@ function runSQL(){
             });
         }
 
+        var text = mailConfig.alive.text 
+            + ' \n'
+            + ' \n'
+            +'Result Time: '
+            + result['time']
+            +' \n Error Message: '
+            + result['err'] 
+            +' \n'
+            +' \n Excuted Query:'
+            + result['sql'];
+
+            var opt = {   
+                text:    text, 
+                from:    mailConfig.alive.from, 
+                to:      mailConfig.alive.to,
+                subject: mailConfig.alive.subject
+            };
+
+            email.sendAliveMail(mailConnection,opt,function(err,email){
+
+                if(err){
+                    logger.error(err);
+                }               
+
+                logger.info(email);
+            });
     }
 
     var chain = new promise.defer();
