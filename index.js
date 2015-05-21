@@ -136,6 +136,37 @@ function runSQL(){
     }
 
 
+    function _runSQL(opt){
+
+        var p = new promise.defer();
+
+        var query = queryConfig[opt["idx"]];
+
+        if(!query){
+
+            p.resolve();
+
+            return p;
+        }
+
+        database.excuteMySQLQuery(dbConnection,query,function(err,result){
+
+            if(err){
+
+                logger.error('Detected Error! ', err);
+
+                p.reject(query);
+            }
+
+            logger.info('SQL success:', query);
+
+            p.resolve(opt["idx"] + 1);
+
+        });
+
+        return p;
+    }
+
     function complete(){
 
         var p = new promise.defer();
@@ -160,36 +191,30 @@ function runSQL(){
         return p;
 
     }
+
+    function runQueries(){
+
+        var funList = [];
+
+        for(var i = 0; i< queryConfig.length; i++){
+
+            funList.push(_runSQL);
+        }
+
+        var p = promise.seq(funList, {idx: 0});
+
+        return p;
+    }
     
     var chain = new promise.defer();
     chain
     .then(connectDatabase)
+    .then(runQueries)
     .then(complete)
 
     chain.resolve();
 }
 
-function checkDatabase(dbConnection){
-
-    var query = queryConfig.pop();
-
-    database.excuteMySQLQuery(dbConnection,queryConfig,function(err,result){
-
-        if(err){
-
-            logger.error('Detected Error! ', err);
-
-            email.sendWarningMail(mailConnection,warningMailOpt,sendMail);
-
-            return;
-        }
-
-        logger.info('OK,There no any error.');
-
-        email.sendAliveMail(mailConnection,aliveMailOpt,sendMail);
-
-    });
-}
 
 function sendMail(err,email){
     
