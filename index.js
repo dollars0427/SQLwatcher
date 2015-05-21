@@ -58,7 +58,6 @@ var warningMailOpt = {
 
 var workerFree = true;
 var lastExecute = 0;
-var lastSuccess = 0;
 
 var times = timerConfig.ms;
 
@@ -268,6 +267,7 @@ function runSQL(){
                     logger.error(err);
                 }               
 
+                logger.info(email);
             });
         }
 
