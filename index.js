@@ -160,7 +160,7 @@ function runSQL(){
 
             logger.info('SQL success:', query);
 
-            p.resolve(opt["idx"] + 1);
+            p.resolve({ idx: opt["idx"] + 1});
 
         });
 
