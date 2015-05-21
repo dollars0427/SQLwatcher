@@ -152,7 +152,10 @@ function runSQL(){
 
                 logger.error('Detected Error! ', err);
 
-                p.reject(query);
+                p.reject({
+                    err: new Error(err),
+                    sql: query
+                });
 
                 return;
             }
@@ -205,7 +208,9 @@ function runSQL(){
 
         function runFailed(opt){
 
-            logger.warn('Run Failed:', opt);
+            logger.warn('Run Failed:');
+            logger.warn(opt.err);
+            logger.warn(opt.sql);
 
             p.resolve();
 
@@ -230,6 +235,7 @@ function runSQL(){
     chain
     .then(connectDatabase)
     .then(runQueries)
+    .then(sendNotification)
     .then(complete)
 
     chain.resolve();
