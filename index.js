@@ -1,5 +1,11 @@
-//Load the config file
+//Require Module
 
+var log4js = require('log4js');
+var logger = log4js.getLogger('Logging');
+var mysql = require('mysql');
+var mailer = require('emailjs');
+var promise = require('promised-io');
+var when = promise.when;
 var fs = require('fs');
 
 var settingPath = process.argv[2];
@@ -24,15 +30,6 @@ var dbConfig = settingFile['database']
 var queryConfig = queryListFile['query']
 var timerConfig = settingFile['repeatTimer'];
 var mailConfig = settingFile['mail'];
-
-//Require Module
-
-var log4js = require('log4js');
-var logger = log4js.getLogger('Logging');
-var mysql = require('mysql');
-var mailer = require('emailjs');
-var promise = require('promised-io');
-
 var database = require('./database');
 var email = require('./email');
 
@@ -156,6 +153,8 @@ function runSQL(){
                 logger.error('Detected Error! ', err);
 
                 p.reject(query);
+
+                return;
             }
 
             logger.info('SQL success:', query);
@@ -194,6 +193,25 @@ function runSQL(){
 
     function runQueries(){
 
+        var p = new promise.defer();
+        
+        function runSucess(opt){
+
+            logger.warn('Run Sucess!');
+
+            p.resolve();
+
+        }
+
+        function runFailed(opt){
+
+            logger.warn('Run Failed:', opt);
+
+            p.resolve();
+
+        }
+
+
         var funList = [];
 
         for(var i = 0; i< queryConfig.length; i++){
@@ -201,7 +219,9 @@ function runSQL(){
             funList.push(_runSQL);
         }
 
-        var p = promise.seq(funList, {idx: 0});
+        var pSQL = promise.seq(funList, {idx: 0});
+
+        when(pSQL,runSucess,runFailed);
 
         return p;
     }
