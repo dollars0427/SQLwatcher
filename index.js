@@ -270,31 +270,79 @@ function runSQL(){
         }
 
         var text = mailConfig.alive.text 
-            + ' \n'
-            + ' \n'
-            +'Result Time: '
-            + result['time']
-            +' \n Error Message: '
-            + result['err'] 
-            +' \n'
-            +' \n Excuted Query:'
-            + result['sql'];
+        + ' \n'
+        + ' \n'
+        +'Last Sucess Time: '
+        + result['time']
+        +' \n Error Message: '
+        + result['err'] 
+        +' \n'
+        +' \n Excuted Query:'
+        + result['sql'];
 
-            var opt = {   
-                text:    text, 
-                from:    mailConfig.alive.from, 
-                to:      mailConfig.alive.to,
-                subject: mailConfig.alive.subject
-            };
+        var opt = {   
+            text:    text, 
+            from:    mailConfig.alive.from, 
+            to:      mailConfig.alive.to,
+            subject: mailConfig.alive.subject
+        };
 
-            email.sendAliveMail(mailConnection,opt,function(err,email){
+        checkTime(opt,result['time']);
 
-                if(err){
-                    logger.error(err);
-                }               
+    }
 
-                logger.info(email);
-            });
+    function checkTime(opt,lastSuccessTime){
+
+        var currentDateInited = getInitTime();
+        var settedTimes = timerConfig.time;
+
+        for(var i = 0; i < settedTimes.length; i++){
+
+            var settedTime = settedTimes[i];
+
+            var settedTimeMs = getTimeMs(settedTime);
+
+            var totalTimeMs = currentDateInited.getTime() + settedTimeMs;
+
+        }
+    }
+
+    function getInitTime(){
+
+        var currentDate = new Date();
+
+        currentDate.setHours(0);
+        currentDate.setMinutes(0);
+        currentDate.setSeconds(0);
+        currentDate.setMilliseconds(0);
+
+        return currentDate;
+    }
+
+    function getTimeMs(time){
+
+        var checkTimeFormat = time.match(/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/);
+
+        if (!checkTimeFormat){
+
+        throw new Error('The format of time Is no correct!');
+
+        }
+
+        var splitedTime = time.split(':');
+
+        var hour = splitedTime[0];
+
+        var minute = splitedTime[1]; 
+
+        var hourMs = hour * 60 * 60 * 1000;
+
+        var minMs = minute * 60 *1000;
+
+        var totalMs = hourMs + minMs; 
+
+        return totalMs;
+
     }
 
     var chain = new promise.defer();
@@ -306,15 +354,3 @@ function runSQL(){
 
     chain.resolve();
 }
-
-
-function sendMail(err,email){
-
-    if(err){
-        logger.error(err);
-        return;
-    }
-
-    logger.debug('Sended Messages: ',email);
-}
-
