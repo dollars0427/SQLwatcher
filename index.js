@@ -22,7 +22,6 @@ function printUsage(){
 
     console.log(out);
 }
-
 var settingFile = JSON.parse(fs.readFileSync(settingPath));
 var queryListFile = JSON.parse(fs.readFileSync(queryListPath));
 
@@ -41,26 +40,57 @@ var mysqlOpt = {
     database:dbConfig.dbName
 }   
 
-var aliveMailOpt = {
-    text:    mailConfig.alive.text,
-    from:    mailConfig.alive.from,
-    to:      mailConfig.alive.to,
-    subject: mailConfig.alive.subject
-};
-
-var warningMailOpt = {
-    text:    mailConfig.dead.text,
-    from:    mailConfig.dead.from,
-    to:      mailConfig.dead.to,
-    subject: mailConfig.dead.subject
-}
-
-
 var workerFree = true;
 var lastExecute = 0;
-var lastAliveTimes = null;
+var lastAliveTime = null;
 
 var times = timerConfig.ms;
+
+var keepAliveTimes = timerConfig.time;
+
+function checkTimeFormat(time){
+
+    var checking = time.match(/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/);
+
+    if(!checking){
+
+        throw new Error('The format of time Is no correct!');
+    }
+}
+
+function getTimeMs(time){
+
+    checkTimeFormat(time);
+
+    var splitedTime = time.split(':');
+
+    var hour = splitedTime[0];
+
+    var minute = splitedTime[1]; 
+
+    var hourMs = hour * 60 * 60 * 1000;
+
+    var minMs = minute * 60 *1000;
+
+    var totalMs = hourMs + minMs; 
+
+    return totalMs;
+
+}
+
+for(var i = 0; i < keepAliveTimes.length; i++){
+
+    var keepAliveTime = keepAliveTimes[i];
+
+    checkTimeFormat(keepAliveTime);
+
+    var keepAliveTimeMs = getTimeMs(keepAliveTime);
+
+    keepAliveTimes[i] = keepAliveTimeMs;
+
+}
+
+keepAliveTimes.sort();
 
 setInterval(runSQL,500);
 
@@ -249,8 +279,8 @@ function runSQL(){
             + ' \n'
             +'Result Time: '
             + result['time']
-            +' \n'
-            +' \n Excuted Query:'
+            + ' \n'
+            + ' \n Excuted Query:'
             + result['sql'];
 
             var opt = {   
@@ -260,155 +290,115 @@ function runSQL(){
                 subject: mailConfig.dead.subject
             };
 
-            email.sendWarningMail(mailConnection,opt,sendMail);
+            email.sendWarningMail(mailConnection,opt,function(err,email){
 
-            var text = mailConfig.alive.text 
-            + ' \n'
-            + ' \n'
-            +'Last Sucess Time: '
-            + result['time']
-            +' \n Error Message: '
-            + result['err'] 
-            +' \n'
-            +' \n Excuted Query:'
-            + result['sql'];
+                if(err){
+                    logger.error(err);
+                }               
 
-            var opt = {   
-                text:    text, 
-                from:    mailConfig.alive.from, 
-                to:      mailConfig.alive.to,
-                subject: mailConfig.alive.subject
-            };
+                logger.info(email);
 
-            checkTime(opt,result['time']);
-
+                p.resolve();
+            });
         }
 
-        function checkTime(opt,lastSuccessTime){
+        var text = mailConfig.alive.text 
+        + ' \n'
+        + ' \n'
+        +'Last Sucess Time: '
+        + result['time']
+        +' \n'
 
-            var keepAliveTimes = timerConfig.time;
+        var opt = {   
+            text:    text, 
+            from:    mailConfig.alive.from, 
+            to:      mailConfig.alive.to,
+            subject: mailConfig.alive.subject
+        };
 
-            var keepAliveTimeMsList = [];
+        var checkTimeSuccess = checkTime(opt,result['time']);
 
-            for(var i = 0; i < keepAliveTimes.length; i++){
+        if(checkTimeSuccess === true){
 
-                var keepAliveTime = keepAliveTimes[i];
+           email.sendAliveMail(mailConnection,opt,function(err,mail){
 
-                checkTimeFormat(keepAliveTime);
+               if(err){
 
-                try{
+                   logger.error(err);
 
-                    var keepAliveTimeMs = getTimeMs(keepAliveTime);
+                   return;
+               }
 
-                }catch (ex){
+               logger.info(mail);
 
-                    break;
-                }
+               lastAliveTime = new Date();
 
-                keepAliveTimes[i] = keepAliveTimeMs;
-            }
+               p.resolve();
 
-            keepAliveTimes.sort();
-
-            for(var i =0; i < keepAliveTimes.length; i++){
-
-                var currentDateInited = getInitTime();
-                var lastSuccessTimeMs = lastSuccessTime.getTime();
-                var keepAliveTimesMs = keepAliveTimes[i];
-                var totalKeepAliveTimesMs = keepAliveTimesMs + currentDateInited.getTime();
-
-                var keepAliveTimesDate = new Date(totalKeepAliveTimesMs);
-
-                var keepAliveTimesHours = keepAliveTimesDate.getHours();
-                var lastSucessTimeHours = lastSuccessTime.getHours();
-
-                if(lastSuccessTimeMs >= totalKeepAliveTimesMs && keepAliveTimesHours === lastSucessTimeHours){
-
-                    if(lastAliveTime === null){
-
-                        email.sendAliveMail(mailConnection,opt,sendMail);
-
-                        lastAliveTime = new Date();
-
-                        return;
-                    }
-
-                    var keepAliveTimesMonth = keepAliveTimesDate.getMonth();
-                    var keepAliveTimesDate = keepAliveTimesDate.getDate();
-
-                    var lastAliveTimeMonth = lastAliveTimeMonth.getMonth();
-                    var lastAliveTimeDate = lastAliveTimeMonth.getDate();
-
-                    if(lastAliveTimeMonth !== keepAliveTimesMonth && lastAliveTimeDate !== keepAliveTimesDate){
-
-                        email.sendAliveMail(mailConnection,opt,sendMail);
-
-                        lastAliveTime = new Date();
-
-                        return;
-                    }
-                }
-            }
+           });
         }
 
-        function getInitTime(){
+        else{
 
-            var currentDate = new Date();
-
-            currentDate.setHours(0);
-            currentDate.setMinutes(0);
-            currentDate.setSeconds(0);
-            currentDate.setMilliseconds(0);
-
-            return currentDate;
+            p.resolve();
         }
 
-        function checkTimeFormat(time){
-
-            var checking = time.match(/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/);
-
-            if(!checking){
-
-                throw new Error('The format of time Is no correct!');
-            }
-        }
-
-        function getTimeMs(time){
-
-            checkTimeFormat(time);
-
-            var splitedTime = time.split(':');
-
-            var hour = splitedTime[0];
-
-            var minute = splitedTime[1]; 
-
-            var hourMs = hour * 60 * 60 * 1000;
-
-            var minMs = minute * 60 *1000;
-
-            var totalMs = hourMs + minMs; 
-
-            return totalMs;
-
-        }
-
-        var chain = new promise.defer();
-        chain
-        .then(connectDatabase)
-        .then(runQueries)
-        .then(sendNotification)
-        .then(complete)
-
-        chain.resolve();
+        return p;
     }
 
-    function sendMail(err,mail){
+    function checkTime(opt,lastSuccessTime){
 
-        if(err){
-            logger.error(err);
-        }               
+        for(var i =0; i < keepAliveTimes.length; i++){
 
-        logger.info('Sended Message:',email);
+            var currentDateInited = getInitTime();
+            var lastSuccessTimeMs = lastSuccessTime.getTime();
+            var keepAliveTimesMs = keepAliveTimes[i];
+            var totalKeepAliveTimesMs = keepAliveTimesMs + currentDateInited.getTime();
+
+            var keepAliveTimesDate = new Date(totalKeepAliveTimesMs);
+
+            var keepAliveTimesHours = keepAliveTimesDate.getHours();
+            var lastSucessTimeHours = lastSuccessTime.getHours();
+
+            if(lastSuccessTimeMs >= totalKeepAliveTimesMs){
+
+                if(lastAliveTime === null){
+
+                    return true;
+                }
+                var keepAliveTimesMonth = keepAliveTimesDate.getMonth();
+                var keepAliveTimesDate = keepAliveTimesDate.getDate();
+
+                var lastAliveTimeMonth = lastAliveTime.getMonth();
+                var lastAliveTimeDate = lastAliveTime.getDate();
+
+                if(lastAliveTimeMonth !== keepAliveTimesMonth && lastAliveTimeDate !== keepAliveTimesDate){
+
+                    return true;
+
+                }
+            }
+        }
     }
+
+    function getInitTime(){
+
+        var currentDate = new Date();
+
+        currentDate.setHours(0);
+        currentDate.setMinutes(0);
+        currentDate.setSeconds(0);
+        currentDate.setMilliseconds(0);
+
+        return currentDate;
+    }
+
+    var chain = new promise.defer();
+    chain
+    .then(connectDatabase)
+    .then(runQueries)
+    .then(sendNotification)
+    .then(complete)
+
+    chain.resolve();
 }
