@@ -357,9 +357,6 @@ function runSQL(){
 
             var keepAliveTimesDate = new Date(totalKeepAliveTimesMs);
 
-            var keepAliveTimesHours = keepAliveTimesDate.getHours();
-            var lastSucessTimeHours = lastSuccessTime.getHours();
-
             if(lastSuccessTimeMs >= totalKeepAliveTimesMs){
 
                 if(lastAliveTime === null){
