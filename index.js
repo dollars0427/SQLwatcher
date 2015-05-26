@@ -32,6 +32,10 @@ var timerConfig = settingFile['timer'];
 var mailConfig = settingFile['mail'];
 var database = require('./database');
 var email = require('./email');
+var processTimes = require('./processtimes');
+
+var checkTimeFormat = processTimes.checkTimeFormat;
+var getTimeMs = processTimes.getTimeMs;
 
 var mysqlOpt = {
     host:dbConfig.host,
@@ -49,35 +53,6 @@ var times = timerConfig.repeattime;
 var keepAliveTimes = timerConfig.keepalivetimes;
 var timeZoneOffset = timerConfig.timezoneoffset;
 
-function checkTimeFormat(time){
-
-    var checking = time.match(/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/);
-
-    if(!checking){
-
-        throw new Error('The format of time Is no correct!');
-    }
-}
-
-function getTimeMs(time){
-
-    checkTimeFormat(time);
-
-    var splitedTime = time.split(':');
-
-    var hour = splitedTime[0];
-
-    var minute = splitedTime[1]; 
-
-    var hourMs = hour * 60 * 60 * 1000;
-
-    var minMs = minute * 60 *1000;
-
-    var totalMs = hourMs + minMs; 
-
-    return totalMs;
-
-}
 
 for(var i = 0; i < keepAliveTimes.length; i++){
 
@@ -364,6 +339,7 @@ function runSQL(){
 
         return p;
     }
+
     function checkTime(opt,lastSuccessTime){
 
         for(var i =0; i < keepAliveTimes.length; i++){
@@ -391,106 +367,102 @@ function runSQL(){
 
             }
 
-        if(!keepAliveTimesMs2 && lastSuccessTimeMs >= totalKeepAliveTimesMs1){
+            if(!keepAliveTimesMs2 && lastSuccessTimeMs >= totalKeepAliveTimesMs1){
 
-            if(lastAliveTime === null){
+                if(lastAliveTime === null){
 
-                return true;
+                    return true;
+                }
+
+                var keepAliveTimesDate = new Date(totalKeepAliveTimesMs1);
+
+                var keepAliveTimesMonth = keepAliveTimesDate.getMonth();
+                var keepAliveTimesDay = keepAliveTimesDate.getDate();
+                var keepAliveTimesYear = keepAliveTimesDate.getYear();
+
+                var lastAliveTimeYear = lastAliveTime.getFullYear();
+                var lastAliveTimeMonth = lastAliveTime.getMonth();
+                var lastAliveTimeDay = lastAliveTime.getDate();
+                var lastAliveTimeMs = lastAliveTime.getTime();
+
+                if(lastAliveTimeMonth !== keepAliveTimesMonth && 
+                   lastAliveTimeDate !== keepAliveTimesDate && 
+                       lastAliveTimeYear !== keepAliveTimesYear  &&
+                           lastAliveTimeMs >= totalKeepAliveTimesMs1){
+
+                    return true;
+
+                }
             }
 
-            var keepAliveTimesDate = new Date(totalKeepAliveTimesMs1);
+            if(lastSuccessTimeMs >= totalKeepAliveTimesMs1 && lastSuccessTimeMs < totalKeepAliveTimesMs2){
 
-            var keepAliveTimesMonth = keepAliveTimesDate.getMonth();
-            var keepAliveTimesDay = keepAliveTimesDate.getDate();
-            var keepAliveTimesYear = keepAliveTimesDate.getYear();
+                if(lastAliveTime === null){
 
-            var lastAliveTimeYear = lastAliveTime.getFullYear();
-            var lastAliveTimeMonth = lastAliveTime.getMonth();
-            var lastAliveTimeDay = lastAliveTime.getDate();
-            var lastAliveTimeMs = lastAliveTime.getTime();
+                    return true;
+                }
 
-            if(lastAliveTimeMonth !== keepAliveTimesMonth && 
-               lastAliveTimeDate !== keepAliveTimesDate && 
-                   lastAliveTimeYear !== keepAliveTimesYear  &&
-                       lastAliveTimeMs >= totalKeepAliveTimesMs1){
+                var keepAliveTimesDate = new Date(totalKeepAliveTimesMs1);
 
-                return true;
+                var keepAliveTimesMonth = keepAliveTimesDate.getMonth();
+                var keepAliveTimesDay = keepAliveTimesDate.getDate();
+                var keepAliveTimesYear = keepAliveTimesDate.getYear();
 
-            }
-        }
+                var lastAliveTimeYear = lastAliveTime.getFullYear();
+                var lastAliveTimeMonth = lastAliveTime.getMonth();
+                var lastAliveTimeDay = lastAliveTime.getDate();
+                var lastAliveTimeMs = lastAliveTime.getTime();
 
-        if(lastSuccessTimeMs >= totalKeepAliveTimesMs1 && lastSuccessTimeMs < totalKeepAliveTimesMs2){
+                if(lastAliveTimeMonth !== keepAliveTimesMonth && 
+                   lastAliveTimeDate !== keepAliveTimesDate && 
+                       lastAliveTimeYear !== keepAliveTimesYear  &&
+                           lastAliveTimeMs >= totalKeepAliveTimesMs1 &&
+                               lastAliveTimeMs < totalKeepAliveTimesMs2){
 
-            if(lastAliveTime === null){
+                    return true;
 
-                return true;
-            }
-
-            var keepAliveTimesDate = new Date(totalKeepAliveTimesMs1);
-
-            var keepAliveTimesMonth = keepAliveTimesDate.getMonth();
-            var keepAliveTimesDay = keepAliveTimesDate.getDate();
-            var keepAliveTimesYear = keepAliveTimesDate.getYear();
-
-            var lastAliveTimeYear = lastAliveTime.getFullYear();
-            var lastAliveTimeMonth = lastAliveTime.getMonth();
-            var lastAliveTimeDay = lastAliveTime.getDate();
-            var lastAliveTimeMs = lastAliveTime.getTime();
-
-            if(lastAliveTimeMonth !== keepAliveTimesMonth && 
-               lastAliveTimeDate !== keepAliveTimesDate && 
-                   lastAliveTimeYear !== keepAliveTimesYear  &&
-                       lastAliveTimeMs >= totalKeepAliveTimesMs1 &&
-                           lastAliveTimeMs < totalKeepAliveTimesMs2){
-
-                return true;
-
+                }
             }
         }
     }
-}
 
-function getInitTime(){
+    function getInitTime(){
 
-    if(timeZoneOffset == ''){
+        if(timeZoneOffset == ''){
 
-        var currentDate = new Date();
+            var currentDate = new Date();
 
-        currentDate.setHours(0);
-        currentDate.setMinutes(0);
-        currentDate.setSeconds(0);
-        currentDate.setMilliseconds(0);
+            currentDate.setHours(0);
+            currentDate.setMinutes(0);
+            currentDate.setSeconds(0);
+            currentDate.setMilliseconds(0);
+
+            return currentDate;
+
+        }
+
+        var currentDate = new moment.tz(new Date(),timeZoneOffset);
+
+        currentDate.hours(0);
+        currentDate.minutes(0);
+        currentDate.seconds(0);
+        currentDate.milliseconds(0);
 
         return currentDate;
-
     }
 
-    var currentDate = new moment.tz(new Date(),timeZoneOffset);
+    var chain = new promise.defer();
+    chain
+    .then(connectDatabase)
+    .then(runQueries)
+    .then(sendNotification)
+    .then(complete)
 
-    currentDate.hours(0);
-    currentDate.minutes(0);
-    currentDate.seconds(0);
-    currentDate.milliseconds(0);
-
-    return currentDate;
-}
-
-var chain = new promise.defer();
-chain
-.then(connectDatabase)
-.then(runQueries)
-.then(sendNotification)
-.then(complete)
-
-chain.resolve();
-
-module.exports = {
-
-    checkTimeFormat:checkTimeFormat,
-    checkTime:checkTime,
-    getInitTime:getInitTime,
-    getTimeMs:getTimeMs
+    chain.resolve();
 
 }
-}
+    module.exports = {
+        checkTimeFormat:checkTimeFormat
+    }
 
+    console.log(module.exports);
