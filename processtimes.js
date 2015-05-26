@@ -104,6 +104,7 @@ function checkTime(keepAliveTimes,lastSuccessTime,lastAliveTime,timeZoneOffset){
 
             var keepAliveTimesDate = moment.tz(totalKeepAliveTimesMs1,timeZoneOffset);
             var keepAliveTimesMonth = keepAliveTimesDate.get('month');
+
             var keepAliveTimesDate = keepAliveTimesDate.get('date');
             var keepAliveTimesYear = keepAliveTimesDate.get('year');
 
@@ -124,14 +125,17 @@ function checkTime(keepAliveTimes,lastSuccessTime,lastAliveTime,timeZoneOffset){
                 return true;
             }
 
-            if(lastAliveTimeMonth !== keepAliveTimesMonth && 
-               lastAliveTimeDate !== keepAliveTimesDate && 
-                   lastAliveTimeYear !== keepAliveTimesYear  &&
+
+            if(lastAliveTimeMonth == keepAliveTimesMonth && 
+               lastAliveTimeDate == keepAliveTimesDate && 
+                   lastAliveTimeYear == keepAliveTimesYear  &&
                        lastAliveTimeMs >= totalKeepAliveTimesMs1){
 
-                return true;
+                return false;
 
             }
+
+            return true;
         }
 
         if(lastSuccessTimeMs >= totalKeepAliveTimesMs1 && lastSuccessTimeMs < totalKeepAliveTimesMs2){
@@ -141,15 +145,17 @@ function checkTime(keepAliveTimes,lastSuccessTime,lastAliveTime,timeZoneOffset){
                 return true;
             }
 
-            if(lastAliveTimeMonth !== keepAliveTimesMonth && 
-               lastAliveTimeDate !== keepAliveTimesDate && 
-                   lastAliveTimeYear !== keepAliveTimesYear  &&
+            if(lastAliveTimeMonth == keepAliveTimesMonth && 
+               lastAliveTimeDate == keepAliveTimesDate && 
+                   lastAliveTimeYear == keepAliveTimesYear  &&
                        lastAliveTimeMs >= totalKeepAliveTimesMs1 &&
                            lastAliveTimeMs < totalKeepAliveTimesMs2){
 
                 return true;
 
             }
+
+            return false;
         }
     }
 }

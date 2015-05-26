@@ -294,6 +294,8 @@ function runSQL(){
 
                 p.resolve();
             });
+
+            return;
         }
 
         var text = mailConfig.alive.text 
