@@ -37,6 +37,7 @@ var processTimes = require('./processtimes');
 var checkTimeFormat = processTimes.checkTimeFormat;
 var getTimeMs = processTimes.getTimeMs;
 var getInitTime = processTimes.getInitTime;
+var checkTime = processTimes.checkTime;
 
 var mysqlOpt = {
     host:dbConfig.host,
@@ -53,7 +54,6 @@ var lastAliveTime = null;
 var times = timerConfig.repeattime;
 var keepAliveTimes = timerConfig.keepalivetimes;
 var timeZoneOffset = timerConfig.timezoneoffset;
-
 
 for(var i = 0; i < keepAliveTimes.length; i++){
 
@@ -239,7 +239,6 @@ function runSQL(){
 
         }
 
-
         var funList = [];
 
         for(var i = 0; i< queryConfig.length; i++){
@@ -311,7 +310,9 @@ function runSQL(){
             subject: mailConfig.alive.subject
         };
 
-        var checkTimeSuccess = checkTime(opt,result['time']);
+        logger.warn(lastAliveTime);
+
+        var checkTimeSuccess = checkTime(keepAliveTimes,result['time'],lastAliveTime,timeZoneOffset);
 
         if(checkTimeSuccess === true){
 
@@ -326,7 +327,15 @@ function runSQL(){
 
                 logger.info(mail);
 
+                if(timeZoneOffset == ''){
+
                 lastAliveTime = new Date();
+
+                }
+
+                else{
+                    lastAliveTime = moment.tz(new Date(),timeZoneOffset);
+                }
 
                 p.resolve();
 
@@ -339,92 +348,6 @@ function runSQL(){
         }
 
         return p;
-    }
-
-    function checkTime(opt,lastSuccessTime){
-
-        for(var i =0; i < keepAliveTimes.length; i++){
-
-            if(timeZoneOffset == ''){
-                var currentDateInited = getInitTime(timeZoneOffset);
-                var lastSuccessTimeMs = lastSuccessTime.getTime();
-                var keepAliveTimesMs1 = keepAliveTimes[i];
-                var keepAliveTimesMs2 = keepAliveTimes[i +1];
-
-                var totalKeepAliveTimesMs1 = keepAliveTimesMs1 + currentDateInited.getTime();
-                var totalKeepAliveTimesMs2 = keepAliveTimesMs2 + currentDateInited.getTime();
-
-            }
-
-            else{
-
-                var currentDateInited = getInitTime(timeZoneOffset);
-                var lastSuccessTimeMs = lastSuccessTime.valueOf();
-                var keepAliveTimesMs1 = keepAliveTimes[i];
-                var keepAliveTimesMs2 = keepAliveTimes[i +1];
-
-                var totalKeepAliveTimesMs1 = keepAliveTimesMs1 + currentDateInited.valueOf();
-                var totalKeepAliveTimesMs2 = keepAliveTimesMs2 + currentDateInited.valueOf();
-
-            }
-
-            if(!keepAliveTimesMs2 && lastSuccessTimeMs >= totalKeepAliveTimesMs1){
-
-                if(lastAliveTime === null){
-
-                    return true;
-                }
-
-                var keepAliveTimesDate = new Date(totalKeepAliveTimesMs1);
-
-                var keepAliveTimesMonth = keepAliveTimesDate.getMonth();
-                var keepAliveTimesDay = keepAliveTimesDate.getDate();
-                var keepAliveTimesYear = keepAliveTimesDate.getYear();
-
-                var lastAliveTimeYear = lastAliveTime.getFullYear();
-                var lastAliveTimeMonth = lastAliveTime.getMonth();
-                var lastAliveTimeDay = lastAliveTime.getDate();
-                var lastAliveTimeMs = lastAliveTime.getTime();
-
-                if(lastAliveTimeMonth !== keepAliveTimesMonth && 
-                   lastAliveTimeDate !== keepAliveTimesDate && 
-                       lastAliveTimeYear !== keepAliveTimesYear  &&
-                           lastAliveTimeMs >= totalKeepAliveTimesMs1){
-
-                    return true;
-
-                }
-            }
-
-            if(lastSuccessTimeMs >= totalKeepAliveTimesMs1 && lastSuccessTimeMs < totalKeepAliveTimesMs2){
-
-                if(lastAliveTime === null){
-
-                    return true;
-                }
-
-                var keepAliveTimesDate = new Date(totalKeepAliveTimesMs1);
-
-                var keepAliveTimesMonth = keepAliveTimesDate.getMonth();
-                var keepAliveTimesDay = keepAliveTimesDate.getDate();
-                var keepAliveTimesYear = keepAliveTimesDate.getYear();
-
-                var lastAliveTimeYear = lastAliveTime.getFullYear();
-                var lastAliveTimeMonth = lastAliveTime.getMonth();
-                var lastAliveTimeDay = lastAliveTime.getDate();
-                var lastAliveTimeMs = lastAliveTime.getTime();
-
-                if(lastAliveTimeMonth !== keepAliveTimesMonth && 
-                   lastAliveTimeDate !== keepAliveTimesDate && 
-                       lastAliveTimeYear !== keepAliveTimesYear  &&
-                           lastAliveTimeMs >= totalKeepAliveTimesMs1 &&
-                               lastAliveTimeMs < totalKeepAliveTimesMs2){
-
-                    return true;
-
-                }
-            }
-        }
     }
 
     var chain = new promise.defer();
