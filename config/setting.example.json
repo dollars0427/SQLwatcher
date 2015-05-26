@@ -8,9 +8,10 @@
     },
 
 
-    "repeatTimer":{
-        "ms":3000,
-        "time":[10:00]
+    "timer":{
+        "repeattime":3000,
+        "keepalivetimes":["10:00"],
+        "timezoneoffset":""
     },
 
 
