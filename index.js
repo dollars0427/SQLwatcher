@@ -352,24 +352,34 @@ function runSQL(){
 
             var currentDateInited = getInitTime();
             var lastSuccessTimeMs = lastSuccessTime.getTime();
-            var keepAliveTimesMs = keepAliveTimes[i];
-            var totalKeepAliveTimesMs = keepAliveTimesMs + currentDateInited.getTime();
+            var keepAliveTimesMs1 = keepAliveTimes[i];
+            var keepAliveTimesMs2 = keepAliveTimes[i +1];
+            var totalKeepAliveTimesMs1 = keepAliveTimesMs1 + currentDateInited.getTime();
+            var totalKeepAliveTimesMs2 = keepAliveTimesMs2 + currentDateInited.getTime();
 
-            var keepAliveTimesDate = new Date(totalKeepAliveTimesMs);
-
-            if(lastSuccessTimeMs >= totalKeepAliveTimesMs){
+            if(lastSuccessTimeMs >= totalKeepAliveTimesMs1 && lastSuccessTimeMs < totalKeepAliveTimesMs2){
 
                 if(lastAliveTime === null){
 
                     return true;
                 }
+
+                var keepAliveTimesDate = new Date(totalKeepAliveTimesMs);
+
                 var keepAliveTimesMonth = keepAliveTimesDate.getMonth();
-                var keepAliveTimesDate = keepAliveTimesDate.getDate();
+                var keepAliveTimesDay = keepAliveTimesDate.getDate();
+                var keepAliveTimesYear = keepAliveTimesDate.getYear();
 
+                var lastAliveTimeYear = lastAliveTime.getFullYear();
                 var lastAliveTimeMonth = lastAliveTime.getMonth();
-                var lastAliveTimeDate = lastAliveTime.getDate();
+                var lastAliveTimeDay = lastAliveTime.getDate();
+                var lastAliveTimeMs = lastAliveTime.getTime();
 
-                if(lastAliveTimeMonth !== keepAliveTimesMonth && lastAliveTimeDate !== keepAliveTimesDate){
+                if(lastAliveTimeMonth !== keepAliveTimesMonth && 
+                   lastAliveTimeDate !== keepAliveTimesDate && 
+                   lastAliveTimeYear !== keepAliveTimesYear  &&
+                   lastAliveTimeMs >= totalKeepAliveTimesMs1 &&
+                   lastAliveTimeMs < totalKeepAliveTimesMs2){
 
                     return true;
 
