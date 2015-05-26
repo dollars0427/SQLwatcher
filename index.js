@@ -320,22 +320,22 @@ function runSQL(){
 
         if(checkTimeSuccess === true){
 
-           email.sendAliveMail(mailConnection,opt,function(err,mail){
+            email.sendAliveMail(mailConnection,opt,function(err,mail){
 
-               if(err){
+                if(err){
 
-                   logger.error(err);
+                    logger.error(err);
 
-                   return;
-               }
+                    return;
+                }
 
-               logger.info(mail);
+                logger.info(mail);
 
-               lastAliveTime = new Date();
+                lastAliveTime = new Date();
 
-               p.resolve();
+                p.resolve();
 
-           });
+            });
         }
 
         else{
@@ -357,14 +357,14 @@ function runSQL(){
             var totalKeepAliveTimesMs1 = keepAliveTimesMs1 + currentDateInited.getTime();
             var totalKeepAliveTimesMs2 = keepAliveTimesMs2 + currentDateInited.getTime();
 
-            if(lastSuccessTimeMs >= totalKeepAliveTimesMs1 && lastSuccessTimeMs < totalKeepAliveTimesMs2){
+            if(!keepAliveTimesMs2 && lastSuccessTimeMs >= totalKeepAliveTimesMs1){
 
                 if(lastAliveTime === null){
 
                     return true;
                 }
 
-                var keepAliveTimesDate = new Date(totalKeepAliveTimesMs);
+                var keepAliveTimesDate = new Date(totalKeepAliveTimesMs1);
 
                 var keepAliveTimesMonth = keepAliveTimesDate.getMonth();
                 var keepAliveTimesDay = keepAliveTimesDate.getDate();
@@ -377,9 +377,37 @@ function runSQL(){
 
                 if(lastAliveTimeMonth !== keepAliveTimesMonth && 
                    lastAliveTimeDate !== keepAliveTimesDate && 
-                   lastAliveTimeYear !== keepAliveTimesYear  &&
-                   lastAliveTimeMs >= totalKeepAliveTimesMs1 &&
-                   lastAliveTimeMs < totalKeepAliveTimesMs2){
+                       lastAliveTimeYear !== keepAliveTimesYear  &&
+                           lastAliveTimeMs >= totalKeepAliveTimesMs1){
+
+                    return true;
+
+                }
+            }
+
+            if(lastSuccessTimeMs >= totalKeepAliveTimesMs1 && lastSuccessTimeMs < totalKeepAliveTimesMs2){
+
+                if(lastAliveTime === null){
+
+                    return true;
+                }
+
+                var keepAliveTimesDate = new Date(totalKeepAliveTimesMs1);
+
+                var keepAliveTimesMonth = keepAliveTimesDate.getMonth();
+                var keepAliveTimesDay = keepAliveTimesDate.getDate();
+                var keepAliveTimesYear = keepAliveTimesDate.getYear();
+
+                var lastAliveTimeYear = lastAliveTime.getFullYear();
+                var lastAliveTimeMonth = lastAliveTime.getMonth();
+                var lastAliveTimeDay = lastAliveTime.getDate();
+                var lastAliveTimeMs = lastAliveTime.getTime();
+
+                if(lastAliveTimeMonth !== keepAliveTimesMonth && 
+                   lastAliveTimeDate !== keepAliveTimesDate && 
+                       lastAliveTimeYear !== keepAliveTimesYear  &&
+                           lastAliveTimeMs >= totalKeepAliveTimesMs1 &&
+                               lastAliveTimeMs < totalKeepAliveTimesMs2){
 
                     return true;
 
@@ -408,4 +436,14 @@ function runSQL(){
     .then(complete)
 
     chain.resolve();
+
+    module.exports = {
+
+        checkTimeFormat:checkTimeFormat,
+        checkTime:checkTime,
+        getInitTime:getInitTime,
+        getTimeMs:getTimeMs
+
+    }
 }
+
