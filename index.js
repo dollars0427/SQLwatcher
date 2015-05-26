@@ -36,6 +36,7 @@ var processTimes = require('./processtimes');
 
 var checkTimeFormat = processTimes.checkTimeFormat;
 var getTimeMs = processTimes.getTimeMs;
+var getInitTime = processTimes.getInitTime;
 
 var mysqlOpt = {
     host:dbConfig.host,
@@ -345,7 +346,7 @@ function runSQL(){
         for(var i =0; i < keepAliveTimes.length; i++){
 
             if(timeZoneOffset == ''){
-                var currentDateInited = getInitTime();
+                var currentDateInited = getInitTime(timeZoneOffset);
                 var lastSuccessTimeMs = lastSuccessTime.getTime();
                 var keepAliveTimesMs1 = keepAliveTimes[i];
                 var keepAliveTimesMs2 = keepAliveTimes[i +1];
@@ -357,7 +358,7 @@ function runSQL(){
 
             else{
 
-                var currentDateInited = getInitTime();
+                var currentDateInited = getInitTime(timeZoneOffset);
                 var lastSuccessTimeMs = lastSuccessTime.valueOf();
                 var keepAliveTimesMs1 = keepAliveTimes[i];
                 var keepAliveTimesMs2 = keepAliveTimes[i +1];
@@ -426,31 +427,6 @@ function runSQL(){
         }
     }
 
-    function getInitTime(){
-
-        if(timeZoneOffset == ''){
-
-            var currentDate = new Date();
-
-            currentDate.setHours(0);
-            currentDate.setMinutes(0);
-            currentDate.setSeconds(0);
-            currentDate.setMilliseconds(0);
-
-            return currentDate;
-
-        }
-
-        var currentDate = new moment.tz(new Date(),timeZoneOffset);
-
-        currentDate.hours(0);
-        currentDate.minutes(0);
-        currentDate.seconds(0);
-        currentDate.milliseconds(0);
-
-        return currentDate;
-    }
-
     var chain = new promise.defer();
     chain
     .then(connectDatabase)
@@ -461,8 +437,3 @@ function runSQL(){
     chain.resolve();
 
 }
-    module.exports = {
-        checkTimeFormat:checkTimeFormat
-    }
-
-    console.log(module.exports);
