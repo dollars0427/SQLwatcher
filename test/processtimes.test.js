@@ -45,7 +45,7 @@ exports['Test Checking Time Format Function'] ={
 
 exports['Test Get Time Function'] = {
 
-    'Test getTimeMs Right(12:00)':function(test){
+    'Test getTimeMs Correct(12:00)':function(test){
 
         var time = '12:00';
 
@@ -58,7 +58,7 @@ exports['Test Get Time Function'] = {
         test.done();
     },
 
-    'Test getInitTime Right(No time zone offset)':function(test){
+    'Test getInitTime Correct(No time zone offset)':function(test){
 
         var timeZoneOffset = '';
 
@@ -76,7 +76,7 @@ exports['Test Get Time Function'] = {
         test.done();
     },
     
-    'Test getInitTime Right(Have time zone offset)':function(test){
+    'Test getInitTime Correct(Have time zone offset)':function(test){
 
         var timeZoneOffset = 'America/Los_Angeles';
         
@@ -102,7 +102,7 @@ exports['Test Get Time Function'] = {
 
 exports['Test check time function'] = {
 
-    'Test Send Alive Mail Time Success(17:45,No timeZoneOffset and lastAlive Time)':function(test){
+    'Test Send Alive Mail Time Correct(17:45,No timeZoneOffset and lastAlive Time)':function(test){
 
         var keepAliveTime = ['17:45'];
         
@@ -124,13 +124,13 @@ exports['Test check time function'] = {
 
         var timeZoneOffset = '';
 
-        var lastSuccessTime = new Date();
+        var lastCorrectTime = new Date();
 
-        lastSuccessTime.setHours(17);
+        lastCorrectTime.setHours(17);
 
-        lastSuccessTime.setMinutes(46);
+        lastCorrectTime.setMinutes(46);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastSuccessTime,timeZoneOffset);
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZoneOffset);
 
         logger.info(result);
 
@@ -139,7 +139,7 @@ exports['Test check time function'] = {
         test.done();
     },
 
-    'Test Send Alive Mail Time Failed(17:45,No timeZoneOffset and lastAlive Time)':function(test){
+    'Test Send Alive Mail Time Incorrect(17:45,No timeZoneOffset and lastAlive Time)':function(test){
 
         var keepAliveTime = ['17:45'];
         
@@ -161,13 +161,13 @@ exports['Test check time function'] = {
 
         var timeZoneOffset = '';
 
-        var lastSuccessTime = new Date();
+        var lastCorrectTime = new Date();
 
-        lastSuccessTime.setHours(17);
+        lastCorrectTime.setHours(17);
 
-        lastSuccessTime.setMinutes(30);
+        lastCorrectTime.setMinutes(30);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastSuccessTime,timeZoneOffset);
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZoneOffset);
 
         logger.info(result);
 
@@ -176,7 +176,7 @@ exports['Test check time function'] = {
         test.done();
     },
 
-    'Test Send Alive Mail Time Success(17:45,18:00,No timeZoneOffset and lastAlive Time)':function(test){
+    'Test Send Alive Mail Time Correct(17:45,18:00,No timeZoneOffset and lastAlive Time)':function(test){
 
         var keepAliveTime = ['17:45','18:00'];
 
@@ -204,13 +204,13 @@ exports['Test check time function'] = {
 
         var timeZoneOffset = '';
 
-        var lastSuccessTime = new Date();
+        var lastCorrectTime = new Date();
 
-        lastSuccessTime.setHours(18);
+        lastCorrectTime.setHours(18);
 
-        lastSuccessTime.setMinutes(0);
+        lastCorrectTime.setMinutes(0);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastSuccessTime,timeZoneOffset);
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZoneOffset);
 
         logger.info(result);
 
@@ -219,7 +219,7 @@ exports['Test check time function'] = {
         test.done();
     },
 
-    'Test Send Alive Mail Time Failed(17:45,18:00,No timeZoneOffset and lastAlive Time)':function(test){
+    'Test Send Alive Mail Time Incorrect(17:45,18:00,No timeZoneOffset and lastAlive Time)':function(test){
 
         var keepAliveTime = ['17:45','18:00'];
 
@@ -247,13 +247,13 @@ exports['Test check time function'] = {
 
         var timeZoneOffset = '';
 
-        var lastSuccessTime = new Date();
+        var lastCorrectTime = new Date();
 
-        lastSuccessTime.setHours(15);
+        lastCorrectTime.setHours(15);
 
-        lastSuccessTime.setMinutes(0);
+        lastCorrectTime.setMinutes(0);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastSuccessTime,timeZoneOffset);
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZoneOffset);
 
         logger.info(result);
 
@@ -262,7 +262,7 @@ exports['Test check time function'] = {
         test.done();
     },
 
-    'Test Send Alive Mail Time Success(17:45,have timeZoneOffset but no lastAlive Time)':function(test){
+    'Test Send Alive Mail Time Correct(17:45,have timeZoneOffset but no lastAlive Time)':function(test){
 
         var keepAliveTime = ['17:45'];
         
@@ -284,13 +284,13 @@ exports['Test check time function'] = {
 
         var timeZoneOffset = 'America/Los_Angeles';
 
-        var lastSuccessTime = new Date();
+        var lastCorrectTime = new Date();
 
-        lastSuccessTime.setHours(17);
+        lastCorrectTime.setHours(17);
 
-        lastSuccessTime.setMinutes(46);
+        lastCorrectTime.setMinutes(46);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastSuccessTime,timeZoneOffset);
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZoneOffset);
 
         logger.info(result);
 
@@ -299,7 +299,7 @@ exports['Test check time function'] = {
         test.done();
     },
 
-    'Test Send Alive Mail Time Failed(17:45, have timeZoneOffset but no lastAlive Time)':function(test){
+    'Test Send Alive Mail Time Incorrect(17:45, have timeZoneOffset but no lastAlive Time)':function(test){
 
         var keepAliveTime = ['17:45'];
         
@@ -321,13 +321,13 @@ exports['Test check time function'] = {
 
         var timeZoneOffset = 'America/Los_Angeles';
 
-        var lastSuccessTime = new Date();
+        var lastCorrectTime = new Date();
 
-        lastSuccessTime.setHours(7);
+        lastCorrectTime.setHours(7);
 
-        lastSuccessTime.setMinutes(30);
+        lastCorrectTime.setMinutes(30);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastSuccessTime,timeZoneOffset);
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZoneOffset);
 
         logger.info(result);
 
@@ -335,5 +335,51 @@ exports['Test check time function'] = {
 
         test.done();
     },
+
+    'Test Send Alive Mail Time Correct(17:45,No timeZoneOffset but have lastAlive Time)':function(test){
+
+        var keepAliveTime = ['17:45'];
+
+        var keepAliveTimeMs = getTimeMs(keepAliveTime[0]);
+
+        keepAliveTime[0] = keepAliveTimeMs;
+
+        var lastAliveTime = getTimeMs('17:45');
+
+        var timeZoneOffset = '';
+
+        var lastCorrectTime = new Date();
+
+        lastCorrectTime.setHours(17);
+
+        lastCorrectTime.setMinutes(46);
+
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZoneOffset);
+
+        logger.info(result);
+
+        test.equal(result,undefined,'The result should be false.');
+
+        test.done();
+    },
+
+}
+
+function getTimeMs(time){
+
+    var splitedTime = time.split(':');
+
+    var hour = splitedTime[0];
+
+    var minute = splitedTime[1];
+
+    var hourMs = hour * 60 * 60 * 1000;
+
+    var minMs = minute * 60 *1000;
+
+    var totalMs = hourMs + minMs;
+
+    return totalMs;
+
 }
 

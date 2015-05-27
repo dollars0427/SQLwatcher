@@ -82,32 +82,27 @@ function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZoneOffset){
         }
 
         var keepAliveTimesMs1 = keepAliveTimes[i];
-        var keepAliveTimesMs2 = keepAliveTimes[i +1];
+        var keepAliveTimesMs2 = keepAliveTimes[i + 1];
+
+        if (lastAliveTime === keepAliveTimesMs1){
+
+            continue;
+        }
 
         var totalKeepAliveTimesMs1 = keepAliveTimesMs1 + currentDateInited.getTime();
         var totalKeepAliveTimesMs2 = keepAliveTimesMs2 + currentDateInited.getTime();
 
-        logger.debug('last Success Time',new Date(lastSuccessTimeMs));
-        logger.debug('Kepp Alive Time',new Date(totalKeepAliveTimesMs1));
+        //logger.debug('last Success Time',new Date(lastSuccessTimeMs));
+        //logger.debug('Kepp Alive Time',new Date(totalKeepAliveTimesMs1));
 
         if(!keepAliveTimesMs2 && lastSuccessTimeMs >= totalKeepAliveTimesMs1){
-
-            if(lastAliveTime === null){
-
-                return true;
-            }
-
+            
             return true;
         }
 
         if(lastSuccessTimeMs >= totalKeepAliveTimesMs1 && lastSuccessTimeMs < totalKeepAliveTimesMs2){
-            if(lastAliveTime === null){
-
-                return true;
-            }
 
             return true;
-
         }
     }
 }
