@@ -218,5 +218,122 @@ exports['Test check time function'] = {
 
         test.done();
     },
+
+    'Test Send Alive Mail Time Failed(17:45,18:00,No timeZoneOffset and lastAlive Time)':function(test){
+
+        var keepAliveTime = ['17:45','18:00'];
+
+        for(var i =0; i < keepAliveTime.length; i++){
+        
+        var splitedTime = keepAliveTime[i].split(':');
+
+        var hour = splitedTime[0];
+
+        var minute = splitedTime[1];
+
+        var hourMs = hour * 60 * 60 * 1000;
+
+        var minMs = minute * 60 *1000;
+
+        var totalMs = hourMs + minMs;
+
+        keepAliveTime[i] = totalMs;
+
+        }
+
+        logger.debug(keepAliveTime);
+
+        var lastAliveTime = null;
+
+        var timeZoneOffset = '';
+
+        var lastSuccessTime = new Date();
+
+        lastSuccessTime.setHours(15);
+
+        lastSuccessTime.setMinutes(0);
+
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastSuccessTime,timeZoneOffset);
+
+        logger.info(result);
+
+        test.equal(result,undefined,'The result should be undefined!');
+
+        test.done();
+    },
+
+    'Test Send Alive Mail Time Success(17:45,have timeZoneOffset but no lastAlive Time)':function(test){
+
+        var keepAliveTime = ['17:45'];
+        
+        var splitedTime = keepAliveTime[0].split(':');
+
+        var hour = splitedTime[0];
+
+        var minute = splitedTime[1];
+
+        var hourMs = hour * 60 * 60 * 1000;
+
+        var minMs = minute * 60 *1000;
+
+        var totalMs = hourMs + minMs;
+
+        keepAliveTime[0] = totalMs;
+
+        var lastAliveTime = null;
+
+        var timeZoneOffset = 'America/Los_Angeles';
+
+        var lastSuccessTime = new Date();
+
+        lastSuccessTime.setHours(17);
+
+        lastSuccessTime.setMinutes(46);
+
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastSuccessTime,timeZoneOffset);
+
+        logger.info(result);
+
+        test.equal(result,true,'The result should be true!');
+
+        test.done();
+    },
+
+    'Test Send Alive Mail Time Failed(17:45, have timeZoneOffset but no lastAlive Time)':function(test){
+
+        var keepAliveTime = ['17:45'];
+        
+        var splitedTime = keepAliveTime[0].split(':');
+
+        var hour = splitedTime[0];
+
+        var minute = splitedTime[1];
+
+        var hourMs = hour * 60 * 60 * 1000;
+
+        var minMs = minute * 60 *1000;
+
+        var totalMs = hourMs + minMs;
+
+        keepAliveTime[0] = totalMs;
+
+        var lastAliveTime = null;
+
+        var timeZoneOffset = 'America/Los_Angeles';
+
+        var lastSuccessTime = new Date();
+
+        lastSuccessTime.setHours(7);
+
+        lastSuccessTime.setMinutes(30);
+
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastSuccessTime,timeZoneOffset);
+
+        logger.info(result);
+
+        test.equal(result,undefined,'The result should be undefined!');
+
+        test.done();
+    },
 }
 
