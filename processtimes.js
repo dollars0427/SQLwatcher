@@ -100,8 +100,6 @@ function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZoneOffset){
             return true;
 
         }
-
-        return false;
     }
 }
 
