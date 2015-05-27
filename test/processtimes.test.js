@@ -335,6 +335,69 @@ exports['Test check time function'] = {
 
         test.done();
     },
+
+
+    'Test Send Alive Mail Time Correct(17:45,No timeZoneOffset but lastAlive Time match)':function(test){
+
+        var keepAliveTime = ['17:45'];
+
+        var keepAliveTimeMs = getTimeMs(keepAliveTime[0]);
+
+        keepAliveTime[0] = keepAliveTimeMs;
+
+        var lastAliveTime = new Date();
+
+        lastAliveTime.setHours(17);
+        
+        lastAliveTime.setMinutes(47);
+
+        var timeZoneOffset = '';
+
+        var lastCorrectTime = new Date();
+
+        lastCorrectTime.setHours(17);
+
+        lastCorrectTime.setMinutes(46);
+
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZoneOffset);
+
+        logger.info(result);
+
+        test.equal(result,true,'The result should be true.');
+
+        test.done();
+    },
+
+    'Test Send Alive Mail Time Correct(17:45,No timeZoneOffset but lastAlive Time not match)':function(test){
+
+        var keepAliveTime = ['17:45'];
+
+        var keepAliveTimeMs = getTimeMs(keepAliveTime[0]);
+
+        keepAliveTime[0] = keepAliveTimeMs;
+
+        var lastAliveTime = new Date();
+
+        lastAliveTime.setHours(16);
+        
+        lastAliveTime.setMinutes(40);
+
+        var timeZoneOffset = '';
+
+        var lastCorrectTime = new Date();
+
+        lastCorrectTime.setHours(17);
+
+        lastCorrectTime.setMinutes(46);
+
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZoneOffset);
+
+        logger.info(result);
+
+        test.equal(result,true,'The result should be true.');
+
+        test.done();
+    },
 }
 
 function getTimeMs(time){
