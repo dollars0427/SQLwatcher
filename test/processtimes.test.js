@@ -4,10 +4,13 @@
 var fs = require('fs');
 var processTimes = require('../processtimes');
 var moment = require('moment-timezone');
-//Require Module
 
+//Require Module
 var log4js = require('log4js');
 var logger = log4js.getLogger('unit-test');
+var settingFile = JSON.parse(fs.readFileSync('../config/setting.json'));
+var timerConfig = settingFile['timer'];
+var keepAliveTimes = timerConfig.keepalivetimes;
 
 exports['Test Checking Time Format Function'] ={ 
     
@@ -99,14 +102,25 @@ exports['Test Get Time Function'] = {
 
 exports['Test check time function'] = {
 
-
     'Test Send Alive Mail Time(17:45,No timeZoneOffset and lastAlive Time)':function(test){
-
-        var timeZoneOffset = '';
 
         var keepAliveTime = ['17:45'];
         
+        var splitedTime = time.split(':');
+
+        var hour = splitedTime[0];
+
+        var minute = splitedTime[1];
+
+        var hourMs = hour * 60 * 60 * 1000;
+
+        var minMs = minute * 60 *1000;
+
+        var totalMs = hourMs + minMs;
+
         var lastAliveTime = null;
+
+        var timeZoneOffset = '';
 
         var lastSuccessTime = new Date();
 
@@ -114,7 +128,7 @@ exports['Test check time function'] = {
 
         lastSuccessTime.setMinutes(46);
 
-        var result = processTimes.checkTime(keepAliveTime,lastSuccessTime,timeZoneOffset);
+        var result = processTimes.checkTime(totalMs,lastAliveTime,lastSuccessTime,timeZoneOffset);
 
         logger.info(result);
 
@@ -122,7 +136,7 @@ exports['Test check time function'] = {
 
         test.done();
     },
-
+/*
     'Test Send Alive Mail Time(17:45,have timeZoneOffset,no lastAlive Time)':function(test){
 
         var timeZoneOffset = 'America/Los_Angeles';
@@ -144,5 +158,6 @@ exports['Test check time function'] = {
         test.done();
 
     },
+   */
 }
 
