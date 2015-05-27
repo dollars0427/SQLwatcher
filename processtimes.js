@@ -38,7 +38,7 @@ function getTimeMs(time){
 
 function getInitTime(timeZoneOffset){
 
-    if(timeZoneOffset == ''){
+    if(timeZoneOffset == '' || timeZoneOffset == null){
 
         var currentDate = new Date();
 
@@ -58,7 +58,13 @@ function getInitTime(timeZoneOffset){
     currentDate.seconds(0);
     currentDate.milliseconds(0);
 
-    return currentDate;
+    var currentDateMs = currentDate.valueOf();
+
+    var newCurrentDate = new Date(currentDateMs);
+
+    logger.debug(newCurrentDate);
+
+    return newCurrentDate;
 }
 
 function checkTime(keepAliveTimes,lastSuccessTime,lastAliveTime,timeZoneOffset){
