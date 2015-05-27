@@ -63,8 +63,6 @@ function getInitTime(timeZoneOffset){
 
     var newCurrentDate = new Date(currentDateMs);
 
-    logger.debug(newCurrentDate);
-
     return newCurrentDate;
 }
 
@@ -73,13 +71,24 @@ function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZoneOffset){
     for(var i =0; i < keepAliveTimes.length; i++){
 
         var currentDateInited = getInitTime(timeZoneOffset);
+        
+        if(timeZoneOffset === '' || timeZoneOffset == null){
+            
+            var lastSuccessTimeMs = lastSuccessTime.getTime();
+        }
 
-        var lastSuccessTimeMs = lastSuccessTime.getTime();
+        else{
+            var lastSuccessTimeMs = new moment.tz(lastSuccessTime,timeZoneOffset).valueOf();
+        }
+
         var keepAliveTimesMs1 = keepAliveTimes[i];
         var keepAliveTimesMs2 = keepAliveTimes[i +1];
 
         var totalKeepAliveTimesMs1 = keepAliveTimesMs1 + currentDateInited.getTime();
         var totalKeepAliveTimesMs2 = keepAliveTimesMs2 + currentDateInited.getTime();
+
+        logger.debug('last Success Time',new Date(lastSuccessTimeMs));
+        logger.debug('Kepp Alive Time',new Date(totalKeepAliveTimesMs1));
 
         if(!keepAliveTimesMs2 && lastSuccessTimeMs >= totalKeepAliveTimesMs1){
 
