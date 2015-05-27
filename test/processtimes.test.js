@@ -77,18 +77,20 @@ exports['Test Get Time Function'] = {
 
         var timeZoneOffset = 'America/Los_Angeles';
         
+        var correctResult = new moment.tz(new Date(),timeZoneOffset);
+
+        correctResult.hours(0);
+        correctResult.minutes(0);
+        correctResult.seconds(0);
+        correctResult.milliseconds(0);
+
+        var correctResultMs = correctResult.valueOf();
+        
         var result = processTimes.getInitTime(timeZoneOffset);
 
-        var now = new Date();
-        
-        now.setHours(0);
-        now.setMinutes(0);
-        now.setSeconds(0);
-        now.setMilliseconds(0);
+        logger.debug(result);
 
-        var correctResult = moment.tz(now,timeZoneOffset);
-
-        test.equal(result.valueOf(),result.valueOf(),'The time should be 00:00:00 !');
+        test.equal(result.getTime(),correctResultMs,'The time should be covert to correct time offset !');
 
         test.done();
 
@@ -112,7 +114,9 @@ exports['Test check time function'] = {
 
         lastSuccessTime.setMinutes(46);
 
-        var result = processTimes.checkTime(keepAliveTime,lastSuccessTime,lastAliveTime,timeZoneOffset);
+        var result = processTimes.checkTime(keepAliveTime,lastSuccessTime,timeZoneOffset);
+
+        logger.info(result);
 
         test.equal(result,true,'The result should be true!');
 
@@ -123,7 +127,7 @@ exports['Test check time function'] = {
 
         var timeZoneOffset = 'America/Los_Angeles';
 
-        var keepAliveTime = ['17:44'];
+        var keepAliveTime = ['17:46'];
         
         var lastAliveTime = null;
 
@@ -141,3 +145,4 @@ exports['Test check time function'] = {
 
     },
 }
+
