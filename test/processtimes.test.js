@@ -106,7 +106,7 @@ exports['Test check time function'] = {
 
         var keepAliveTime = ['17:45'];
         
-        var splitedTime = time.split(':');
+        var splitedTime = keepAliveTime[0].split(':');
 
         var hour = splitedTime[0];
 
@@ -118,6 +118,8 @@ exports['Test check time function'] = {
 
         var totalMs = hourMs + minMs;
 
+        keepAliveTime[0] = totalMs;
+
         var lastAliveTime = null;
 
         var timeZoneOffset = '';
@@ -128,7 +130,7 @@ exports['Test check time function'] = {
 
         lastSuccessTime.setMinutes(46);
 
-        var result = processTimes.checkTime(totalMs,lastAliveTime,lastSuccessTime,timeZoneOffset);
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastSuccessTime,timeZoneOffset);
 
         logger.info(result);
 
@@ -136,28 +138,5 @@ exports['Test check time function'] = {
 
         test.done();
     },
-/*
-    'Test Send Alive Mail Time(17:45,have timeZoneOffset,no lastAlive Time)':function(test){
-
-        var timeZoneOffset = 'America/Los_Angeles';
-
-        var keepAliveTime = ['17:46'];
-        
-        var lastAliveTime = null;
-
-        var lastSuccessTime = moment.tz(new Date(),timeZoneOffset);
-
-        lastSuccessTime.hours(17);
-
-        lastSuccessTime.minutes(46);
-
-        var result = processTimes.checkTime(keepAliveTime,lastSuccessTime,lastAliveTime,timeZoneOffset);
-
-        test.equal(result,true,'The result should be true!');
-
-        test.done();
-
-    },
-   */
 }
 
