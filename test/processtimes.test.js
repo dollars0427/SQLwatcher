@@ -13,7 +13,7 @@ var timerConfig = settingFile['timer'];
 var keepAliveTimes = timerConfig.keepalivetimes;
 
 exports['Test Checking Time Format Function'] ={ 
-    
+
     'Test checkTimeFormat success(12:00)':function(test){
 
         var time = '12:00';
@@ -35,7 +35,7 @@ exports['Test Checking Time Format Function'] ={
 
         }catch(ex){
 
-        test.ok(ex,'The function must throw error!');
+            test.ok(ex,'The function must throw error!');
 
         }
 
@@ -75,11 +75,11 @@ exports['Test Get Time Function'] = {
 
         test.done();
     },
-    
+
     'Test getInitTime Correct(Have time zone offset)':function(test){
 
         var timeZoneOffset = 'America/Los_Angeles';
-        
+
         var correctResult = new moment.tz(new Date(),timeZoneOffset);
 
         correctResult.hours(0);
@@ -88,7 +88,7 @@ exports['Test Get Time Function'] = {
         correctResult.milliseconds(0);
 
         var correctResultMs = correctResult.valueOf();
-        
+
         var result = processTimes.getInitTime(timeZoneOffset);
 
         logger.debug(result);
@@ -105,7 +105,7 @@ exports['Test check time function'] = {
     'Test Send Alive Mail Time Correct(17:45,No timeZoneOffset and lastAlive Time)':function(test){
 
         var keepAliveTime = ['17:45'];
-        
+
         var splitedTime = keepAliveTime[0].split(':');
 
         var hour = splitedTime[0];
@@ -142,7 +142,7 @@ exports['Test check time function'] = {
     'Test Send Alive Mail Time Incorrect(17:45,No timeZoneOffset and lastAlive Time)':function(test){
 
         var keepAliveTime = ['17:45'];
-        
+
         var splitedTime = keepAliveTime[0].split(':');
 
         var hour = splitedTime[0];
@@ -181,20 +181,20 @@ exports['Test check time function'] = {
         var keepAliveTime = ['17:45','18:00'];
 
         for(var i =0; i < keepAliveTime.length; i++){
-        
-        var splitedTime = keepAliveTime[i].split(':');
 
-        var hour = splitedTime[0];
+            var splitedTime = keepAliveTime[i].split(':');
 
-        var minute = splitedTime[1];
+            var hour = splitedTime[0];
 
-        var hourMs = hour * 60 * 60 * 1000;
+            var minute = splitedTime[1];
 
-        var minMs = minute * 60 *1000;
+            var hourMs = hour * 60 * 60 * 1000;
 
-        var totalMs = hourMs + minMs;
+            var minMs = minute * 60 *1000;
 
-        keepAliveTime[i] = totalMs;
+            var totalMs = hourMs + minMs;
+
+            keepAliveTime[i] = totalMs;
 
         }
 
@@ -224,20 +224,20 @@ exports['Test check time function'] = {
         var keepAliveTime = ['17:45','18:00'];
 
         for(var i =0; i < keepAliveTime.length; i++){
-        
-        var splitedTime = keepAliveTime[i].split(':');
 
-        var hour = splitedTime[0];
+            var splitedTime = keepAliveTime[i].split(':');
 
-        var minute = splitedTime[1];
+            var hour = splitedTime[0];
 
-        var hourMs = hour * 60 * 60 * 1000;
+            var minute = splitedTime[1];
 
-        var minMs = minute * 60 *1000;
+            var hourMs = hour * 60 * 60 * 1000;
 
-        var totalMs = hourMs + minMs;
+            var minMs = minute * 60 *1000;
 
-        keepAliveTime[i] = totalMs;
+            var totalMs = hourMs + minMs;
+
+            keepAliveTime[i] = totalMs;
 
         }
 
@@ -265,7 +265,7 @@ exports['Test check time function'] = {
     'Test Send Alive Mail Time Correct(17:45,have timeZoneOffset but no lastAlive Time)':function(test){
 
         var keepAliveTime = ['17:45'];
-        
+
         var splitedTime = keepAliveTime[0].split(':');
 
         var hour = splitedTime[0];
@@ -286,9 +286,9 @@ exports['Test check time function'] = {
 
         var lastCorrectTime = new Date();
 
-        lastCorrectTime.setHours(17);
+        lastCorrectTime.setHours(20);
 
-        lastCorrectTime.setMinutes(46);
+        lastCorrectTime.setMinutes(0);
 
         var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZoneOffset);
 
@@ -302,7 +302,7 @@ exports['Test check time function'] = {
     'Test Send Alive Mail Time Incorrect(17:45, have timeZoneOffset but no lastAlive Time)':function(test){
 
         var keepAliveTime = ['17:45'];
-        
+
         var splitedTime = keepAliveTime[0].split(':');
 
         var hour = splitedTime[0];
@@ -335,34 +335,6 @@ exports['Test check time function'] = {
 
         test.done();
     },
-
-    'Test Send Alive Mail Time Correct(17:45,No timeZoneOffset but have lastAlive Time)':function(test){
-
-        var keepAliveTime = ['17:45'];
-
-        var keepAliveTimeMs = getTimeMs(keepAliveTime[0]);
-
-        keepAliveTime[0] = keepAliveTimeMs;
-
-        var lastAliveTime = getTimeMs('17:45');
-
-        var timeZoneOffset = '';
-
-        var lastCorrectTime = new Date();
-
-        lastCorrectTime.setHours(17);
-
-        lastCorrectTime.setMinutes(46);
-
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZoneOffset);
-
-        logger.info(result);
-
-        test.equal(result,undefined,'The result should be false.');
-
-        test.done();
-    },
-
 }
 
 function getTimeMs(time){
@@ -382,4 +354,3 @@ function getTimeMs(time){
     return totalMs;
 
 }
-
