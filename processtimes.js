@@ -2,6 +2,7 @@
 var log4js = require('log4js');
 var logger = log4js.getLogger('Logging');
 var moment = require('moment-timezone');
+var fs = require('fs');
 
 function checkTimeFormat(time){
 
@@ -67,62 +68,18 @@ function getInitTime(timeZoneOffset){
     return newCurrentDate;
 }
 
-function checkTime(keepAliveTimes,lastSuccessTime,lastAliveTime,timeZoneOffset){
+function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZoneOffset){
 
     for(var i =0; i < keepAliveTimes.length; i++){
 
-        if(timeZoneOffset == ''){
+        var currentDateInited = getInitTime(timeZoneOffset);
 
-            var currentDateInited = getInitTime(timeZoneOffset);
+        var lastSuccessTimeMs = lastSuccessTime.getTime();
+        var keepAliveTimesMs1 = keepAliveTimes[i];
+        var keepAliveTimesMs2 = keepAliveTimes[i +1];
 
-            var lastSuccessTimeMs = lastSuccessTime.getTime();
-            var keepAliveTimesMs1 = keepAliveTimes[i];
-            var keepAliveTimesMs2 = keepAliveTimes[i +1];
-
- 
-            var totalKeepAliveTimesMs1 = keepAliveTimesMs1 + currentDateInited.getTime();
-            var totalKeepAliveTimesMs2 = keepAliveTimesMs2 + currentDateInited.getTime();
-
-            var keepAliveTimesDate = new Date(totalKeepAliveTimesMs1);
-            var keepAliveTimesMonth = keepAliveTimesDate.getMonth();
-            var keepAliveTimesDay = keepAliveTimesDate.getDate();
-            var keepAliveTimesYear = keepAliveTimesDate.getYear();
-
-            if(lastAliveTime !== null){
-
-            var lastAliveTimeYear = lastAliveTime.getFullYear();
-            var lastAliveTimeMonth = lastAliveTime.getMonth();
-            var lastAliveTimeDate = lastAliveTime.getDate();
-            var lastAliveTimeMs = lastAliveTime.getTime();
-
-            }
-        }
-
-        else{
-
-            var currentDateInited = getInitTime(timeZoneOffset);
-            var lastSuccessTimeMs = lastSuccessTime.valueOf();
-            var keepAliveTimesMs1 = keepAliveTimes[i];
-            var keepAliveTimesMs2 = keepAliveTimes[i +1];
-
-            var totalKeepAliveTimesMs1 = keepAliveTimesMs1 + currentDateInited.valueOf();
-            var totalKeepAliveTimesMs2 = keepAliveTimesMs2 + currentDateInited.valueOf();
-
-            var keepAliveTimesDate = moment.tz(totalKeepAliveTimesMs1,timeZoneOffset);
-            var keepAliveTimesMonth = keepAliveTimesDate.get('month');
-
-            var keepAliveTimesDate = keepAliveTimesDate.get('date');
-            var keepAliveTimesYear = keepAliveTimesDate.get('year');
-
-            if(lastAliveTime !== null){
-
-            var lastAliveTimeYear = lastAliveTime.get('year');
-            var lastAliveTimeMonth = lastAliveTime.get('month');
-            var lastAliveTimeDate = lastAliveTime.get('date');
-            var lastAliveTimeMs = lastAliveTime.valueOf();
-
-            }
-        }
+        var totalKeepAliveTimesMs1 = keepAliveTimesMs1 + currentDateInited.getTime();
+        var totalKeepAliveTimesMs2 = keepAliveTimesMs2 + currentDateInited.getTime();
 
         if(!keepAliveTimesMs2 && lastSuccessTimeMs >= totalKeepAliveTimesMs1){
 
@@ -131,38 +88,20 @@ function checkTime(keepAliveTimes,lastSuccessTime,lastAliveTime,timeZoneOffset){
                 return true;
             }
 
-
-            if(lastAliveTimeMonth == keepAliveTimesMonth && 
-               lastAliveTimeDate == keepAliveTimesDate && 
-                   lastAliveTimeYear == keepAliveTimesYear  &&
-                       lastAliveTimeMs >= totalKeepAliveTimesMs1){
-
-                return false;
-
-            }
-
             return true;
         }
 
         if(lastSuccessTimeMs >= totalKeepAliveTimesMs1 && lastSuccessTimeMs < totalKeepAliveTimesMs2){
-
             if(lastAliveTime === null){
 
                 return true;
             }
 
-            if(lastAliveTimeMonth == keepAliveTimesMonth && 
-               lastAliveTimeDate == keepAliveTimesDate && 
-                   lastAliveTimeYear == keepAliveTimesYear  &&
-                       lastAliveTimeMs >= totalKeepAliveTimesMs1 &&
-                           lastAliveTimeMs < totalKeepAliveTimesMs2){
+            return true;
 
-                return true;
-
-            }
-
-            return false;
         }
+
+        return false;
     }
 }
 
