@@ -6,10 +6,9 @@
   "dependencies": {
       "log4js":"0.6.21",
       "emailjs":"0.3.16",
-      "config":"1.13.0",
       "promised-io":"0.3.4",
       "mysql":"2.6.2",
-      "moment-timezone":"*"
+      "moment-timezone":"0.3.1"
   },
   "license": "MIT",
   "engines": {
