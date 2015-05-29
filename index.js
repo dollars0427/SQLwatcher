@@ -8,6 +8,7 @@ var promise = require('promised-io');
 var moment = require('moment-timezone');
 var when = promise.when;
 var fs = require('fs');
+var nconf = require('nconf');
 
 var settingPath = process.argv[2];
 var queryListPath = process.argv[3];
@@ -23,11 +24,14 @@ function printUsage(){
 
     console.log(out);
 }
-var settingFile = JSON.parse(fs.readFileSync(settingPath));
-var queryListFile = JSON.parse(fs.readFileSync(queryListPath));
 
-var dbConfig = settingFile['database']
-var queryConfig = queryListFile['query']
+nconf.argv()
+    .env()
+    .file({file:settingPath})
+    .file({file:queryListPath});
+
+var dbConfig = settingFile['database'];
+var queryConfig = queryListFile['query';]
 var timerConfig = settingFile['timer'];
 var mailConfig = settingFile['mail'];
 var database = require('./database');
