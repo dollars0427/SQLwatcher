@@ -61,9 +61,7 @@ function getInitTime(timeZoneOffset){
 
     var currentDateMs = currentDate.valueOf();
 
-    var newCurrentDate = new Date(currentDateMs);
-
-    logger.error(newCurrentDate);
+    var newCurrentDate = new Date(currentDateMs)
 
     return newCurrentDate;
 }
@@ -76,22 +74,45 @@ function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZoneOffset){
         var lastSuccessTimeMs = lastSuccessTime.getTime();
 
         var keepAliveTimesMs1 = keepAliveTimes[i];
-        var keepAliveTimesMs2 = keepAliveTimes[i + 1];
+
+        var index2 = i + 1;
+
+        var keepAliveTimesMs2 = keepAliveTimes[index2];
 
         var totalKeepAliveTimesMs1 = keepAliveTimesMs1 + currentDateInited.getTime();
         var totalKeepAliveTimesMs2 = keepAliveTimesMs2 + currentDateInited.getTime();
 
-        logger.warn(new Date(totalKeepAliveTimesMs1));
-        logger.warn(new Date(lastSuccessTime));
-
         if(!keepAliveTimesMs2 && lastSuccessTimeMs >= totalKeepAliveTimesMs1){
-            
-            return true;
+
+            if(lastAliveTime == null){
+
+                return new Date(totalKeepAliveTimesMs1);
+            }
+
+            lastAliveTimeMs = lastAliveTime.getTime();
+
+            if(lastAliveTimeMs >= totalKeepAliveTimesMs1){ 
+
+                return undefined;
+
+            }
+
+            return new Date(totalKeepAliveTimesMs1);
         }
 
         if(lastSuccessTimeMs >= totalKeepAliveTimesMs1 && lastSuccessTimeMs < totalKeepAliveTimesMs2){
+            if(lastAliveTime == null){
 
-            return true;
+                return new Date(totalKeepAliveTimesMs1);
+
+            }
+
+            if(lastAliveTimeMs >= totalKeepAliveTimesMs1){ 
+
+                continue;
+            }
+
+            return new Date(totalKeepAliveTimesMs1);
         }
     }
 }
