@@ -312,11 +312,9 @@ function runSQL(){
             subject: mailConfig.alive.subject
         };
 
-        logger.warn(lastAliveTime);
+        var checkTimeSuccess = checkTime(keepAliveTimes,lastAliveTime,result['time'],timeZoneOffset);
 
-        var checkTimeSuccess = checkTime(keepAliveTimes,result['time'],lastAliveTime,timeZoneOffset);
-
-        if(checkTimeSuccess === true){
+        if(checkTimeSuccess){
 
             email.sendAliveMail(mailConnection,opt,function(err,mail){
 
@@ -329,15 +327,9 @@ function runSQL(){
 
                 logger.info(mail);
 
-                if(timeZoneOffset == ''){
+                logger.info(checkTimeSuccess);
 
                 lastAliveTime = new Date();
-
-                }
-
-                else{
-                    lastAliveTime = moment.tz(new Date(),timeZoneOffset);
-                }
 
                 p.resolve();
 
