@@ -472,6 +472,37 @@ exports['Test check time function'] = {
         test.done();
     },
 
+    'Test Send Alive Mail Time Incorrect(10:00,have timeZoneOffset and lastAlive Time match)':function(test){
+
+        var keepAliveTime = ['10:00'];
+
+        var keepAliveTimeMs = getTimeMs(keepAliveTime[0]);
+
+        keepAliveTime[0] = keepAliveTimeMs;
+
+        var lastAliveTime = new Date();
+
+        lastAliveTime.setHours(20);
+        
+        lastAliveTime.setMinutes(2);
+
+        var timeZoneOffset = 'America/Los_Angeles';
+
+        var lastCorrectTime = new Date();
+
+        lastCorrectTime.setHours(20);
+
+        lastCorrectTime.setMinutes(1);
+
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZoneOffset);
+
+        logger.info(result);
+
+        test.equal(result,undefined,'The result should be undefined.');
+
+        test.done();
+    },
+
     'Test Send Alive Mail Time Correct(1:00,have timeZoneOffset and lastAlive Time not match)':function(test){
 
         var keepAliveTime = ['1:00'];
@@ -499,6 +530,81 @@ exports['Test check time function'] = {
         logger.info(result);
 
         test.ok(result,'It should had a result.');
+
+        test.done();
+    },
+
+    'Test Send Alive Mail Time Incorrect(10:00,have timeZoneOffset and lastAlive Time not match)':function(test){
+
+        var keepAliveTime = ['10:00'];
+
+        var keepAliveTimeMs = getTimeMs(keepAliveTime[0]);
+
+        keepAliveTime[0] = keepAliveTimeMs;
+
+        var lastAliveTime = new Date();
+
+        lastAliveTime.setHours(0);
+        
+        lastAliveTime.setMinutes(0);
+
+        var timeZoneOffset = 'America/Los_Angeles';
+
+        var lastCorrectTime = new Date();
+
+        lastCorrectTime.setHours(20);
+
+        lastCorrectTime.setMinutes(1);
+
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZoneOffset);
+
+        logger.info(result);
+
+        test.equal(result,undefined,'The result should be undefined.');
+
+        test.done();
+    },
+
+    'Test Send Alive Mail Time Correct(2:00,have timeZoneOffset and lastAlive Time match)':function(test){
+
+        var keepAliveTime = ['1:00','2:00','3:00'];
+
+        for(var i =0; i < keepAliveTime.length; i++){
+
+            var splitedTime = keepAliveTime[i].split(':');
+
+            var hour = splitedTime[0];
+
+            var minute = splitedTime[1];
+
+            var hourMs = hour * 60 * 60 * 1000;
+
+            var minMs = minute * 60 *1000;
+
+            var totalMs = hourMs + minMs;
+
+            keepAliveTime[i] = totalMs;
+        }
+
+        var lastAliveTime = new Date();
+
+        lastAliveTime.setHours(16);
+        
+        lastAliveTime.setMinutes(2);
+
+        var timeZoneOffset = 'America/Los_Angeles';
+
+        var lastCorrectTime = new Date();
+
+        lastCorrectTime.setHours(17);
+
+        lastCorrectTime.setMinutes(2);
+
+        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZoneOffset);
+
+        logger.info(result);
+
+        test.ok(result,'The result should have result.');
 
         test.done();
     },
