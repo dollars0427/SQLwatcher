@@ -107,6 +107,8 @@ function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZoneOffset){
 
             }
 
+            lastAliveTimeMs = lastAliveTime.getTime();
+
             if(lastAliveTimeMs >= totalKeepAliveTimesMs1){ 
 
                 continue;
