@@ -39,7 +39,7 @@ function getTimeMs(time){
 
 function getInitTime(timeZone){
 
-    if(timeZone == '' || timeZoneOffset == null){
+    if(timeZone == '' || timeZone == null){
 
         var currentDate = new Date();
 
