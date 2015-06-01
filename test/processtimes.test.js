@@ -1,13 +1,11 @@
 'use strict';
 
-//Load Config File
 var fs = require('fs');
 var processTimes = require('../processtimes');
-var moment = require('moment-timezone');
-
-//Require Module
 var log4js = require('log4js');
 var logger = log4js.getLogger('unit-test');
+var moment = require('moment-timezone');
+
 var settingFile = JSON.parse(fs.readFileSync('../config/setting.json'));
 var timerConfig = settingFile['timer'];
 var keepAliveTimes = timerConfig.keepalivetimes;
@@ -80,8 +78,12 @@ exports['Test Get Time Function'] = {
 
         var timeZoneOffset = 'America/Los_Angeles';
 
+        var currentDate = new Date();
+
         var correctResult = new moment.tz(new Date(),timeZoneOffset);
 
+        correctResult.month(currentDate.getMonth());
+        correctResult.date(currentDate.getDate());
         correctResult.hours(0);
         correctResult.minutes(0);
         correctResult.seconds(0);
