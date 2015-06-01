@@ -52,14 +52,18 @@ function getInitTime(timeZoneOffset){
 
     }
 
-    var currentDate = new moment.tz(new Date(),timeZoneOffset);
+    var currentDate = new Date();
 
-    currentDate.hours(0);
-    currentDate.minutes(0);
-    currentDate.seconds(0);
-    currentDate.milliseconds(0);
+    var currentDateTz = new moment.tz(new Date(),timeZoneOffset);
 
-    var currentDateMs = currentDate.valueOf();
+    currentDateTz.month(currentDate.getMonth());
+    currentDateTz.date(currentDate.getDate());
+    currentDateTz.hours(0);
+    currentDateTz.minutes(0);
+    currentDateTz.seconds(0);
+    currentDateTz.milliseconds(0);
+
+    var currentDateMs = currentDateTz.valueOf();
 
     var newCurrentDate = new Date(currentDateMs)
 
@@ -69,7 +73,6 @@ function getInitTime(timeZoneOffset){
 function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZoneOffset){
 
     for(var i =0; i < keepAliveTimes.length; i++){
-
         var currentDateInited = getInitTime(timeZoneOffset);
         var lastSuccessTimeMs = lastSuccessTime.getTime();
 
@@ -81,6 +84,9 @@ function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZoneOffset){
 
         var totalKeepAliveTimesMs1 = keepAliveTimesMs1 + currentDateInited.getTime();
         var totalKeepAliveTimesMs2 = keepAliveTimesMs2 + currentDateInited.getTime();
+
+        logger.debug('keepAliveTimes: ', new Date(totalKeepAliveTimesMs1));
+        logger.debug('lastSuccessTime: ', new Date(lastSuccessTimeMs));
 
         if(!keepAliveTimesMs2 && lastSuccessTimeMs >= totalKeepAliveTimesMs1){
 
