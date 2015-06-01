@@ -5,9 +5,12 @@ var processTimes = require('../processtimes');
 var log4js = require('log4js');
 var logger = log4js.getLogger('unit-test');
 var moment = require('moment-timezone');
+var nconf = require('nconf');
+nconf.argv()
+.env()
+.file({file:'./config/setting.json'});
 
-var settingFile = JSON.parse(fs.readFileSync('../config/setting.json'));
-var timerConfig = settingFile['timer'];
+var timerConfig = nconf.get('timer');
 var keepAliveTimes = timerConfig.keepalivetimes;
 
 exports['Test Checking Time Format Function'] ={ 
