@@ -1,0 +1,46 @@
+{
+    "database": {
+        "host":"localhost",
+        "port":"3306",
+        "dbName":"Enter Your Database Name At Here.",
+        "username":"Enter Your Database Username At Here.",
+        "password":"Enter Your Database Password At Here."
+    },
+
+
+    "timer":{
+        "repeattime":3000,
+        "keepalivetimes":["10:00"],
+        "timezoneoffset":""
+    },
+
+
+    "mail":{
+        "server":{
+            "user":"Enter Your mail address at here.",
+            "password":"Enter Your mail password at here.",
+            "host":"Enter your smtp server address at here",
+            "port":465,
+            "ssl":true,
+            "tls":false
+        },
+
+        "alive":{
+            "from":"You <username@your-email.com>",
+            "to":["hello@mail.com","hey@mail.com"],
+            "subject":"You have done!",
+            "text":"Yes, you have done."
+        },
+
+        "dead":{
+            "from":"You <username@your-email.com>",
+            "to":["hello@mail.com","hey@mail.com"],
+            "subject":"We are failed.",
+            "text":"No, we are failed."
+
+        }
+
+    }
+}
+
+
