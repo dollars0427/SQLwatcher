@@ -10,6 +10,10 @@ var when = promise.when;
 var fs = require('fs');
 var nconf = require('nconf');
 
+nconf.argv()
+    .env()
+    .file({file:settingPath})
+
 var database = require('./database');
 var email = require('./email');
 var processTimes = require('./processtimes');
@@ -28,11 +32,6 @@ function printUsage(){
 
     console.log(out);
 }
-
-nconf.argv()
-    .env()
-    .file({file:settingPath})
-
 var queryListFile = JSON.parse(fs.readFileSync(queryListPath));
 
 var dbConfig = nconf.get('database');
