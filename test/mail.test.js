@@ -1,17 +1,17 @@
 'use strict';
 
-//Load Config File
-var fs = require('fs');
-var settingFile = JSON.parse(fs.readFileSync('../config/setting.json'));
-
-var mailConfig = settingFile['mail'];
-
 //Require Module
+var fs = require('fs');
+var nconf = require('nconf');
+nconf.argv()
+.env()
+.file({file:'./config/setting.json'})
 
 var log4js = require('log4js');
 var logger = log4js.getLogger('unit-test');
-
 var mailer = require('emailjs');
+
+var mailConfig = nconf.get('mail');
 
 var connection = mailer.server.connect({
     user:mailConfig.server.user,
