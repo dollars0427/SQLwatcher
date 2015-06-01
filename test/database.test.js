@@ -1,20 +1,22 @@
 'use strict';
 
-
-//Load Config File
-var fs = require('fs');
-var settingFile = JSON.parse(fs.readFileSync('../config/setting.json'));
-var queryListFile = JSON.parse(fs.readFileSync('../config/querylist.json'));
-
-var dbConfig = settingFile['database']
-
 //Require Module
 
 var log4js = require('log4js');
 var logger = log4js.getLogger('unit-test');
+var nconf = require('nconf');
+
+nconf.argv()
+.env()
+.file({file:'./config/setting.json'})
 
 var mysql = require('mysql');
 var database = require('../database');
+
+//Load Config File
+var fs = require('fs');
+
+var dbConfig = nconf.get('database');
 
 var mysqlOpt = {
     host:dbConfig.host,
@@ -23,6 +25,7 @@ var mysqlOpt = {
     password:dbConfig.password,
     database:dbConfig.dbName
 }
+
 var connection = mysql.createConnection(mysqlOpt);
 
 exports['Establish DB connection'] = function(test){
