@@ -108,6 +108,7 @@ You can run the unit-test of this project by using nodeunit.
 
 3.Copy the configuration file and edit it: 
 `$ cp ./config/option.conf.sample option.conf` 
+
 `$ vi option.conf`
 
 It is same as configuration part.
