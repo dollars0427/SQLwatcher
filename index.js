@@ -10,6 +10,10 @@ var when = promise.when;
 var fs = require('fs');
 var nconf = require('nconf');
 
+var database = require('./database');
+var email = require('./email');
+var processTimes = require('./processtimes');
+
 var settingPath = process.argv[2];
 var queryListPath = process.argv[3];
 
@@ -28,16 +32,13 @@ function printUsage(){
 nconf.argv()
     .env()
     .file({file:settingPath})
-    .file({file:queryListPath});
 
-var dbConfig = settingFile['database'];
-var queryConfig = queryListFile['query';]
-var timerConfig = settingFile['timer'];
-var mailConfig = settingFile['mail'];
-var database = require('./database');
-var email = require('./email');
-var processTimes = require('./processtimes');
+var queryListFile = JSON.parse(fs.readFileSync(queryListPath));
 
+var dbConfig = nconf.get('database');
+var queryConfig = queryListFile['query'];
+var timerConfig = nconf.get('timer');
+var mailConfig = nconf.get('mail');
 var checkTimeFormat = processTimes.checkTimeFormat;
 var getTimeMs = processTimes.getTimeMs;
 var getInitTime = processTimes.getInitTime;
