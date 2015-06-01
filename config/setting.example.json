@@ -11,7 +11,7 @@
     "timer":{
         "repeattime":3000,
         "keepalivetimes":["10:00"],
-        "timezoneoffset":""
+        "timezone":""
     },
 
 
