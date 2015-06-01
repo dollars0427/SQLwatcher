@@ -41,6 +41,36 @@ exports['Establish DB connection'] = function(test){
 
 exports['Test SQL'] = {
 
+    'Test SQL success(create table)':function(test){
+
+        var query = 'CREATE TABLE TestTable(Firstname VARCHAR(30) NOT NULL,Lastname VARCHAR(30) NOT NULL,Age INT(100) NOT NULL)';
+
+        var result = database.excuteMySQLQuery(connection,query,function(err,result){
+
+            test.equal(err,null,'The result should be success.');
+            logger.debug('Excute Query Result: ',result);
+
+            test.done();
+
+        });
+
+    },    
+    
+    'Test SQL fail(create table)':function(test){
+
+        var query = 'CREATE TABLE TestTable(Firstname VARCHAR(30) NOT NULL,Lastname VARCHAR(30) NOT NULL,Age INT(100) NOT NULL)';
+
+        var result = database.excuteMySQLQuery(connection,query,function(err,result){
+
+            test.ok(err !== null,'The result should be failed.');
+            logger.debug('Excute Query Result: ',result);
+
+            test.done();
+
+        });
+
+    },
+
     'Test SQL success(insert)': function(test){
 
         var query = 'INSERT INTO TestTable (FirstName, LastName, Age) VALUES ("Sardo", "Ip", "21")';
@@ -144,6 +174,34 @@ exports['Test SQL'] = {
     'Test SQL failed(delete)': function(test){
 
         var query = 'DELETE FROM Test Where FirstName = "Sardo"';
+
+        var result = database.excuteMySQLQuery(connection,query,function(err,result){
+
+            test.ok(err !== null,'The result should be failed.');
+            logger.debug('Excute Query Result: ',result);
+
+            test.done();
+
+        });
+    },
+
+    'Test SQL success(drop)': function(test){
+
+        var query = 'DROP TABLE TestTable;';
+
+        var result = database.excuteMySQLQuery(connection,query,function(err,result){
+
+            test.equal(err,null,'The result should be success.');
+            logger.debug('Excute Query Result: ',result);
+
+            test.done();
+
+        });
+    },
+
+    'Test SQL failed(drop)': function(test){
+
+        var query = 'DROP TABLE TestTable;';
 
         var result = database.excuteMySQLQuery(connection,query,function(err,result){
 
