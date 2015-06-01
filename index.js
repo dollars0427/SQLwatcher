@@ -48,7 +48,7 @@ var mysqlOpt = {
     port:dbConfig.port,
     user:dbConfig.username,
     password:dbConfig.password,
-    database:dbConfig.dbName
+    database:dbConfig.dbname
 }   
 
 var workerFree = true;

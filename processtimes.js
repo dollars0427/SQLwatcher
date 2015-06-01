@@ -37,9 +37,9 @@ function getTimeMs(time){
 
 }
 
-function getInitTime(timeZoneOffset){
+function getInitTime(timeZone){
 
-    if(timeZoneOffset == '' || timeZoneOffset == null){
+    if(timeZone == '' || timeZoneOffset == null){
 
         var currentDate = new Date();
 
@@ -54,7 +54,7 @@ function getInitTime(timeZoneOffset){
 
     var currentDate = new Date();
 
-    var currentDateTz = new moment.tz(new Date(),timeZoneOffset);
+    var currentDateTz = new moment.tz(new Date(),timeZone);
 
     currentDateTz.month(currentDate.getMonth());
     currentDateTz.date(currentDate.getDate());
@@ -70,10 +70,10 @@ function getInitTime(timeZoneOffset){
     return newCurrentDate;
 }
 
-function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZoneOffset){
+function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZone){
 
     for(var i =0; i < keepAliveTimes.length; i++){
-        var currentDateInited = getInitTime(timeZoneOffset);
+        var currentDateInited = getInitTime(timeZone);
         var lastSuccessTimeMs = lastSuccessTime.getTime();
 
         var keepAliveTimesMs1 = keepAliveTimes[i];
