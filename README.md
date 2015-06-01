@@ -9,7 +9,7 @@ Note: This requires Node.js to run. If you had not install it , you can download
 1.Download the SQLwatcher source or clone the git repository:
 `$ git@10.180.51.88:sardoip/SQLwatcher`
 
-2.Switch to the directory of SQLwatcher:
+2.Switch to the project root directory:
 `$ cd SQLwathcer`
 
 3.Install the dependencies: 
@@ -105,6 +105,12 @@ You can run the unit-test of this project by using nodeunit.
 
 2.Install the dependencies:
 `npm install`
+
+3.Copy the configuration file and edit it: 
+`$ cp ./config/option.conf.sample option.conf` 
+`$ vi option.conf`
+
+It is same as configuration part.
 
 3.Run nodeunit to test each part:
 `nodeunit testcase.js` *It just a exmaple!
