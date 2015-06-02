@@ -76,7 +76,7 @@ exports['Drop and establish DB Table'] = {
 },
 
 exports['Test SQL'] = {
- 
+
     'Test SQL success(insert)': function(test){
 
         var query = 'INSERT INTO TestTable (FirstName, LastName, Age) VALUES ("Sardo", "Ip", "21")';
@@ -220,14 +220,14 @@ exports['Test SQL'] = {
     },
 }
 
-    exports['Terminate DB connection'] = function(test){
+exports['Terminate DB connection'] = function(test){
 
-        connection.end(function(err){
+    connection.end(function(err){
 
-            test.equal(err,null,'Cannot Close Connection !');
+        test.equal(err,null,'Cannot Close Connection !');
 
-            test.done();
+        test.done();
 
-        });
+    });
 }
 
