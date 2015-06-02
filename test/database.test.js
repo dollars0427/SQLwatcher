@@ -37,11 +37,30 @@ exports['Establish DB connection'] = function(test){
         test.done();
 
     });
-}
+},
 
-exports['Test SQL'] = {
+exports['Drop and establish DB Table'] = {
 
-    'Test SQL success(create table)':function(test){
+    'Drop Table':function(test){
+
+        var query = 'DROP TABLE TestTable;';
+
+        var result = database.excuteMySQLQuery(connection,query,function(err,result){
+
+            if(err.errno !== 1051){
+
+                logger.error(err);
+
+            }
+
+            test.ok(err === null || err.errno === 1051,'The table should be not found or result should be success.');
+
+            test.done();
+
+        });
+    },
+
+    'Create table':function(test){
 
         var query = 'CREATE TABLE TestTable(Firstname VARCHAR(30) NOT NULL,Lastname VARCHAR(30) NOT NULL,Age INT(100) NOT NULL)';
 
@@ -53,24 +72,11 @@ exports['Test SQL'] = {
             test.done();
 
         });
+    },   
+},
 
-    },    
-    
-    'Test SQL fail(create table)':function(test){
-
-        var query = 'CREATE TABLE TestTable(Firstname VARCHAR(30) NOT NULL,Lastname VARCHAR(30) NOT NULL,Age INT(100) NOT NULL)';
-
-        var result = database.excuteMySQLQuery(connection,query,function(err,result){
-
-            test.ok(err !== null,'The result should be failed.');
-            logger.debug('Excute Query Result: ',result);
-
-            test.done();
-
-        });
-
-    },
-
+exports['Test SQL'] = {
+ 
     'Test SQL success(insert)': function(test){
 
         var query = 'INSERT INTO TestTable (FirstName, LastName, Age) VALUES ("Sardo", "Ip", "21")';
