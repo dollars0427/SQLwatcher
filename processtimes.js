@@ -4,13 +4,17 @@ var logger = log4js.getLogger('Logging');
 var moment = require('moment-timezone');
 var fs = require('fs');
 
+/*
+ * Check time format "hh:mm"
+ *
+ * */
 function checkTimeFormat(time){
 
     var checking = time.match(/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/);
 
     if(!checking){
 
-        throw new Error('The format of time Is no correct!');
+        throw new Error('TIME_FORMAT_ERROR');
     }
 
     return true;
