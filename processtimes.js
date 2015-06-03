@@ -94,7 +94,7 @@ function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZone){
         logger.debug('keepAliveTimes: ', new Date(totalKeepAliveTimeMs1));
         logger.debug('lastSuccessTime: ', new Date(lastSuccessTimeMs));
 
-        if(!keepAliveTimeMs2 && lastSuccessTimeMs >= totalKeepAliveTimeMs1){
+        if(isNaN(keepAliveTimeMs2) && lastSuccessTimeMs >= totalKeepAliveTimeMs1){
 
             if(lastAliveTime == null){
 
