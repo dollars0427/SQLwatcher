@@ -84,45 +84,45 @@ function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZone){
         var keepAliveTimeMs1 = keepAliveTimes[i];
         var keepAliveTimeMs2 = keepAliveTimes[i+1];
 
-        var totalKeepAliveTimesMs1 = keepAliveTimeMs1 + currentDateInited;
-        var totalKeepAliveTimesMs2 = keepAliveTimeMs2 + currentDateInited;
+        var totalKeepAliveTimeMs1 = keepAliveTimeMs1 + currentDateInited;
+        var totalKeepAliveTimeMs2 = keepAliveTimeMs2 + currentDateInited;
 
-        logger.debug('keepAliveTimes: ', new Date(totalKeepAliveTimesMs1));
+        logger.debug('keepAliveTimes: ', new Date(totalKeepAliveTimeMs1));
         logger.debug('lastSuccessTime: ', new Date(lastSuccessTimeMs));
 
-        if(!keepAliveTimeMs2 && lastSuccessTimeMs >= totalKeepAliveTimesMs1){
+        if(!keepAliveTimeMs2 && lastSuccessTimeMs >= totalKeepAliveTimeMs1){
 
             if(lastAliveTime == null){
 
-                return new Date(totalKeepAliveTimesMs1);
+                return new Date(totalKeepAliveTimeMs1);
             }
 
             lastAliveTimeMs = lastAliveTime.getTime();
 
-            if(lastAliveTimeMs >= totalKeepAliveTimesMs1){ 
+            if(lastAliveTimeMs >= totalKeepAliveTimeMs1){ 
 
                 return undefined;
 
             }
 
-            return new Date(totalKeepAliveTimesMs1);
+            return new Date(totalKeepAliveTimeMs1);
         }
 
-        if(lastSuccessTimeMs >= totalKeepAliveTimesMs1 && lastSuccessTimeMs < totalKeepAliveTimesMs2){
+        if(lastSuccessTimeMs >= totalKeepAliveTimeMs1 && lastSuccessTimeMs < totalKeepAliveTimeMs2){
             if(lastAliveTime == null){
 
-                return new Date(totalKeepAliveTimesMs1);
+                return new Date(totalKeepAliveTimeMs1);
 
             }
 
             lastAliveTimeMs = lastAliveTime.getTime();
 
-            if(lastAliveTimeMs >= totalKeepAliveTimesMs1){ 
+            if(lastAliveTimeMs >= totalKeepAliveTimeMs1){ 
 
                 continue;
             }
 
-            return new Date(totalKeepAliveTimesMs1);
+            return new Date(totalKeepAliveTimeMs1);
         }
     }
 }
