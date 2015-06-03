@@ -76,23 +76,21 @@ function getInitTime(timeZone){
 
 function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZone){
 
+    var currentDateInited = getInitTime(timeZone).getTime();
+
     for(var i =0; i < keepAliveTimes.length; i++){
-        var currentDateInited = getInitTime(timeZone);
         var lastSuccessTimeMs = lastSuccessTime.getTime();
 
-        var keepAliveTimesMs1 = keepAliveTimes[i];
+        var keepAliveTimeMs1 = keepAliveTimes[i];
+        var keepAliveTimeMs2 = keepAliveTimes[i+1];
 
-        var index2 = i + 1;
-
-        var keepAliveTimesMs2 = keepAliveTimes[index2];
-
-        var totalKeepAliveTimesMs1 = keepAliveTimesMs1 + currentDateInited.getTime();
-        var totalKeepAliveTimesMs2 = keepAliveTimesMs2 + currentDateInited.getTime();
+        var totalKeepAliveTimesMs1 = keepAliveTimeMs1 + currentDateInited;
+        var totalKeepAliveTimesMs2 = keepAliveTimeMs2 + currentDateInited;
 
         logger.debug('keepAliveTimes: ', new Date(totalKeepAliveTimesMs1));
         logger.debug('lastSuccessTime: ', new Date(lastSuccessTimeMs));
 
-        if(!keepAliveTimesMs2 && lastSuccessTimeMs >= totalKeepAliveTimesMs1){
+        if(!keepAliveTimeMs2 && lastSuccessTimeMs >= totalKeepAliveTimesMs1){
 
             if(lastAliveTime == null){
 
