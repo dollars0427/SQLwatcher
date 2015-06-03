@@ -80,7 +80,11 @@ function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZone){
 
     for(var i =0; i < keepAliveTimes.length; i++){
         var lastSuccessTimeMs = lastSuccessTime.getTime();
+        var lastAliveTimeMs = null;
 
+        try{
+            lastAliveTimeMs = lastAliveTime.getTime();
+        }catch(err){}
         var keepAliveTimeMs1 = keepAliveTimes[i];
         var keepAliveTimeMs2 = keepAliveTimes[i+1];
 
@@ -97,7 +101,6 @@ function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZone){
                 return new Date(totalKeepAliveTimeMs1);
             }
 
-            lastAliveTimeMs = lastAliveTime.getTime();
 
             if(lastAliveTimeMs >= totalKeepAliveTimeMs1){ 
 
@@ -114,8 +117,6 @@ function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZone){
                 return new Date(totalKeepAliveTimeMs1);
 
             }
-
-            lastAliveTimeMs = lastAliveTime.getTime();
 
             if(lastAliveTimeMs >= totalKeepAliveTimeMs1){ 
 
