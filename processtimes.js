@@ -55,6 +55,16 @@ function getTimeMs(time){
 
 function getInitTime(timeZone){
 
+/*
+ * Get init time of today
+ * Receive a string of timeZone, if it is '' or null, 
+ * get new Date and set the time to all zero.
+ * 
+ * If it is not null, get new date by moment with the time zone, 
+ * and convert it to a normal date object.
+ * 
+ * */
+
     if(timeZone == '' || timeZone == null){
 
         var currentDate = new Date();
@@ -88,6 +98,37 @@ function getInitTime(timeZone){
 
 function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZone){
 
+    /*
+     * Check the last success time is match the keepAliveTime and lastAliveTime.
+     * Receive a array of keepAliveTimes,a date object of lastAliveTime,
+     * a date object of lastSuccess Time and a string of timeZone.
+     * 
+     * It will get a initDate by calling the getInitTime function,
+     * then convert lastSuccessTime,lastAliveTime(If it is not null) and keepAliveTime to ms.
+     *
+     * If the keepAliveTimeMs2 is NaN, lastSuccessTimeMs is bigger than totalKeepAliveTimeMs1,
+     * it will return a date object of totalKeepAliveTime.
+     * Otherwise, it will return undefined.
+     *
+     * If the keepAliveTimeMs2 is NaN, lastSuccessTimeMs is bigger than totalKeepAliveTimeMs1,
+     * but lastAliveTimeMs is bigger than totalKeepAliveTimeMs1,
+     * it will return undefined.
+     *
+     * If the keepAliveTimeMs2 is not NaN, 
+     * lastSuccessTimeMs is bigger than totalKeepAliveTimeMs1 
+     * and smaller than totalKeepAliveTimeMs2, 
+     * it will return a date object of totalKeepAliveTime.
+     * Otherwise, it will return undefined.
+     *
+     * If the keepAliveTimeMs2 is not NaN, 
+     * lastSuccessTimeMs is bigger than totalKeepAliveTimeMs1,
+     * but lastAliveTimeMs is bigger than totalKeepAliveTimeMs1,
+     * it will return undefined.
+     * Otherwise, it will return a date object of totalKeepAliveTime.
+     *
+     * 
+     * */
+
     var currentDateInited = getInitTime(timeZone).getTime();
 
     for(var i =0; i < keepAliveTimes.length; i++){
@@ -99,6 +140,8 @@ function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZon
         }catch(err){}
         var keepAliveTimeMs1 = keepAliveTimes[i];
         var keepAliveTimeMs2 = keepAliveTimes[i+1];
+
+        //Convert the KeepAliveTime to be a timestamp of current Date.
 
         var totalKeepAliveTimeMs1 = keepAliveTimeMs1 + currentDateInited;
         var totalKeepAliveTimeMs2 = keepAliveTimeMs2 + currentDateInited;
