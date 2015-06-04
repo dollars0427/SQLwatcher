@@ -121,16 +121,7 @@ function release(reset){
 
     if(reset){
 
-        if(timeZoneOffset == ''){
-
-            lastExecute = new Date().getTime();
-
-        }
-
-        else{
-
-            lastExecute = new moment.tz(new Date(),timeZoneOffset).valueOf();
-        }
+        lastExecute = new Date().getTime();
     }
 
     workerFree = true;
