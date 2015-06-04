@@ -4,7 +4,7 @@ var logger = log4js.getLogger('Logging');
 var moment = require('moment-timezone');
 var fs = require('fs');
 
-/*
+/**
  * Check time format "hh:mm"
  * @param{String} time
  * @return{Boolean} true
@@ -24,7 +24,7 @@ function checkTimeFormat(time){
     return true;
 }
 
-/*
+/**
  * Convert time to ms
  * @param{String} time
  * @return{Number} totalMs
@@ -53,7 +53,7 @@ function getTimeMs(time){
     return totalMs;
 }
 
-/*
+/**
  * Get the date of today with init time (00:00:00)
  * @param{string} timeZone
  * @return {Object(Date)} newCurrentDate
@@ -101,10 +101,10 @@ function getInitTime(timeZone){
     return newCurrentDate;
 }
 
-/*Check the success time is match keepAliveTime and lastAliveTime
+/**Check the success time is match keepAliveTime and lastAliveTime
  *@param {Array} keepAliveTimes
- *@param {Number(Timestamp)} lastAliveTime
- *@param {Number(Timestamp)} lastSuccessTime
+ *@param {Number['Timestamp']} lastAliveTime
+ *@param {Number['Timestamp'} lastSuccessTime
  *@param {String} timeZone
  */
 
