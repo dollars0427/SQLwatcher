@@ -21,7 +21,7 @@ exports['Test Checking Time Format Function'] ={
 
         var result = processTimes.checkTimeFormat(time);
 
-        test.equal(result,true,'It should return true!');
+        test.ok(result,true,'It should return true!');
 
         test.done();
     },
@@ -156,11 +156,13 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(46);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
-        test.ok(result,'It should had a result!');
+        test.ok(result !== null ,'The result should not be null!');
 
         test.done();
     },
@@ -193,11 +195,13 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(30);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
-        test.equal(result,undefined,'The result should be undefined!');
+        test.equal(result,null,'The result should be null!');
 
         test.done();
     },
@@ -230,11 +234,11 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(30);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
 
-        logger.info(result);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTimeMs,timeZone);
 
-        test.equal(result,undefined,'The result should be undefined!');
+        test.equal(result,null,'The result should be null!');
 
         test.done();
     },
@@ -273,11 +277,13 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(0);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
 
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTimeMs,timeZone);
+        
         logger.info(result);
 
-        test.ok(result,'It should had a result!');
+        test.ok(result !== null,'It should not be null!');
 
         test.done();
     },
@@ -316,11 +322,14 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(0);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
-        test.equal(result,undefined,'The result should be undefined!');
+        test.equal(result,null,'The result should be null!');
 
         test.done();
     },
@@ -356,12 +365,14 @@ exports['Test check time function'] = {
         lastCorrectTime.setHours(15);
 
         lastCorrectTime.setMinutes(0);
+ 
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
-        test.equal(result,undefined,'The result should be undefined!');
+        test.equal(result,null,'The result should be null!');
 
         test.done();
     },
@@ -394,11 +405,13 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(0);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
-        test.ok(result,'It should had a result!');
+        test.ok(result !== null,'The result should not be null!');
 
         test.done();
     },
@@ -430,12 +443,14 @@ exports['Test check time function'] = {
         lastCorrectTime.setHours(7);
 
         lastCorrectTime.setMinutes(30);
+        
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
-        test.equal(result,undefined,'The result should be undefined!');
+        test.equal(result,null,'The result should be null!');
 
         test.done();
     },
@@ -468,11 +483,13 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(0);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
-        test.ok(result,'It should have a result!');
+        test.ok(result !== null ,'The result should not be null!');
 
         test.done();
     },
@@ -505,11 +522,13 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(30);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
-        test.equal(result,undefined,'The result should be undefined!');
+        test.equal(result,null,'The result should be null!');
 
         test.done();
     },
@@ -529,6 +548,8 @@ exports['Test check time function'] = {
         
         lastAliveTime.setMinutes(47);
 
+        var lastAliveTimeMs = lastAliveTime.getTime();
+
         var timeZone = '';
 
         var lastCorrectTime = new Date();
@@ -537,11 +558,13 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(46);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTimeMs,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
-        test.equal(result,undefined,'The result should be undefined.');
+        test.equal(result,null,'The result should be null.');
 
         test.done();
     },
@@ -573,6 +596,8 @@ exports['Test check time function'] = {
 
         lastAliveTime.setMinutes(46);
 
+        var lastAliveTimeMs = lastAliveTime.getTime();
+
         var timeZone = '';
 
         var lastCorrectTime = new Date();
@@ -581,11 +606,13 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(3);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTimeMs,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
-        test.ok(result,'It should had a result.');
+        test.ok(result !== null, 'The result should not be null.');
 
         test.done();
     },
@@ -604,6 +631,8 @@ exports['Test check time function'] = {
         
         lastAliveTime.setMinutes(40);
 
+        var lastAliveTimeMs = lastAliveTime.getTime();
+
         var timeZone = '';
 
         var lastCorrectTime = new Date();
@@ -612,11 +641,13 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(46);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTimeMs,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
-        test.ok(result,'It should had a result.');
+        test.ok(result !== null, 'The result should not be null.');
 
         test.done();
     },
@@ -635,6 +666,8 @@ exports['Test check time function'] = {
         
         lastAliveTime.setMinutes(2);
 
+        var lastAliveTimeMs = lastAliveTime.getTime();
+
         var timeZone = 'America/Los_Angeles';
 
         var lastCorrectTime = new Date();
@@ -643,11 +676,13 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(1);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTimeMs,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
-        test.equal(result,undefined,'The result should be undefined.');
+        test.equal(result,null,'The result should be null.');
 
         test.done();
     },
@@ -666,6 +701,8 @@ exports['Test check time function'] = {
         
         lastAliveTime.setMinutes(2);
 
+        var lastAliveTimeMs = lastAliveTime.getTime();
+
         var timeZone = 'America/Los_Angeles';
 
         var lastCorrectTime = new Date();
@@ -674,11 +711,13 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(1);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTimeMs,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
-        test.equal(result,undefined,'The result should be undefined.');
+        test.equal(result,null,'The result should be null.');
 
         test.done();
     },
@@ -697,6 +736,8 @@ exports['Test check time function'] = {
         
         lastAliveTime.setMinutes(0);
 
+        var lastAliveTimeMs = lastAliveTime.getTime();
+
         var timeZone = 'America/Los_Angeles';
 
         var lastCorrectTime = new Date();
@@ -705,11 +746,13 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(1);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTimeMs,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
-        test.ok(result,'It should had a result.');
+        test.ok(result !== null,'The result should not be null.');
 
         test.done();
     },
@@ -724,6 +767,8 @@ exports['Test check time function'] = {
 
         var lastAliveTime = new Date();
 
+        var lastAliveTimeMs = lastAliveTime.getTime();
+
         lastAliveTime.setHours(0);
         
         lastAliveTime.setMinutes(0);
@@ -736,7 +781,9 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(1);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTimeMs,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
@@ -772,6 +819,8 @@ exports['Test check time function'] = {
         
         lastAliveTime.setMinutes(2);
 
+        var lastAliveTimeMs = lastAliveTime.getTime();
+
         var timeZone = 'America/Los_Angeles';
 
         var lastCorrectTime = new Date();
@@ -780,7 +829,9 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(2);
 
-        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var lastCorrectTimeMs = lastCorrectTime.getTime();
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTimeMs,lastCorrectTimeMs,timeZone);
 
         logger.info(result);
 
