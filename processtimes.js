@@ -129,12 +129,6 @@ function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZon
     //Convert lastSuccessTime,lastAliveTime(If it is not null) and keepAliveTime to ms.
 
     for(var i =0; i < keepAliveTimes.length; i++){
-        var lastSuccessTimeMs = lastSuccessTime.getTime();
-        var lastAliveTimeMs = null;
-
-        try{
-            lastAliveTimeMs = lastAliveTime.getTime();
-        }catch(err){}
         var keepAliveTimeMs1 = keepAliveTimes[i];
         var keepAliveTimeMs2 = keepAliveTimes[i+1];
 
@@ -144,14 +138,14 @@ function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZon
         var totalKeepAliveTimeMs2 = keepAliveTimeMs2 + currentDateInited;
 
         logger.debug('keepAliveTimes: ', new Date(totalKeepAliveTimeMs1));
-        logger.debug('lastSuccessTime: ', new Date(lastSuccessTimeMs));
+        logger.debug('lastSuccessTime: ', new Date(lastSuccessTime));
 
         /*If the keepAliveTimeMs2 is NaN, 
          *lastSuccessTimeMs is bigger than totalKeepAliveTimeMs1,
          *return a date object of totalKeepAliveTime.
          */
 
-        if(isNaN(keepAliveTimeMs2) && lastSuccessTimeMs >= totalKeepAliveTimeMs1){
+        if(isNaN(keepAliveTimeMs2) && lastSuccessTime >= totalKeepAliveTimeMs1){
 
             if(lastAliveTime == null){
 
@@ -164,7 +158,7 @@ function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZon
             *it will return undefined.
             */
 
-            if(lastAliveTimeMs >= totalKeepAliveTimeMs1){ 
+            if(lastAliveTime >= totalKeepAliveTimeMs1){ 
 
                 return null;
 
@@ -179,7 +173,7 @@ function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZon
          *it will return a date object of totalKeepAliveTime.
          */
 
-        if(lastSuccessTimeMs >= totalKeepAliveTimeMs1 && lastSuccessTimeMs < totalKeepAliveTimeMs2){
+        if(lastSuccessTime >= totalKeepAliveTimeMs1 && lastSuccessTime < totalKeepAliveTimeMs2){
             if(lastAliveTime == null){
 
                 return new Date(totalKeepAliveTimeMs1);
@@ -192,7 +186,7 @@ function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZon
              *it will be skip.
              */
 
-            if(lastAliveTimeMs >= totalKeepAliveTimeMs1){ 
+            if(lastAliveTime >= totalKeepAliveTimeMs1){ 
 
                 continue;
             }

@@ -43,7 +43,7 @@ var mailConfig = nconf.get('mail');
 var checkTimeFormat = processTimes.checkTimeFormat;
 var getTimeMs = processTimes.getTimeMs;
 var getInitTime = processTimes.getInitTime;
-var checkTime = processTimes.checkTime;
+var checkKeepAliveTime = processTimes.checkKeepAliveTime;
 
 var mysqlOpt = {
     host:dbConfig.host,
@@ -385,8 +385,14 @@ function runSQL(){
         //call the check alive time function to
         //check the last sucess time of excute query is match the keep alive time.
 
+        var lastSuccessTime = result['time'].getTime();
+
+        try{
+            lastAliveTime = lastAliveTime.getTime();
+        }catch(err){}
+
         var checkKeepAliveTimeSuccess = 
-            checkKeepAliveTime(keepAliveTimes,lastAliveTime,result['time'],timeZoneOffset);
+            checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZone);
 
         //If checkTimeSuccess had return anything, send alive mail.
 
@@ -403,7 +409,7 @@ function runSQL(){
 
                 logger.info(mail);
 
-                logger.info(checkTimeSuccess);
+                logger.info(checkKeepAliveTimeSuccess);
 
                 lastAliveTime = new Date();
 
