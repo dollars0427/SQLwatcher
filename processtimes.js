@@ -18,7 +18,7 @@ function checkTimeFormat(time){
 
     if(!checking){
 
-        throw new Error('TIME_FORMAT_ERROR');
+        return false;
     }
 
     return true;
@@ -102,10 +102,11 @@ function getInitTime(timeZone){
 }
 
 /**Check the success time is match keepAliveTime and lastAliveTime
- *@param {Array} keepAliveTimes
- *@param {Number['Timestamp']} lastAliveTime
- *@param {Number['Timestamp'} lastSuccessTime
- *@param {String} timeZone
+ * @param {Array} keepAliveTimes
+ * @param {Number['Timestamp']} lastAliveTime
+ * @param {Number['Timestamp'} lastSuccessTime
+ * @param {String} timeZone
+ * @return {Boolean} true
  */
 
 function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZone){
