@@ -10,6 +10,13 @@ var when = promise.when;
 var fs = require('fs');
 var nconf = require('nconf');
 
+var settingPath = process.argv[2];
+var queryListPath = process.argv[3];
+
+if(!settingPath || !queryListPath){
+    printUsage();
+    process.exit(1);
+}
 nconf.argv()
     .env()
     .file({file:settingPath})
@@ -18,13 +25,6 @@ var database = require('./database');
 var email = require('./email');
 var processTimes = require('./processtimes');
 
-var settingPath = process.argv[2];
-var queryListPath = process.argv[3];
-
-if(!settingPath || !queryListPath){
-    printUsage();
-    process.exit(1);
-}
 
 function printUsage(){
 
@@ -132,7 +132,7 @@ function runSQL(){
     
     var now = new Date().getTime();
 
-    if (now - lastExecute < times){
+    if (now - lastExecute < time){
 
         release();
 
@@ -370,10 +370,11 @@ function runSQL(){
             subject: mailConfig.alive.subject
         };
 
-        var checkTimeSuccess = checkTime(keepAliveTimes,lastAliveTime,result['time'],timeZoneOffset);
+        var checkKeepAliveTimeSuccess = 
+            checkKeepAliveTime(keepAliveTimes,lastAliveTime,result['time'],timeZoneOffset);
 
 
-        if(checkTimeSuccess){
+        if(checkKeepAliveTimeSuccess){
 
             email.sendAliveMail(mailConnection,opt,function(err,mail){
 

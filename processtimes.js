@@ -4,11 +4,14 @@ var logger = log4js.getLogger('Logging');
 var moment = require('moment-timezone');
 var fs = require('fs');
 
+function checkTimeFormat(time){
+
 /*
  * Check time format "hh:mm"
- *
+ * Receive a string of time,
+ * If the time format is wrong, throw error,
+ * else retun true.
  * */
-function checkTimeFormat(time){
 
     var checking = time.match(/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/);
 
@@ -22,6 +25,15 @@ function checkTimeFormat(time){
 
 
 function getTimeMs(time){
+
+/*
+ * Convert time to ms
+ * Receive a string of time,and call checkTimeFormat to make sure the format is right.
+ * 
+ * After that, split the time and convert it to a int, 
+ * then convert it again to ms, add them together, and return it.
+ * 
+ * */
 
     checkTimeFormat(time);
 
@@ -74,7 +86,7 @@ function getInitTime(timeZone){
     return newCurrentDate;
 }
 
-function checkTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZone){
+function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZone){
 
     var currentDateInited = getInitTime(timeZone).getTime();
 
@@ -132,5 +144,5 @@ module.exports = {
     checkTimeFormat:checkTimeFormat,
     getTimeMs:getTimeMs,
     getInitTime:getInitTime,
-    checkTime:checkTime
+    checkKeepAliveTime:checkKeepAliveTime
 }
