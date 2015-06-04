@@ -118,8 +118,24 @@ exports['Test Get Time Function'] = {
         test.equal(result.getTime(),correctResultMs,'The time should be covert to correct time offset !');
 
         test.done();
+    },
 
-    }   
+    'Test getInitTime Incorrect(Wrong time zone offset)':function(test){
+
+        var timeZone = 'HelloWorld';
+
+        var currentDate = new Date();
+
+        currentDate.setHours(8);
+        currentDate.setMinutes(0);
+        currentDate.setMilliseconds(0);
+        
+        var result = processTimes.getInitTime(timeZone);
+
+        test.ok(result !== currentDate.getTime(),'It should not get any result.');
+
+        test.done();
+    }     
 },
 
 exports['Test check time function'] = {
@@ -198,6 +214,43 @@ exports['Test check time function'] = {
         test.done();
     },
 
+    'Test Send Alive Mail Time Incorrect(0,No timeZone and lastAlive Time)':function(test){
+
+        var keepAliveTime = ['0'];
+
+        var splitedTime = keepAliveTime[0].split(':');
+
+        var hour = splitedTime[0];
+
+        var minute = splitedTime[1];
+
+        var hourMs = hour * 60 * 60 * 1000;
+
+        var minMs = minute * 60 *1000;
+
+        var totalMs = hourMs + minMs;
+
+        keepAliveTime[0] = totalMs;
+
+        var lastAliveTime = null;
+
+        var timeZone = '';
+
+        var lastCorrectTime = new Date();
+
+        lastCorrectTime.setHours(17);
+
+        lastCorrectTime.setMinutes(30);
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+
+        logger.info(result);
+
+        test.equal(result,undefined,'The result should be undefined!');
+
+        test.done();
+    },
+
     'Test Send Alive Mail Time Correct(17:45,18:00,No timeZone and lastAlive Time)':function(test){
 
         var keepAliveTime = ['17:45','18:00'];
@@ -236,7 +289,50 @@ exports['Test check time function'] = {
 
         logger.info(result);
 
-        test.ok(result,'The result should be a date!');
+        test.ok(result,'It should had a result!');
+
+        test.done();
+    },
+
+    'Test Send Alive Mail Time Incorrect(0,1,No timeZone and lastAlive Time)':function(test){
+
+        var keepAliveTime = ['0','1'];
+
+        for(var i =0; i < keepAliveTime.length; i++){
+
+            var splitedTime = keepAliveTime[i].split(':');
+
+            var hour = splitedTime[0];
+
+            var minute = splitedTime[1];
+
+            var hourMs = hour * 60 * 60 * 1000;
+
+            var minMs = minute * 60 *1000;
+
+            var totalMs = hourMs + minMs;
+
+            keepAliveTime[i] = totalMs;
+
+        }
+
+        logger.debug(keepAliveTime);
+
+        var lastAliveTime = null;
+
+        var timeZone = '';
+
+        var lastCorrectTime = new Date();
+
+        lastCorrectTime.setHours(18);
+
+        lastCorrectTime.setMinutes(0);
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+
+        logger.info(result);
+
+        test.equal(result,undefined,'The result should be undefined!');
 
         test.done();
     },
