@@ -113,11 +113,11 @@ function getInitTime(timeZone){
  * it mean the script can send alive mail. Otherwise if it return null, 
  * it should not send any mail.
  *
- * @param {Array} keepAliveTimes
- * @param {Number['Timestamp']} lastAliveTime
- * @param {Number['Timestamp'} lastSuccessTime
+ * @param {Number[]} keepAliveTimes (Timestamp, in ms)
+ * @param {Number} lastAliveTime (Timestamp, in ms)
+ * @param {Number} lastSuccessTime (Timestamp, in ms)
  * @param {String} timeZone
- * @return {Object(Date)} new Date(totalKeepAliveTimeMs1)
+ * @return {Date} Date, null for mismatch 
  */
 
 function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZone){
