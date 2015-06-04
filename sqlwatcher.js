@@ -98,7 +98,7 @@ for(var i = 0; i < keepAliveTimes.length; i++){
 
 keepAliveTimes.sort();
 
-//The script will run again after the setted time.
+//The script will run after the setted time.
 
 setInterval(runSQL,time);
 
@@ -119,31 +119,31 @@ function getLock(){
 
 function release(reset){
 
+    //If reset is defined, reset the lastExecute time
+
     if(reset){
 
         lastExecute = new Date().getTime();
     }
+
+    //Otherwise, set worker to free
 
     workerFree = true;
 }
 
 function runSQL(){
 
+    //If cannot getLock, it will be exit.
+
     if(!getLock()){
 
         return;
     }
 
-    if(timeZoneOffset == ''){
-
-        var now = new Date().getTime();
-
-    }
-
-    else{
-
-        var now = new moment.tz(new Date(),timeZoneOffset).valueOf();
-    }
+    //Otherwise, it will check the time of now and last excute, 
+    //if it is smaller then setted time it will run release and exit.
+    
+    var now = new Date().getTime();
 
     if (now - lastExecute < times){
 
