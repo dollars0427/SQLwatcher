@@ -59,6 +59,23 @@ exports['Test Get Time Function'] = {
         test.done();
     },
 
+    'Test getTimeMs Incorrect(25:00)':function(test){
+
+        var time = '25:00';
+
+        try{
+
+            var result = processTimes.getTimeMs(time);
+
+        }catch(ex){
+
+            test.ok(ex,'The function must throw error!');
+
+            test.done();
+
+        }
+    },
+
     'Test getInitTime Correct(No time zone offset)':function(test){
 
         var timeZone = '';
@@ -135,7 +152,7 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(46);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
 
         logger.info(result);
 
@@ -172,7 +189,7 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(30);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
 
         logger.info(result);
 
@@ -215,7 +232,7 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(0);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
 
         logger.info(result);
 
@@ -256,7 +273,7 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(0);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
 
         logger.info(result);
 
@@ -293,7 +310,7 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(0);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
 
         logger.info(result);
 
@@ -330,7 +347,7 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(30);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
 
         logger.info(result);
 
@@ -362,7 +379,7 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(46);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
 
         logger.info(result);
 
@@ -406,7 +423,7 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(3);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
 
         logger.info(result);
 
@@ -437,7 +454,7 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(46);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
 
         logger.info(result);
 
@@ -468,7 +485,7 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(1);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
 
         logger.info(result);
 
@@ -499,7 +516,7 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(1);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
 
         logger.info(result);
 
@@ -530,7 +547,7 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(1);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
 
         logger.info(result);
 
@@ -561,7 +578,7 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(1);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
 
         logger.info(result);
 
@@ -605,7 +622,7 @@ exports['Test check time function'] = {
 
         lastCorrectTime.setMinutes(2);
 
-        var result = processTimes.checkTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
 
         logger.info(result);
 
