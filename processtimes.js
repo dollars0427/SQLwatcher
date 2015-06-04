@@ -107,12 +107,17 @@ function getInitTime(timeZone){
     return newCurrentDate;
 }
 
-/**Check the success time is match keepAliveTime and lastAliveTime
+/**
+ * Check the success time is match keepAliveTime and lastAliveTime.
+ * It will return the date which convent from totalKeepAliveTimeMs, 
+ * it mean the script can send alive mail. Otherwise if it return null, 
+ * it should not send any mail.
+ *
  * @param {Array} keepAliveTimes
  * @param {Number['Timestamp']} lastAliveTime
  * @param {Number['Timestamp'} lastSuccessTime
  * @param {String} timeZone
- * @return {Boolean} true
+ * @return {Object(Date)} new Date(totalKeepAliveTimeMs1)
  */
 
 function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZone){
@@ -161,7 +166,7 @@ function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZon
 
             if(lastAliveTimeMs >= totalKeepAliveTimeMs1){ 
 
-                return undefined;
+                return null;
 
             }
 
