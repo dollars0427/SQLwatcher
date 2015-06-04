@@ -21,7 +21,7 @@ exports['Test Checking Time Format Function'] ={
 
         var result = processTimes.checkTimeFormat(time);
 
-        test.equal(result,true,'It should had a result!');
+        test.equal(result,true,'It should return true!');
 
         test.done();
     },
@@ -30,15 +30,9 @@ exports['Test Checking Time Format Function'] ={
 
         var time = '24:00';
 
-        try{
+        var result = processTimes.checkTimeFormat(time);
 
-            var result = processTimes.checkTimeFormat(time);
-
-        }catch(ex){
-
-            test.ok(ex,'The function must throw error!');
-
-        }
+        test.equal(result,false,'The function must return false!');
 
         test.done();
     }
