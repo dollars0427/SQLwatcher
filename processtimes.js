@@ -4,14 +4,15 @@ var logger = log4js.getLogger('Logging');
 var moment = require('moment-timezone');
 var fs = require('fs');
 
-function checkTimeFormat(time){
-
 /*
  * Check time format "hh:mm"
- * Receive a string of time,
- * If the time format is wrong, throw error,
- * else retun true.
+ * @param{String} time
+ * @return{Boolean} true
  * */
+
+function checkTimeFormat(time){
+
+    //If the time format is wrong, throw error.
 
     var checking = time.match(/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/);
 
@@ -23,19 +24,19 @@ function checkTimeFormat(time){
     return true;
 }
 
+/*
+ * Convert time to ms
+ * @param{String} time
+ * @return{Number} totalMs
+ */
 
 function getTimeMs(time){
 
-/*
- * Convert time to ms
- * Receive a string of time,and call checkTimeFormat to make sure the format is right.
- * 
- * After that, split the time and convert it to a int, 
- * then convert it again to ms, add them together, and return it.
- * 
- * */
+    //Call checkTimeFormat to make sure the format is right.
 
     checkTimeFormat(time);
+
+    //Split the time and convert it to ms
 
     var splitedTime = time.split(':');
 
@@ -50,22 +51,19 @@ function getTimeMs(time){
     var totalMs = hourMs + minMs;
 
     return totalMs;
-
 }
+
+/*
+ * Get the date of today with init time (00:00:00)
+ * @param{string} timeZone
+ * @return {Object(Date)} newCurrentDate
+ */
 
 function getInitTime(timeZone){
 
-/*
- * Get init time of today
- * Receive a string of timeZone, if it is '' or null, 
- * get new Date and set the time to all zero.
- * 
- * If it is not null, get new date by moment with the time zone, 
- * and convert it to a normal date object.
- * 
- * */
-
     if(timeZone == '' || timeZone == null){
+
+        //Get the date of today, and set the time to 00:00:00
 
         var currentDate = new Date();
 
@@ -78,9 +76,14 @@ function getInitTime(timeZone){
 
     }
 
+    //If user setted timezone, using moment to convert the date with timezone
+
     var currentDate = new Date();
 
     var currentDateTz = new moment.tz(new Date(),timeZone);
+
+    //Make sure the month and date of converted date is same of currentDate
+    //After that, set it to 00:00:00
 
     currentDateTz.month(currentDate.getMonth());
     currentDateTz.date(currentDate.getDate());
@@ -89,6 +92,8 @@ function getInitTime(timeZone){
     currentDateTz.seconds(0);
     currentDateTz.milliseconds(0);
 
+    //Get the ms and convert it to date object.
+
     var currentDateMs = currentDateTz.valueOf();
 
     var newCurrentDate = new Date(currentDateMs)
@@ -96,40 +101,20 @@ function getInitTime(timeZone){
     return newCurrentDate;
 }
 
+/*Check the success time is match keepAliveTime and lastAliveTime
+ *@param {Array} keepAliveTimes
+ *@param {Number(Timestamp)} lastAliveTime
+ *@param {Number(Timestamp)} lastSuccessTime
+ *@param {String} timeZone
+ */
+
 function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZone){
 
-    /*
-     * Check the last success time is match the keepAliveTime and lastAliveTime.
-     * Receive a array of keepAliveTimes,a date object of lastAliveTime,
-     * a date object of lastSuccess Time and a string of timeZone.
-     * 
-     * It will get a initDate by calling the getInitTime function,
-     * then convert lastSuccessTime,lastAliveTime(If it is not null) and keepAliveTime to ms.
-     *
-     * If the keepAliveTimeMs2 is NaN, lastSuccessTimeMs is bigger than totalKeepAliveTimeMs1,
-     * it will return a date object of totalKeepAliveTime.
-     * Otherwise, it will return undefined.
-     *
-     * If the keepAliveTimeMs2 is NaN, lastSuccessTimeMs is bigger than totalKeepAliveTimeMs1,
-     * but lastAliveTimeMs is bigger than totalKeepAliveTimeMs1,
-     * it will return undefined.
-     *
-     * If the keepAliveTimeMs2 is not NaN, 
-     * lastSuccessTimeMs is bigger than totalKeepAliveTimeMs1 
-     * and smaller than totalKeepAliveTimeMs2, 
-     * it will return a date object of totalKeepAliveTime.
-     * Otherwise, it will return undefined.
-     *
-     * If the keepAliveTimeMs2 is not NaN, 
-     * lastSuccessTimeMs is bigger than totalKeepAliveTimeMs1,
-     * but lastAliveTimeMs is bigger than totalKeepAliveTimeMs1,
-     * it will return undefined.
-     * Otherwise, it will return a date object of totalKeepAliveTime.
-     *
-     * 
-     * */
+    //Get a initDate by calling the getInitTime function
 
     var currentDateInited = getInitTime(timeZone).getTime();
+
+    //Convert lastSuccessTime,lastAliveTime(If it is not null) and keepAliveTime to ms.
 
     for(var i =0; i < keepAliveTimes.length; i++){
         var lastSuccessTimeMs = lastSuccessTime.getTime();
@@ -149,6 +134,11 @@ function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZon
         logger.debug('keepAliveTimes: ', new Date(totalKeepAliveTimeMs1));
         logger.debug('lastSuccessTime: ', new Date(lastSuccessTimeMs));
 
+        /*If the keepAliveTimeMs2 is NaN, 
+         *lastSuccessTimeMs is bigger than totalKeepAliveTimeMs1,
+         *return a date object of totalKeepAliveTime.
+         */
+
         if(isNaN(keepAliveTimeMs2) && lastSuccessTimeMs >= totalKeepAliveTimeMs1){
 
             if(lastAliveTime == null){
@@ -156,6 +146,11 @@ function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZon
                 return new Date(totalKeepAliveTimeMs1);
             }
 
+            /*If the keepAliveTimeMs2 is NaN, 
+            *lastSuccessTimeMs is bigger than totalKeepAliveTimeMs1,
+            *but lastAliveTimeMs is bigger than totalKeepAliveTimeMs1,
+            *it will return undefined.
+            */
 
             if(lastAliveTimeMs >= totalKeepAliveTimeMs1){ 
 
@@ -166,12 +161,24 @@ function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZon
             return new Date(totalKeepAliveTimeMs1);
         }
 
+        /*If the keepAliveTimeMs2 is not NaN, 
+         *lastSuccessTimeMs is bigger than totalKeepAliveTimeMs1 
+         *and smaller than totalKeepAliveTimeMs2, 
+         *it will return a date object of totalKeepAliveTime.
+         */
+
         if(lastSuccessTimeMs >= totalKeepAliveTimeMs1 && lastSuccessTimeMs < totalKeepAliveTimeMs2){
             if(lastAliveTime == null){
 
                 return new Date(totalKeepAliveTimeMs1);
 
             }
+
+            /*If the keepAliveTimeMs2 is not NaN, 
+             *lastSuccessTimeMs is bigger than totalKeepAliveTimeMs1,
+             *but lastAliveTimeMs is bigger than totalKeepAliveTimeMs1,
+             *it will be skip.
+             */
 
             if(lastAliveTimeMs >= totalKeepAliveTimeMs1){ 
 
