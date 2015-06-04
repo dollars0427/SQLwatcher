@@ -4,12 +4,22 @@ var logger = log4js.getLogger('Logging');
 
 function sendAliveMail (connection,opt,callback){
 
+/**
+ *Receive the connection of mail server, mail option and callback,
+ *Then send the alive mail by the these value.
+ * */
+
     logger.debug('Sending Alive Mail......');
 
     connection.send(opt,callback);
 }
 
 function sendWarningMail(connection,opt,callback){
+
+/**
+ *Receive the connection of mail server, mail option and callback,
+ *Then send the warning mail by the these value.
+ * */
 
     logger.debug('Sending Warning Mail......');
 
