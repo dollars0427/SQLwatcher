@@ -18,8 +18,8 @@ if(!settingPath || !queryListPath){
     process.exit(1);
 }
 nconf.argv()
-    .env()
-    .file({file:settingPath})
+.env()
+.file({file:settingPath})
 
 var database = require('./database');
 var email = require('./email');
@@ -65,10 +65,9 @@ var keepAliveTimes = timerConfig.keepalivetimes;
 
 var timeZone = timerConfig.timezone;
 
-/*
- * Convert the keepAliveTimes to ms and sort it.
- * 
-* */
+
+//Convert the keepAliveTimes to ms and sort it.
+
 
 for(var i = 0; i < keepAliveTimes.length; i++){
 
@@ -86,50 +85,66 @@ keepAliveTimes.sort();
 
 setInterval(runSQL,500);
 
+/**
+ *Check the worker status and lock it.
+ *
+ * @return {bool} true 
+ *
+ */
+
 function getLock(){
 
-    /**If the workerFree variable had not defined, return false.
-    *Otherwise, set it to false and return true.
-    */
+    //If the worker status is not free, return false represent lock failed.
 
     if(!workerFree){
 
         return false;
     }
 
+    //If the worker status is free, lock it and return true represent lock success.
+
     workerFree = false;
 
     return true;
 }
 
+/**
+ * Reset last execute and set worker free 
+ *
+ * @param {boolean} reset
+ *
+ */
+
 function release(reset){
 
-    /*If reset is defined, reset the lastExecute time
-     * Otherwise, set worker to free
-     * */
+    //If reset is defined, reset the lastExecute time
 
     if(reset){
 
         lastExecute = new Date().getTime();
     }
 
+    //Set worker status to free.
 
     workerFree = true;
 }
 
-function runSQL(){
+/*
+ *Check current time, if it match the setted time will conncet to database.
+ */
 
-    /* Lock the worker,if cannot getLock, it will be exit.
-     * Otherwise, it will check the time of now and last excute, 
-     * if the difference of them is smaller then setted time,
-     * release the worker and exit.
-     * */
+function runSQL(){
 
     if(!getLock()){
 
         return;
     }
-    
+
+    /*
+     * If the difference of current time and last execute time is smaller
+     * than setted time, run release to reset the lastExecute time and exit.
+     */
+
     var now = new Date().getTime();
 
     if (now - lastExecute < time){
@@ -162,24 +177,20 @@ function runSQL(){
         return p;
     }
 
+    /**
+     *
+     * Get query from queryList from the index in the opt object,
+     * then excute it.
+     *
+     * @param {object["idx"]} opt
+     *
+     */
 
     function _runSQL(opt){
 
-        /**
-         * It will receive a opt object which havd a index,
-         * And get query from queryList by the index.
-         * If there are no any query,it will resolve the promise.
-         * Otherwise, call the excuteMySQLQuery function by passing
-         * dbConnection,query and callback function.
-         * 
-         * If Detected any error, reject the promise with a object
-         * which have time,error and excuted query.
-         *
-         * Otherwise, resolve the promise with the opt object which have index + 1.
-         *
-         **/
-
         var p = new promise.defer();
+
+        //Get query from queryList by the index.
 
         var query = queryConfig[opt["idx"]];
 
@@ -192,7 +203,12 @@ function runSQL(){
 
         database.excuteMySQLQuery(dbConnection,query,function(err,result){
 
-            if(err){                logger.error('Detected Error! ', err);
+            if(err){                
+
+                //If Detected any error, reject the promise with a object
+                //which have time,error and excuted query. 
+
+                logger.error('Detected Error! ', err);
 
                 p.reject({
                     time:new Date(),
@@ -202,7 +218,7 @@ function runSQL(){
 
                 return;
             }
-
+            //resolve the promise with the opt object which have index + 1.
             logger.info('SQL success:', query);
 
             p.resolve({ idx: opt["idx"] + 1});
@@ -243,23 +259,14 @@ function runSQL(){
 
     function runQueries(){
 
-        /**
-         * If all of query can be excute successful,Run runSucess.
-         * Otherwise, run runFailed.
-         *
-         * If there no any query excuted,
-         * Store all of the _runSQL function in a array, 
-         * and using promise.then to run them by order.
-         * */
-
         var p = new promise.defer();
+
+        //If all of query can be excute successful,Run runSucess.
 
         function runSucess(){
 
             /**
-             *
              *Save the lastSucess time to opt amd resolve with this object
-             *
              **/
 
             logger.warn('Run Sucess!');
@@ -272,6 +279,8 @@ function runSQL(){
             p.resolve(opt);
 
         }
+
+        //If there are any query can not be excute successful, Run runFailed.
 
         function runFailed(opt){
 
@@ -288,6 +297,8 @@ function runSQL(){
 
         }
 
+        // Create a function list and use promise.when to run it by order.
+
         var funList = [];
 
         for(var i = 0; i< queryConfig.length; i++){
@@ -302,17 +313,15 @@ function runSQL(){
         return p;
     }
 
-    function sendNotification(result){
+    /**
+     *
+     * Check the SQL excute reuslt and send notification mail.
+     *
+     * @param {object(time,err,sql)} result
+     *
+     */
 
-        /**
-         * Receive a result which have time and may have error.
-         * If the result of excute sql have error, 
-         * send warning mail with the text in config,result time and excuted query.
-         *
-         * Otherwise, call the check alive time function to
-         * check the last sucess time of excute query is match the keep alive time.
-         * If checkTimeSuccess had return anything, send alive mail and resolve the promise. 
-         * */
+    function sendNotification(result){
 
         var p = new promise.defer();
 
@@ -324,6 +333,9 @@ function runSQL(){
             ssl:mailConfig.server.ssl,
             tls:mailConfig.server.tls
         });
+         
+        //If the result of excute sql have error, 
+        //send warning mail with the text in config,result time and excuted query.
 
         if(result['err']){
 
@@ -370,9 +382,13 @@ function runSQL(){
             subject: mailConfig.alive.subject
         };
 
+        //call the check alive time function to
+        //check the last sucess time of excute query is match the keep alive time.
+
         var checkKeepAliveTimeSuccess = 
             checkKeepAliveTime(keepAliveTimes,lastAliveTime,result['time'],timeZoneOffset);
 
+        //If checkTimeSuccess had return anything, send alive mail.
 
         if(checkKeepAliveTimeSuccess){
 
