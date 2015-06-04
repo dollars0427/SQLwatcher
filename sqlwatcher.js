@@ -84,7 +84,7 @@ for(var i = 0; i < keepAliveTimes.length; i++){
 
 keepAliveTimes.sort();
 
-setInterval(runSQL,time);
+setInterval(runSQL,500);
 
 function getLock(){
 
