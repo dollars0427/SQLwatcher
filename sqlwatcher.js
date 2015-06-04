@@ -140,8 +140,6 @@ function runSQL(){
 
     }
 
-    //If the difference of them is bigger then setted time,connect to database.
-
     var dbConnection = mysql.createConnection(mysqlOpt);
 
     function connectDatabase(){
@@ -167,7 +165,19 @@ function runSQL(){
 
     function _runSQL(opt){
 
-        //After connect to database, get query from queryList,
+        /**
+         * It will receive a opt object which havd a index,
+         * And get query from queryList by the index.
+         * If there are no any query,it will resolve the promise.
+         * Otherwise, call the excuteMySQLQuery function by passing
+         * dbConnection,query and callback function.
+         * 
+         * If Detected any error, reject the promise with a object
+         * which have time,error and excuted query.
+         *
+         * Otherwise, resolve the promise with the opt object which have index + 1.
+         *
+         **/
 
         var p = new promise.defer();
 
@@ -180,16 +190,9 @@ function runSQL(){
             return p;
         }
 
-        //And then excute it.
-
         database.excuteMySQLQuery(dbConnection,query,function(err,result){
 
-            if(err){
-
-                //If Detected any error, reject the promise with a object
-                //which have time,error and excuted query.
-
-                logger.error('Detected Error! ', err);
+            if(err){                logger.error('Detected Error! ', err);
 
                 p.reject({
                     time:new Date(),
@@ -199,8 +202,6 @@ function runSQL(){
 
                 return;
             }
-
-            //Otherwise, resolve the promise.
 
             logger.info('SQL success:', query);
 
@@ -213,7 +214,9 @@ function runSQL(){
 
     function complete(){
 
-        //After finish all the task, end the database connection and release the worker.
+        /**
+         * After finish all the task, end the database connection and release the worker.
+         * */
 
         var p = new promise.defer();
 
@@ -240,16 +243,27 @@ function runSQL(){
 
     function runQueries(){
 
-        //If all of query can be excute successful,Run runSucess.
-        //Otherwise, run runFailed
+        /**
+         * If all of query can be excute successful,Run runSucess.
+         * Otherwise, run runFailed.
+         *
+         * If there no any query excuted,
+         * Store all of the _runSQL function in a array, 
+         * and using promise.then to run them by order.
+         * */
 
         var p = new promise.defer();
 
         function runSucess(){
 
+            /**
+             *
+             *Save the lastSucess time to opt amd resolve with this object
+             *
+             **/
+
             logger.warn('Run Sucess!');
 
-            //Save the lastSucess time to opt amd resolve with this object
 
             var opt = {
                 time: new Date(),
@@ -261,8 +275,10 @@ function runSQL(){
 
         function runFailed(opt){
 
-            //Show the error and query in the object which called opt, 
-            //then resolve it with this object  
+            /**
+             * Show the error and query in the object which called opt, 
+             * then resolve it with this object.
+             * */
 
             logger.warn('Run Failed:');
             logger.warn(opt.err);
@@ -273,9 +289,6 @@ function runSQL(){
         }
 
         var funList = [];
-
-        //Store all of the _runSQL function in a array, 
-        //and using promise.then to run them by order.
 
         for(var i = 0; i< queryConfig.length; i++){
 
@@ -291,9 +304,17 @@ function runSQL(){
 
     function sendNotification(result){
 
-        var p = new promise.defer();
+        /**
+         * Receive a result which have time and may have error.
+         * If the result of excute sql have error, 
+         * send warning mail with the text in config,result time and excuted query.
+         *
+         * Otherwise, call the check alive time function to
+         * check the last sucess time of excute query is match the keep alive time.
+         * If checkTimeSuccess had return anything, send alive mail and resolve the promise. 
+         * */
 
-        //Create the connection with mail server by config
+        var p = new promise.defer();
 
         var mailConnection =  mailer.server.connect({
             user:mailConfig.server.user,
@@ -303,9 +324,6 @@ function runSQL(){
             ssl:mailConfig.server.ssl,
             tls:mailConfig.server.tls
         });
-
-        //If the result of excute sql have error, 
-        //send warning mail with the text in config,result time and excuted query.
 
         if(result['err']){
 
@@ -338,10 +356,6 @@ function runSQL(){
 
             return;
         }
-
-        //Otherwise, call the check time function to
-        //check the last sucess time of excute query.
-
         var text = mailConfig.alive.text 
         + ' \n'
         + ' \n'
@@ -358,7 +372,6 @@ function runSQL(){
 
         var checkTimeSuccess = checkTime(keepAliveTimes,lastAliveTime,result['time'],timeZoneOffset);
 
-        //If checkTimeSuccess had return anything, send alive mail and resolve the promise. 
 
         if(checkTimeSuccess){
 
