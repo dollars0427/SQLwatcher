@@ -18,8 +18,12 @@ var database = require('./database');
 var email = require('./email');
 var processTimes = require('./processtimes');
 
+//Get the path of config file and querylist list from argv
+
 var settingPath = process.argv[2];
 var queryListPath = process.argv[3];
+
+//If user had not input the path of config file or querylist, print usage and exit
 
 if(!settingPath || !queryListPath){
     printUsage();
@@ -32,17 +36,23 @@ function printUsage(){
 
     console.log(out);
 }
+
+//Loading query list and get the config from file
+
 var queryListFile = JSON.parse(fs.readFileSync(queryListPath));
 
 var dbConfig = nconf.get('database');
 var queryConfig = queryListFile['query'];
 var timerConfig = nconf.get('timer');
 var mailConfig = nconf.get('mail');
+
+//Store the function from processTimes in variable
 var checkTimeFormat = processTimes.checkTimeFormat;
 var getTimeMs = processTimes.getTimeMs;
 var getInitTime = processTimes.getInitTime;
 var checkTime = processTimes.checkTime;
 
+//Stroe the database config in a object
 var mysqlOpt = {
     host:dbConfig.host,
     port:dbConfig.port,
@@ -51,14 +61,29 @@ var mysqlOpt = {
     database:dbConfig.dbname
 }   
 
+//In default, the status of worker is free.
+
 var workerFree = true;
+
+//In default, the last execute time is 0.
+
 var lastExecute = 0;
+
+//In default, the last alive time is null.
+
 var lastAliveTime = null;
 
-var times = timerConfig.repeattime;
-var keepAliveTimes = timerConfig.keepalivetimes;
-var timeZoneOffset = timerConfig.timezoneoffset;
+//Get the time when will the script run again.
 
+var time = timerConfig.repeattime;
+
+//Get the time when will the script send keep alive mail.
+var keepAliveTimes = timerConfig.keepalivetimes;
+
+//Get the timezone, and the script will send keep alive mail by this.
+var timeZone = timerConfig.timezone;
+
+//Convert the keepAliveTimes to ms and sort it.
 for(var i = 0; i < keepAliveTimes.length; i++){
 
     var keepAliveTime = keepAliveTimes[i];
@@ -73,9 +98,14 @@ for(var i = 0; i < keepAliveTimes.length; i++){
 
 keepAliveTimes.sort();
 
-setInterval(runSQL,500);
+//The script will run again after the setted time.
+
+setInterval(runSQL,time);
 
 function getLock(){
+
+    //If the workerFree variable had not defined, return false.
+    //Otherwise, set it to false and return true.
 
     if(!workerFree){
 
