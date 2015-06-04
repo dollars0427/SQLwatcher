@@ -452,6 +452,80 @@ exports['Test check time function'] = {
         test.done();
     },
 
+    'Test Send Alive Mail Time correct(1:00, have wrong timeZone but no lastAlive Time)':function(test){
+
+        var keepAliveTime = ['1:00'];
+
+        var splitedTime = keepAliveTime[0].split(':');
+
+        var hour = splitedTime[0];
+
+        var minute = splitedTime[1];
+
+        var hourMs = hour * 60 * 60 * 1000;
+
+        var minMs = minute * 60 *1000;
+
+        var totalMs = hourMs + minMs;
+
+        keepAliveTime[0] = totalMs;
+
+        var lastAliveTime = null;
+
+        var timeZone = 'Hello World';
+
+        var lastCorrectTime = new Date();
+
+        lastCorrectTime.setHours(20);
+
+        lastCorrectTime.setMinutes(0);
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+
+        logger.info(result);
+
+        test.ok(result,'It should have a result!');
+
+        test.done();
+    },
+
+    'Test Send Alive Mail Time Incorrect(17:45, have wrong timeZone but no lastAlive Time)':function(test){
+
+        var keepAliveTime = ['17:45'];
+
+        var splitedTime = keepAliveTime[0].split(':');
+
+        var hour = splitedTime[0];
+
+        var minute = splitedTime[1];
+
+        var hourMs = hour * 60 * 60 * 1000;
+
+        var minMs = minute * 60 *1000;
+
+        var totalMs = hourMs + minMs;
+
+        keepAliveTime[0] = totalMs;
+
+        var lastAliveTime = null;
+
+        var timeZone = 'Hello World';
+
+        var lastCorrectTime = new Date();
+
+        lastCorrectTime.setHours(7);
+
+        lastCorrectTime.setMinutes(30);
+
+        var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTime,timeZone);
+
+        logger.info(result);
+
+        test.equal(result,undefined,'The result should be undefined!');
+
+        test.done();
+    },
+
 
     'Test Send Alive Mail Time Correct(17:45,No timeZone but lastAlive Time match)':function(test){
 
