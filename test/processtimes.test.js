@@ -57,17 +57,11 @@ exports['Test Get Time Function'] = {
 
         var time = '25:00';
 
-        try{
+        var result = processTimes.getTimeMs(time);
 
-            var result = processTimes.getTimeMs(time);
+        test.ok(!result,'It should not return any result!');
 
-        }catch(ex){
-
-            test.ok(ex,'The function must throw error!');
-
-            test.done();
-
-        }
+        test.done();
     },
 
     'Test getInitTime Correct(No time zone offset)':function(test){

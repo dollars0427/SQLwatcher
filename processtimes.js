@@ -34,7 +34,9 @@ function getTimeMs(time){
 
     //Call checkTimeFormat to make sure the format is right.
 
-    checkTimeFormat(time);
+    var format = checkTimeFormat(time);
+
+    if(format == true){
 
     //Split the time and convert it to ms
 
@@ -51,6 +53,10 @@ function getTimeMs(time){
     var totalMs = hourMs + minMs;
 
     return totalMs;
+
+    }
+
+    return;
 }
 
 /**
