@@ -2,22 +2,23 @@
 var log4js = require('log4js');
 var logger = log4js.getLogger('Logging');
 
-function excuteMySQLQuery (db,query,callback){
+/**
+ * Excute mysql query and return the result.
+ *
+ * @Param {Object} db
+ * @Param {String} query
+ * @Param {function} callback
+ * @Return {Object['affectedRows']} r
+ * @Return {Object} err
+ */
 
-    /**
-     * Receive the database connection, query and callback function, 
-     * Then show the query which will be test at first.
-     * After that, excute the query.
-     * If the result have error, return the error,
-     * Else if the result have affectedRows, save it in r return it.
-     * Else,it will return null.
-     * */
+function excuteMySQLQuery (db,query,callback){
 
     logger.debug('Testing Query:', query);
 
-
     db.query(query,function(err,result){
 
+        //If the result have error, return the error
 
         if(err){
             callback(err);
@@ -26,7 +27,7 @@ function excuteMySQLQuery (db,query,callback){
 
 
         var r = {affectedRows :0};
-
+        //If the result have affectedRows, save it in r return to be a result.
         if(result.affectedRows){
 
             r['affectedRows'] = result['affectedRows'];
