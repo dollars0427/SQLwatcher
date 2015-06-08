@@ -1,25 +1,26 @@
 var fs = require('fs');
+var log4js = require('log4js');
+var logger = log4js.getLogger('Converter');
 
 var inputFile = process.argv[2];
-var outputFile = process.argv[3];
 
-if(!inputFile || !outputFile){
+if(!inputFile){
 
     printUsage();
 }
 
 /**
  *
- * If user have not input the path of text file(for input) or json file(for output),
+ * If user have not input the path of text file,
  * It will show the correct usage of script.
  *
  */
 
 function printUsage(){
 
-    var out = "Usgae: " + process.argv[1] + " [input file]" + " [output file]";
+    var out = "Usgae: " + process.argv[1] + " [input file]";
 
-    console.log(out);
+    logger.info(out);
 
     process.exit(1);
 }
@@ -29,6 +30,8 @@ function printUsage(){
  * Convert a text file which have query to json format.
  *
  */
+
+convertQuery();
 
 function convertQuery(){
 
@@ -58,6 +61,5 @@ function convertQuery(){
 
     var outputJson = JSON.stringify({query:outputQuerys});
 
-    fs.writeFileSync(outputFile,outputJson);
-
+    logger.info(outputJson);
 }
