@@ -20,7 +20,7 @@ function printUsage(){
 
     var out = "Usgae: " + process.argv[1] + " [input file]";
 
-    logger.info(out);
+    console.log(out);
 
     process.exit(1);
 }
@@ -59,7 +59,7 @@ function convertQuery(){
         outputQuerys.push(correctQuery);
     }
 
-    var outputJson = JSON.stringify({query:outputQuerys});
+    var outputJson = JSON.stringify({query:outputQuerys}, null, 2);
 
-    logger.info(outputJson);
+    console.log(outputJson);
 }
