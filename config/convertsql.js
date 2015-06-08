@@ -3,6 +3,19 @@ var log4js = require('log4js');
 var logger = log4js.getLogger('Converter');
 
 var inputFile = process.argv[2];
+var defaultSelectRec = parseInt(process.argv[3]);
+var defaultUpdateRec = parseInt(process.argv[4]);
+
+if(!defaultSelectRec){
+
+    defaultSelectRec = 1;
+}
+
+if(!defaultUpdateRec){
+
+    defaultUpdateRec = 1;
+
+}
 
 if(!inputFile){
 
@@ -39,7 +52,7 @@ function convertQuery(){
 
     var splitedQuerys = readQueryList.split('\n');
 
-    var outputQuerys = [];
+    var outputArray = [];
 
     for(i = 0; i< splitedQuerys.length; i++){
 
@@ -52,12 +65,14 @@ function convertQuery(){
             continue;
         }
 
-        //Else, push it to the array for output
+       var queryObject = {sql:query,rec:null};
 
-        outputQuerys.push(query);
+       outputArray.push(queryObject);
     }
 
-    var outputJson = JSON.stringify({query:outputQuerys}, null, 2);
+    var outputObject = {defaultSelectRec:defaultSelectRec,defaultUpdateRec:defaultUpdateRec,job:outputArray};
+
+    var outputJson = JSON.stringify(outputObject, null, 2);
 
     console.log(outputJson);
 }
