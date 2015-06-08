@@ -52,11 +52,9 @@ function convertQuery(){
             continue;
         }
 
-        //Else, reaplce double quote with single quote
+        //Else, push it to the array for output
 
-        var correctQuery = query.replace(/["]/g, "'");
-
-        outputQuerys.push(correctQuery);
+        outputQuerys.push(query);
     }
 
     var outputJson = JSON.stringify({query:outputQuerys}, null, 2);
