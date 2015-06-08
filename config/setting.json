@@ -1,0 +1,44 @@
+{
+    "database": {
+        "host":"127.0.0.1",
+        "port":4422,
+        "dbname":"TEST",
+        "username":"sardo",
+        "password":"sardo"
+    },
+
+    "timer":{
+        "repeattime":3000,
+        "keepalivetimes":["17:10","17:15","17:20"],
+        "timezone":""
+    },
+
+
+    "mail":{
+        "server":{
+            "user":"sardo.ip@nxtomo.hk",
+            "password":"mc0351augk",
+            "host":"smtp.gmail.com",
+            "port":null,
+            "ssl":true,
+            "tls":false
+        },
+
+        "alive":{
+            "from":"Sardo <sardo.ip@nxtomo.hk>",
+            "to":["sardo.ip@nxtomo.hk","sardo@zuikaku.me"],
+            "subject":"You have done!",
+            "text":"Yes, you have done."
+        },
+
+        "dead":{
+            "from":"Sardo <sardo.ip@nxtomo.hk>",
+            "to":["sardo.ip@nxtomo.hk","sardo@zuikaku.me"],
+            "subject":"We are failed.",
+            "text":"No, we are failed."
+
+        }
+
+    }
+}
+
