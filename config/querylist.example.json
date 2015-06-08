@@ -1,7 +1,18 @@
 {
-  "query": [
-    "SELECT * from TestTable;",
-    "SELECT * from TestTable limit 2;",
-    "INSERT INTO TestTable (FirstName, LastName, Age) VALUES (\"Sardo\", \"Ip\", \"21\");"
+  "defaultSelectRec": 1,
+  "defaultUpdateRec": 1,
+  "job": [
+    {
+      "sql": "SELECT * from TestTable;",
+      "rec": null
+    },
+    {
+      "sql": "SELECT * from TestTable limit 2;",
+      "rec": null
+    },
+    {
+      "sql": "INSERT INTO TestTable (FirstName, LastName, Age) VALUES (\"Sardo\", \"Ip\", \"21\");",
+      "rec": null
+    }
   ]
 }
