@@ -240,7 +240,7 @@ function runSQL(){
 
             if(rec && selectStatement === 0 && result['record'].length !== rec){
 
-                logger.error('Detected Error! ', 'Affcted Number of record not match! It must be ' + defaultSelectRec);
+                logger.error('Detected Error! ', 'Affcted Number of record not match! It must be ' + rec);
 
                 p.reject({
                     time:new Date(),
@@ -251,9 +251,9 @@ function runSQL(){
                 return;
             }
 
-            if(rec && updateStatement === 0 && result['affectedRows'] !== defaultUpdateRec){
+            if(rec && updateStatement === 0 && result['affectedRows'] !== rec){
 
-                logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + defaultUpdateRec);
+                logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + rec);
 
                 p.reject({
                     time:new Date(),
