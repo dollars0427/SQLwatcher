@@ -25,14 +25,15 @@ function excuteMySQLQuery (db,query,callback){
             return;
         }
 
-
         var r = {affectedRows :0};
+
         //If the result have affectedRows, save it in r return to be a result.
         if(result.affectedRows){
 
             r['affectedRows'] = result['affectedRows'];
-
         }
+
+        r['result'] = result;
 
         callback(null,r);
 
