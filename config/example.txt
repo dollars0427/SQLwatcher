@@ -1,3 +1,3 @@
-SELECT * from TestTable;
-SELECT * from TestTable limit 2;
+SELECT * from TestTable limit 1;
 INSERT INTO TestTable (FirstName, LastName, Age) VALUES ("Sardo", "Ip", "21");
+UPDATE TestTable SET FirstName ="Hiei" WHERE FirstName = "Sardo";
