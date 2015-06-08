@@ -47,12 +47,12 @@ var defaultUpdateRec = 1;
 
 if (selectRecordConfig){
     
-    selectRecordConfig = queryListFile['defaultSelectRec'];
+    defaultSelectRec = queryListFile['defaultSelectRec'];
 }
 
 if(!selectRecordConfig){
 
-    updateRecordConfig = queryListFile['defaultUpdateRec'];
+    defaultUpdateRec = queryListFile['defaultUpdateRec'];
 }
 
 
@@ -207,7 +207,11 @@ function runSQL(){
 
         //Get query from queryList by the index.
 
-        var query = queryConfig[opt["idx"]];
+        var query = jobConfig[opt["idx"]].sql;
+        var rec = jobConfig[opt["idx"]].rec;
+
+        var selectStatement = query.search("SELECT");
+        var updateStatement = query.search("UPDATE");
 
         if(!query){
 
@@ -232,6 +236,38 @@ function runSQL(){
                 });
 
                 return;
+            }
+
+            if(!rec && selectStatement === 0){
+
+                if(result['affectedRows'] !== defaultSelectRec){
+
+                    logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + defaultSelectRec);
+
+                    p.reject({
+                        time:new Date(),
+                        err: 'Affcted Row not match',
+                        sql: query
+                    });
+
+                    return;
+                }
+            }
+
+            if(!rec && updateStatement === 0){
+
+                if(result['affectedRows'] !== defaultUpdateRec){
+
+                    logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + defaultUpdateRec);
+
+                    p.reject({
+                        time:new Date(),
+                        err: 'Affcted Row not match! It must be ' + defaultUpdateRec,
+                        sql: query
+                    });
+
+                    return;
+                }
             }
 
             //resolve the promise with the opt object which have index + 1.
@@ -317,7 +353,7 @@ function runSQL(){
 
         var funList = [];
 
-        for(var i = 0; i< queryConfig.length; i++){
+        for(var i = 0; i< jobConfig.length; i++){
 
             funList.push(_runSQL);
         }
@@ -361,6 +397,10 @@ function runSQL(){
             +'Result Time: '
             + result['time']
             + ' \n'
+            + ' \n'
+            +' Error: '
+            + result['err']
+            + '\n'
             + ' \n Excuted Query:'
             + result['sql'];
 
