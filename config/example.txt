@@ -1,0 +1,3 @@
+SELECT * from TestTable;
+SELECT * from TestTable limit 2;
+INSERT INTO TestTable (FirstName, LastName, Age) VALUES ("Sardo", "Ip", "21");
