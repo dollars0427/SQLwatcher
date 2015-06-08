@@ -40,7 +40,57 @@ function excuteMySQLQuery (db,query,callback){
     });
 }
 
+/**
+ * Receive mysql query and result, check the record num of result is correct.
+ *
+ * @Param {String} query
+ * @Param {Object['affectedRows','record']} result
+ * @Param {Number} defaultSelectRec
+ * @Param {Number} defaultUpdateRec
+ * @Param {Number} rec
+ * @Return {Bool} false
+ * @Return {Bool} true
+ *
+ */
+
+
+function checkRecordNum(query,result,defaultSelectRec,defaultUpdateRec,rec){
+
+    var selectStatement = query.search("SELECT");
+    var updateStatement = query.search("UPDATE");
+
+    if(rec && selectStatement === 0 && result['record'].length !== rec){
+
+        logger.error('Detected Error! ', 'Affcted Number of record not match! It must be ' + rec);
+
+         return false;
+     }
+
+     if(rec && updateStatement === 0 && result['affectedRows'] !== rec){
+
+        logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + rec);
+
+        return false;
+    }
+
+    if(!rec && selectStatement === 0 && result['record'].length !== defaultSelectRec){
+
+        logger.error('Detected Error! ', 'Number of record not match! It must be ' + defaultSelectRec);
+
+        return false;
+    }
+
+    if(!rec && updateStatement === 0 && result['affectedRows'] !== defaultUpdateRec){
+
+        logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + defaultUpdateRec);
+
+        return false;
+    }
+
+}
+
 module.exports = {
 
-    excuteMySQLQuery:excuteMySQLQuery
+    excuteMySQLQuery:excuteMySQLQuery,
+    checkRecordNum:checkRecordNum
 }

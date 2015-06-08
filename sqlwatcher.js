@@ -210,9 +210,6 @@ function runSQL(){
         var query = jobConfig[opt["idx"]].sql;
         var rec = jobConfig[opt["idx"]].rec;
 
-        var selectStatement = query.search("SELECT");
-        var updateStatement = query.search("UPDATE");
-
         if(!query){
 
             p.resolve();
@@ -232,58 +229,6 @@ function runSQL(){
                 p.reject({
                     time:new Date(),
                     err: new Error(err),
-                    sql: query
-                });
-
-                return;
-            }
-
-            if(rec && selectStatement === 0 && result['record'].length !== rec){
-
-                logger.error('Detected Error! ', 'Affcted Number of record not match! It must be ' + rec);
-
-                p.reject({
-                    time:new Date(),
-                    err: 'The number of record not match',
-                    sql: query
-                });
-
-                return;
-            }
-
-            if(rec && updateStatement === 0 && result['affectedRows'] !== rec){
-
-                logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + rec);
-
-                p.reject({
-                    time:new Date(),
-                    err: 'Affcted Row not match! It must be ' + defaultUpdateRec,
-                    sql: query
-                });
-
-                return;
-            }
-
-            if(!rec && selectStatement === 0 && result['record'].length !== defaultSelectRec){
-
-                logger.error('Detected Error! ', 'Number of record not match! It must be ' + defaultSelectRec);
-
-                p.reject({
-                    time:new Date(),
-                    err: 'The number of record not match',
-                    sql: query
-                });
-
-                return;
-            }
-
-            if(!rec && updateStatement === 0 && result['affectedRows'] !== defaultUpdateRec){
-
-                logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + defaultUpdateRec);
-
-                p.reject({
-                    time:new Date(),
-                    err: 'Affcted Row not match! It must be ' + defaultUpdateRec,
                     sql: query
                 });
 
