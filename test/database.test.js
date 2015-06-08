@@ -119,6 +119,41 @@ exports['Test SQL'] = {
         });
     },
 
+
+    'Test SQL success(select with defaultSelectRec)': function(test){
+
+        var defaultSelectRec = 1 
+
+        var query = 'SELECT * FROM TestTable';
+
+        var runQueryResult = {result:1}
+
+        var result = database.checkRecordNum(query,runQueryResult,defaultSelectRec);
+
+        test.equal(result,true,'The result should be true!');
+
+        logger.debug('Excute Query Result: ',result);
+
+        test.done();
+    },
+
+    'Test SQL success(select with rec)': function(test){
+
+        var query = 'SELECT * FROM TestTable';
+
+        var rec = 1
+
+        var runQueryResult = {result:1}
+
+        var result = database.checkRecordNum(query,runQueryResult,null,null,rec);
+
+        test.equal(result,true,'The result should be true!');
+
+        logger.debug('Excute Query Result: ',result);
+
+        test.done();
+    },
+
     'Test SQL failed(select)': function(test){
 
         var query = 'SELECT * FROM Hello';
@@ -132,6 +167,41 @@ exports['Test SQL'] = {
 
         });
     },
+
+    'Test SQL failed(select with defaultSelectRec)': function(test){
+
+        var defaultSelectRec = 1 
+
+        var query = 'SELECT * FROM TestTable';
+
+        var runQueryResult = {result:2}
+
+        var result = database.checkRecordNum(query,runQueryResult,defaultSelectRec);
+
+        test.equal(result,false,'The result should be false');
+
+        logger.debug('Excute Query Result: ',result);
+
+        test.done();
+    },
+
+    'Test SQL failed(select with rec)': function(test){
+
+        var rec = 2
+
+        var query = 'SELECT * FROM TestTable';
+
+        var runQueryResult = {result:1}
+
+        var result = database.checkRecordNum(query,runQueryResult,null,null,rec);
+
+        test.equal(result,false,'The result should be false');
+
+        logger.debug('Excute Query Result: ',result);
+
+        test.done();
+    },
+
     'Test SQL success(update)': function(test){
 
         var query = 'UPDATE TestTable SET FirstName ="Hiei" WHERE FirstName = "Sardo"';
@@ -147,6 +217,40 @@ exports['Test SQL'] = {
         });
     },
 
+    'Test SQL success(update with defaultUpdateRec)': function(test){
+
+        var defaultUpdateRec = 1 
+
+        var query = 'UPDATE TestTable SET FirstName ="Hiei" WHERE FirstName = "Sardo"';
+
+        var runQueryResult = {affectedRows:1}
+
+        var result = database.checkRecordNum(query,runQueryResult,null,defaultUpdateRec);
+
+        test.equal(result,true,'The result should be true!');
+
+        logger.debug('Excute Query Result: ',result);
+
+        test.done();
+    },
+
+    'Test SQL success(update with rec)': function(test){
+
+        var rec = 1 
+
+        var query = 'UPDATE TestTable SET FirstName ="Hiei" WHERE FirstName = "Sardo"';
+
+        var runQueryResult = {affectedRows:1}
+
+        var result = database.checkRecordNum(query,runQueryResult,null,null,rec);
+
+        test.equal(result,true,'The result should be true!');
+
+        logger.debug('Excute Query Result: ',result);
+
+        test.done();
+    },
+
     'Test SQL failed(update)': function(test){
 
         var query = 'UPDATE Test SET FirstName ="Hiei" WHERE "Hello" = "S"';
@@ -160,6 +264,40 @@ exports['Test SQL'] = {
             test.done();
 
         });
+    },
+
+    'Test SQL failed(update with defaultUpdateRec)': function(test){
+
+        var defaultUpdateRec = 1 
+
+        var query = 'UPDATE TestTable SET FirstName ="Hiei" WHERE FirstName = "Sardo"';
+
+        var runQueryResult = {affectedRows:0}
+
+        var result = database.checkRecordNum(query,runQueryResult,null,defaultUpdateRec);
+
+        test.equal(result,false,'The result should be false!');
+
+        logger.debug('Excute Query Result: ',result);
+
+        test.done();
+    },
+
+    'Test SQL failed(update with rec)': function(test){
+
+        var rec = 1
+
+        var query = 'UPDATE TestTable SET FirstName ="Hiei" WHERE FirstName = "Sardo"';
+
+        var runQueryResult = {affectedRows:0}
+
+        var result = database.checkRecordNum(query,runQueryResult,null,null,rec);
+
+        test.equal(result,false,'The result should be false!');
+
+        logger.debug('Excute Query Result: ',result);
+
+        test.done();
     },
 
     'Test SQL success(delete)': function(test){
