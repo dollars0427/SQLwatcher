@@ -1,7 +1,4 @@
 {
-
-    "queryList":[
-        {"query":"SELECT * FROM TestTable"},
-        {"query":"INSERT INTO TestTable (FirstName, LastName, Age) VALUES ('Sardo', 'Ip', '21')"},
-        {"query":"DELETE FROM TestTable Where FirstName = 'Sardo'"}]
+    "query":["SELECT * from TestTable;","SELECT * from TestTable limit 2"]
 }
+
