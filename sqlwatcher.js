@@ -240,13 +240,13 @@ function runSQL(){
 
             if(!rec && selectStatement === 0){
 
-                if(result['affectedRows'] !== defaultSelectRec){
+                if(result['record'].length !== defaultSelectRec){
 
                     logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + defaultSelectRec);
 
                     p.reject({
                         time:new Date(),
-                        err: 'Affcted Row not match',
+                        err: 'The number of record not match',
                         sql: query
                     });
 
