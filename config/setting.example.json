@@ -7,13 +7,16 @@
         "password":"Enter Your Database Password At Here."
     },
 
+    "query":{
+        "defselectrec":"1",
+        "defupdaterec":"1"
+    },
 
     "timer":{
         "repeattime":3000,
         "keepalivetimes":["10:00"],
         "timezone":""
     },
-
 
     "mail":{
         "server":{
