@@ -137,8 +137,8 @@ function checkKeepAliveTime(keepAliveTimes,lastAliveTime,lastSuccessTime,timeZon
         var totalKeepAliveTimeMs1 = keepAliveTimeMs1 + currentDateInited;
         var totalKeepAliveTimeMs2 = keepAliveTimeMs2 + currentDateInited;
 
-        logger.debug('keepAliveTimes: ', new Date(totalKeepAliveTimeMs1));
-        logger.debug('lastSuccessTime: ', new Date(lastSuccessTime));
+        //logger.debug('keepAliveTimes: ', new Date(totalKeepAliveTimeMs1));
+        //logger.debug('lastSuccessTime: ', new Date(lastSuccessTime));
 
         /*If the keepAliveTimeMs2 is NaN, 
          *lastSuccessTimeMs is bigger than totalKeepAliveTimeMs1,
