@@ -92,6 +92,13 @@ timezoneoffset: Set the time zone offset, if it is null the script will using th
  }
 ```
 
+If you have a text file which contain SQL query, you can using  convertsql.js which in config directory to convert it to json format too. 
+
+```bash
+$ node convertsql.js [Path of text file(Input) ] >> [Path of json file(Output) ]
+```
+Than you will get a query list file in json format.
+
 Usage
 ---
 1.Run index.js with this command: 
