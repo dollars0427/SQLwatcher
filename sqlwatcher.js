@@ -238,36 +238,56 @@ function runSQL(){
                 return;
             }
 
-            if(!rec && selectStatement === 0){
+            if(rec && selectStatement === 0 && result['record'].length !== rec){
 
-                if(result['record'].length !== defaultSelectRec){
+                logger.error('Detected Error! ', 'Affcted Number of record not match! It must be ' + defaultSelectRec);
 
-                    logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + defaultSelectRec);
+                p.reject({
+                    time:new Date(),
+                    err: 'The number of record not match',
+                    sql: query
+                });
 
-                    p.reject({
-                        time:new Date(),
-                        err: 'The number of record not match',
-                        sql: query
-                    });
-
-                    return;
-                }
+                return;
             }
 
-            if(!rec && updateStatement === 0){
+            if(rec && updateStatement === 0 && result['affectedRows'] !== defaultUpdateRec){
 
-                if(result['affectedRows'] !== defaultUpdateRec){
+                logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + defaultUpdateRec);
 
-                    logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + defaultUpdateRec);
+                p.reject({
+                    time:new Date(),
+                    err: 'Affcted Row not match! It must be ' + defaultUpdateRec,
+                    sql: query
+                });
 
-                    p.reject({
-                        time:new Date(),
-                        err: 'Affcted Row not match! It must be ' + defaultUpdateRec,
-                        sql: query
-                    });
+                return;
+            }
 
-                    return;
-                }
+            if(!rec && selectStatement === 0 && result['record'].length !== defaultSelectRec){
+
+                logger.error('Detected Error! ', 'Number of record not match! It must be ' + defaultSelectRec);
+
+                p.reject({
+                    time:new Date(),
+                    err: 'The number of record not match',
+                    sql: query
+                });
+
+                return;
+            }
+
+            if(!rec && updateStatement === 0 && result['affectedRows'] !== defaultUpdateRec){
+
+                logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + defaultUpdateRec);
+
+                p.reject({
+                    time:new Date(),
+                    err: 'Affcted Row not match! It must be ' + defaultUpdateRec,
+                    sql: query
+                });
+
+                return;
             }
 
             //resolve the promise with the opt object which have index + 1.
