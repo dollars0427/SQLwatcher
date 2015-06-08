@@ -25,7 +25,6 @@ var database = require('./database');
 var email = require('./email');
 var processTimes = require('./processtimes');
 
-
 function printUsage(){
 
     var out = "Usage: " + process.argv[1] + " [Setting file] [Query list file]"
@@ -36,9 +35,26 @@ function printUsage(){
 var queryListFile = JSON.parse(fs.readFileSync(queryListPath));
 
 var dbConfig = nconf.get('database');
-var queryConfig = queryListFile['query'];
+var jobConfig = queryListFile['job'];
+var selectRecordConfig = queryListFile['defaultSelectRec'];
+var updateRecordConfig = queryListFile['defaultUpdateRec'];
+
 var timerConfig = nconf.get('timer');
 var mailConfig = nconf.get('mail');
+
+var defaultSelectRec = 1;
+var defaultUpdateRec = 1;
+
+if (selectRecordConfig){
+    
+    selectRecordConfig = queryListFile['defaultSelectRec'];
+}
+
+if(!selectRecordConfig){
+
+    updateRecordConfig = queryListFile['defaultUpdateRec'];
+}
+
 
 var checkTimeFormat = processTimes.checkTimeFormat;
 var getTimeMs = processTimes.getTimeMs;
@@ -67,7 +83,6 @@ var timeZone = timerConfig.timezone;
 
 
 //Convert the keepAliveTimes to ms and sort it.
-
 
 for(var i = 0; i < keepAliveTimes.length; i++){
 
@@ -218,6 +233,7 @@ function runSQL(){
 
                 return;
             }
+
             //resolve the promise with the opt object which have index + 1.
             logger.info('SQL success:', query);
 
