@@ -33,7 +33,7 @@ function excuteMySQLQuery (db,query,callback){
             r['affectedRows'] = result['affectedRows'];
         }
 
-        r['result'] = result;
+        r['record'] = result;
 
         callback(null,r);
 
