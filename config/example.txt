@@ -1,5 +1,3 @@
-CREATE TABLE TestTable(Firstname VARCHAR(30) NOT NULL,Lastname VARCHAR(30) NOT NULL,Age INT(100) NOT NULL);
 INSERT INTO TestTable (FirstName, LastName, Age) VALUES ("Sardo", "Ip", "21");
 SELECT * from TestTable limit 1;
 UPDATE TestTable SET FirstName ="Hiei" WHERE FirstName = "Sardo";
-DROP TABLE TestTable;
