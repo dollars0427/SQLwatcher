@@ -57,18 +57,21 @@ function checkRecordCount(result,defaultSelectRec,defaultUpdateRec,rec){
 
     //If the result have record.length, it must be a select query
 
-    try{
+        if(result === undefined){
+
+            return true;
+        }
 
         var recordLength = result['record'].length;
 
-        if(rec && recordLength !== rec){
+        if(rec && recordLength && recordLength !== rec){
 
-            logger.error('Detected Error! ', 'Affcted Number of record not match! It must be ' + rec);
+            logger.error('Detected Error! ', 'Number of record not match! It must be ' + rec);
 
             return false;
         }
 
-        if(!rec && recordLength !== defaultSelectRec){
+        if(!rec && recordLength && recordLength !== defaultSelectRec){
 
             logger.error('Detected Error! ', 'Number of record not match! It must be ' + defaultSelectRec);
 
@@ -76,25 +79,14 @@ function checkRecordCount(result,defaultSelectRec,defaultUpdateRec,rec){
 
         }
 
-        return true;
-
-    }catch(ex){
-
-    //If the result dont't have record.length, it must be a update,insert or drop query
-
-        if(result === undefined){
-
-            return true;
-        }
-
-        if(rec && result['affectedRows'] !== rec){
+        if(rec && !recordLength && result['affectedRows'] !== rec){
 
             logger.error('Detected Error! ', 'Affcted Number of record not match! It must be ' + rec);
 
             return false;
         }
 
-        if(!rec && result['affectedRows'] !== defaultUpdateRec){
+        if(!rec && !recordLength && result['affectedRows'] !== defaultUpdateRec){
 
             logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + defaultUpdateRec);
 
@@ -103,7 +95,6 @@ function checkRecordCount(result,defaultSelectRec,defaultUpdateRec,rec){
         }
 
         return true;
-    }
 }
 
 module.exports = {

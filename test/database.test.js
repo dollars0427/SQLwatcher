@@ -215,7 +215,7 @@ exports['Test SQL'] = {
 
         var query = 'UPDATE TestTable SET FirstName ="Hiei" WHERE FirstName = "Sardo"';
 
-        var runQueryResult = {affectedRows:1}
+        var runQueryResult = {record:{Hello:'Hello'},affectedRows:1}
 
         var result = database.checkRecordCount(runQueryResult,null,defaultUpdateRec);
 
@@ -230,7 +230,7 @@ exports['Test SQL'] = {
 
         var rec = 1 
 
-        var runQueryResult = {affectedRows:1}
+        var runQueryResult = {record:{Hello:'Hello'},affectedRows:1}
 
         var result = database.checkRecordCount(runQueryResult,null,null,rec);
 
@@ -260,7 +260,7 @@ exports['Test SQL'] = {
 
         var defaultUpdateRec = 1 
 
-        var runQueryResult = {affectedRows:0}
+        var runQueryResult = {record:{Hello:'Hello'},affectedRows:0}
 
         var result = database.checkRecordCount(runQueryResult,null,defaultUpdateRec);
 
@@ -275,7 +275,7 @@ exports['Test SQL'] = {
 
         var rec = 1
 
-        var runQueryResult = {affectedRows:0}
+        var runQueryResult = {record:{Hello:'Hello'},affectedRows:0}
 
         var result = database.checkRecordCount(runQueryResult,null,null,rec);
 
