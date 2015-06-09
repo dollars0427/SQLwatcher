@@ -235,6 +235,42 @@ function runSQL(){
                 return;
             }
 
+            if(!rec){
+
+                var checkRecordNumResult = database.checkRecordNum(query,result,defaultSelectRec,defaultUpdateRec);
+
+                if (checkRecordNumResult === false){
+
+                    p.reject({
+                        time:new Date(),
+                        err: new Error(err),
+                        sql: query
+                    });
+
+                    return;
+                }
+
+                logger.info('SQL success:', query);
+
+                p.resolve({ idx: opt["idx"] + 1});
+
+                return p;
+
+            }
+
+            var checkRecordNumResult = database.checkRecordNum(query,result,null,null,rec);
+
+            if(checkRecordNumResult === false){
+
+                p.reject({
+                    time:new Date(),
+                    err: new Error(err),
+                    sql: query
+                });
+
+                return;
+            }
+
             //resolve the promise with the opt object which have index + 1.
             logger.info('SQL success:', query);
 
@@ -243,6 +279,7 @@ function runSQL(){
         });
 
         return p;
+
     }
 
     function complete(){
