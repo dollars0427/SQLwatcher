@@ -237,9 +237,9 @@ function runSQL(){
 
             if(!rec){
 
-                var checkRecordNumResult = database.checkRecordNum(query,result,defaultSelectRec,defaultUpdateRec);
+                var checkRecordCountResult = database.checkRecordCount(result,defaultSelectRec,defaultUpdateRec);
 
-                if (checkRecordNumResult === false){
+                if (checkRecordCountResult === false){
 
                     p.reject({
                         time:new Date(),
@@ -258,9 +258,9 @@ function runSQL(){
 
             }
 
-            var checkRecordNumResult = database.checkRecordNum(query,result,null,null,rec);
+            var checkRecordCountResult = database.checkRecordCount(query,result,null,null,rec);
 
-            if(checkRecordNumResult === false){
+            if(checkRecordCountResult === false){
 
                 p.reject({
                     time:new Date(),
