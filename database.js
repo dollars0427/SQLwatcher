@@ -43,7 +43,6 @@ function excuteMySQLQuery (db,query,callback){
 /**
  * Receive mysql query and result, check the record num of result is correct.
  *
- * @Param {String} query
  * @Param {Object['affectedRows','record']} result
  * @Param {Number} defaultSelectRec
  * @Param {Number} defaultUpdateRec
@@ -54,40 +53,48 @@ function excuteMySQLQuery (db,query,callback){
  */
 
 
-function checkRecordNum(query,result,defaultSelectRec,defaultUpdateRec,rec){
+function checkRecordNum(result,defaultSelectRec,defaultUpdateRec,rec){
 
-    var selectStatement = query.search("SELECT");
-    var updateStatement = query.search("UPDATE");
+    try{
 
-    if(rec && selectStatement === 0 && result['record'].length !== rec){
+        var recordLength = result['record'].length;
 
-        logger.error('Detected Error! ', 'Affcted Number of record not match! It must be ' + rec);
+        if(rec && recordLength !== rec){
 
-         return false;
-     }
+            logger.error('Detected Error! ', 'Affcted Number of record not match! It must be ' + rec);
 
-     if(rec && updateStatement === 0 && result['affectedRows'] !== rec){
+            return false;
+        }
 
-        logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + rec);
+        if(!rec && recordLength !== defaultSelectRec){
 
-        return false;
+            logger.error('Detected Error! ', 'Number of record not match! It must be ' + defaultSelectRec);
+
+            return false;
+
+        }
+
+        return true;
+
+    }catch(ex){
+
+        if(rec && result['affectedRows'] !== rec){
+
+            logger.error('Detected Error! ', 'Affcted Number of record not match! It must be ' + rec);
+
+            return false;
+        }
+
+        if(!rec && result['affectedRows'] !== defaultUpdateRec){
+
+            logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + defaultUpdateRec);
+
+            return false;
+
+        }
+
+        return true;
     }
-
-    if(!rec && selectStatement === 0 && result['record'].length !== defaultSelectRec){
-
-        logger.error('Detected Error! ', 'Number of record not match! It must be ' + defaultSelectRec);
-
-        return false;
-    }
-
-    if(!rec && updateStatement === 0 && result['affectedRows'] !== defaultUpdateRec){
-
-        logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + defaultUpdateRec);
-
-        return false;
-    }
-
-    return true;
 }
 
 module.exports = {
