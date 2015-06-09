@@ -71,6 +71,20 @@ exports['Drop and establish DB Table'] = {
 
 exports['Test SQL'] = {
 
+    'Test SQL success(create with checkRecordCount)': function(test){
+
+        var rec = 1;
+
+        var runQueryResult = {record:'Hello',affectedRows:0}
+
+        var result = database.checkRecordNum(runQueryResult,null,null,rec);
+
+        test.equal(result,true,'The result should be success.');
+        logger.debug('Excute Query Result: ',result);
+
+        test.done();
+    },
+
     'Test SQL success(insert)': function(test){
 
         var query = 'INSERT INTO TestTable (FirstName, LastName, Age) VALUES ("Sardo", "Ip", "21")';
@@ -230,8 +244,6 @@ exports['Test SQL'] = {
 
         var rec = 1 
 
-        var query = 'UPDATE TestTable SET FirstName ="Hiei" WHERE FirstName = "Sardo"';
-
         var runQueryResult = {affectedRows:1}
 
         var result = database.checkRecordNum(runQueryResult,null,null,rec);
@@ -245,7 +257,7 @@ exports['Test SQL'] = {
 
     'Test SQL failed(update)': function(test){
 
-        var query = 'UPDATE Test SET FirstName ="Hiei" WHERE "Hello" = "S"';
+        var query = 'UPDATE TestTable SET Name ="Hiei" WHERE FirstName = "Sardo"';
 
         var result = database.excuteMySQLQuery(connection,query,function(err,result){
 
@@ -262,8 +274,6 @@ exports['Test SQL'] = {
 
         var defaultUpdateRec = 1 
 
-        var query = 'UPDATE TestTable SET FirstName ="Hiei" WHERE FirstName = "Sardo"';
-
         var runQueryResult = {affectedRows:0}
 
         var result = database.checkRecordNum(runQueryResult,null,defaultUpdateRec);
@@ -278,8 +288,6 @@ exports['Test SQL'] = {
     'Test SQL failed(update with rec)': function(test){
 
         var rec = 1
-
-        var query = 'UPDATE TestTable SET FirstName ="Hiei" WHERE FirstName = "Sardo"';
 
         var runQueryResult = {affectedRows:0}
 
@@ -305,6 +313,20 @@ exports['Test SQL'] = {
             test.done();
 
         });
+    },
+
+    'Test SQL success(delete with checkRecordCount)': function(test){
+
+        var rec = 1;
+
+        var runQueryResult = undefined;
+
+        var result = database.checkRecordNum(runQueryResult,null,null,rec);
+
+        test.equal(result,true,'The result should be success.');
+        logger.debug('Excute Query Result: ',result);
+
+        test.done();
     },
 
     'Test SQL failed(delete)': function(test){
