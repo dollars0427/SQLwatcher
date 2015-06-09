@@ -87,6 +87,7 @@ function checkRecordNum(query,result,defaultSelectRec,defaultUpdateRec,rec){
         return false;
     }
 
+    return true;
 }
 
 module.exports = {
