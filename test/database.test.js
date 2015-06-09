@@ -47,14 +47,6 @@ exports['Drop and establish DB Table'] = {
 
         var result = database.excuteMySQLQuery(connection,query,function(err,result){
 
-            if(err.errno !== 1051){
-
-                logger.error(err);
-
-                test.done();
-
-            }
-
             test.ok(err === null || err.errno === 1051,'The table should be not found or result should be success.');
 
             test.done();
@@ -126,11 +118,9 @@ exports['Test SQL'] = {
 
         var defaultSelectRec = 1 
 
-        var query = 'SELECT * FROM TestTable';
-
         var runQueryResult = {record:[{Hello:'Hello'}]};
 
-        var result = database.checkRecordNum(query,runQueryResult,defaultSelectRec);
+        var result = database.checkRecordNum(runQueryResult,defaultSelectRec);
 
         test.equal(result,true,'The result should be true!');
 
@@ -147,7 +137,7 @@ exports['Test SQL'] = {
 
         var runQueryResult = {record:[{Hello:'Hello'}]}
 
-        var result = database.checkRecordNum(query,runQueryResult,null,null,rec);
+        var result = database.checkRecordNum(runQueryResult,null,null,rec);
 
         test.equal(result,true,'The result should be true!');
 
@@ -178,7 +168,7 @@ exports['Test SQL'] = {
 
         var runQueryResult = {record:[{Hello:'Hello'}]}
 
-        var result = database.checkRecordNum(query,runQueryResult,defaultSelectRec);
+        var result = database.checkRecordNum(runQueryResult,defaultSelectRec);
 
         test.equal(result,false,'The result should be false');
 
@@ -195,7 +185,7 @@ exports['Test SQL'] = {
 
         var runQueryResult = {record:[{Hello:'Hello'}]}
 
-        var result = database.checkRecordNum(query,runQueryResult,null,null,rec);
+        var result = database.checkRecordNum(runQueryResult,null,null,rec);
 
         test.equal(result,false,'The result should be false');
 
@@ -227,7 +217,7 @@ exports['Test SQL'] = {
 
         var runQueryResult = {affectedRows:1}
 
-        var result = database.checkRecordNum(query,runQueryResult,null,defaultUpdateRec);
+        var result = database.checkRecordNum(runQueryResult,null,defaultUpdateRec);
 
         test.equal(result,true,'The result should be true!');
 
@@ -244,7 +234,7 @@ exports['Test SQL'] = {
 
         var runQueryResult = {affectedRows:1}
 
-        var result = database.checkRecordNum(query,runQueryResult,null,null,rec);
+        var result = database.checkRecordNum(runQueryResult,null,null,rec);
 
         test.equal(result,true,'The result should be true!');
 
@@ -276,7 +266,7 @@ exports['Test SQL'] = {
 
         var runQueryResult = {affectedRows:0}
 
-        var result = database.checkRecordNum(query,runQueryResult,null,defaultUpdateRec);
+        var result = database.checkRecordNum(runQueryResult,null,defaultUpdateRec);
 
         test.equal(result,false,'The result should be false!');
 
@@ -293,7 +283,7 @@ exports['Test SQL'] = {
 
         var runQueryResult = {affectedRows:0}
 
-        var result = database.checkRecordNum(query,runQueryResult,null,null,rec);
+        var result = database.checkRecordNum(runQueryResult,null,null,rec);
 
         test.equal(result,false,'The result should be false!');
 
