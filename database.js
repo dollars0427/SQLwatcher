@@ -41,7 +41,7 @@ function excuteMySQLQuery (db,query,callback){
 }
 
 /**
- * Receive mysql query and result, check the record num of result is correct.
+ * Receive mysql query excute result, check the record num of result is correct.
  *
  * @Param {Object['affectedRows','record']} result
  * @Param {Number} defaultSelectRec
@@ -53,7 +53,9 @@ function excuteMySQLQuery (db,query,callback){
  */
 
 
-function checkRecordNum(result,defaultSelectRec,defaultUpdateRec,rec){
+function checkRecordCount(result,defaultSelectRec,defaultUpdateRec,rec){
+
+    //If the result have record.length, it must be a select query
 
     try{
 
@@ -78,6 +80,13 @@ function checkRecordNum(result,defaultSelectRec,defaultUpdateRec,rec){
 
     }catch(ex){
 
+    //If the result dont't have record.length, it must be a update,insert or drop query
+
+        if(result === undefined){
+
+            return true;
+        }
+
         if(rec && result['affectedRows'] !== rec){
 
             logger.error('Detected Error! ', 'Affcted Number of record not match! It must be ' + rec);
@@ -100,5 +109,5 @@ function checkRecordNum(result,defaultSelectRec,defaultUpdateRec,rec){
 module.exports = {
 
     excuteMySQLQuery:excuteMySQLQuery,
-    checkRecordNum:checkRecordNum
+    checkRecordCount:checkRecordCount
 }
