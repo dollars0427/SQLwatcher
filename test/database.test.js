@@ -120,7 +120,7 @@ exports['Test SQL'] = {
 
         var runQueryResult = {record:[{Hello:'Hello'}]};
 
-        var result = database.checkRecordNum(runQueryResult,defaultSelectRec);
+        var result = database.checkRecordCount(runQueryResult,defaultSelectRec);
 
         test.equal(result,true,'The result should be true!');
 
@@ -137,7 +137,7 @@ exports['Test SQL'] = {
 
         var runQueryResult = {record:[{Hello:'Hello'}]}
 
-        var result = database.checkRecordNum(runQueryResult,null,null,rec);
+        var result = database.checkRecordCount(runQueryResult,null,null,rec);
 
         test.equal(result,true,'The result should be true!');
 
@@ -168,7 +168,7 @@ exports['Test SQL'] = {
 
         var runQueryResult = {record:[{Hello:'Hello'}]}
 
-        var result = database.checkRecordNum(runQueryResult,defaultSelectRec);
+        var result = database.checkRecordCount(runQueryResult,defaultSelectRec);
 
         test.equal(result,false,'The result should be false');
 
@@ -185,7 +185,7 @@ exports['Test SQL'] = {
 
         var runQueryResult = {record:[{Hello:'Hello'}]}
 
-        var result = database.checkRecordNum(runQueryResult,null,null,rec);
+        var result = database.checkRecordCount(runQueryResult,null,null,rec);
 
         test.equal(result,false,'The result should be false');
 
@@ -209,7 +209,7 @@ exports['Test SQL'] = {
         });
     },
 
-    'Test SQL success(update with defaultUpdateRec)': function(test){
+    'Test SQL success(insert/update with defaultUpdateRec)': function(test){
 
         var defaultUpdateRec = 1 
 
@@ -217,7 +217,7 @@ exports['Test SQL'] = {
 
         var runQueryResult = {affectedRows:1}
 
-        var result = database.checkRecordNum(runQueryResult,null,defaultUpdateRec);
+        var result = database.checkRecordCount(runQueryResult,null,defaultUpdateRec);
 
         test.equal(result,true,'The result should be true!');
 
@@ -226,13 +226,13 @@ exports['Test SQL'] = {
         test.done();
     },
 
-    'Test SQL success(update with rec)': function(test){
+    'Test SQL success(insert/update with rec)': function(test){
 
         var rec = 1 
 
         var runQueryResult = {affectedRows:1}
 
-        var result = database.checkRecordNum(runQueryResult,null,null,rec);
+        var result = database.checkRecordCount(runQueryResult,null,null,rec);
 
         test.equal(result,true,'The result should be true!');
 
@@ -256,13 +256,13 @@ exports['Test SQL'] = {
         });
     },
 
-    'Test SQL failed(update with defaultUpdateRec)': function(test){
+    'Test SQL failed(insert/update with defaultUpdateRec)': function(test){
 
         var defaultUpdateRec = 1 
 
         var runQueryResult = {affectedRows:0}
 
-        var result = database.checkRecordNum(runQueryResult,null,defaultUpdateRec);
+        var result = database.checkRecordCount(runQueryResult,null,defaultUpdateRec);
 
         test.equal(result,false,'The result should be false!');
 
@@ -271,13 +271,13 @@ exports['Test SQL'] = {
         test.done();
     },
 
-    'Test SQL failed(update with rec)': function(test){
+    'Test SQL failed(insert/update with rec)': function(test){
 
         var rec = 1
 
         var runQueryResult = {affectedRows:0}
 
-        var result = database.checkRecordNum(runQueryResult,null,null,rec);
+        var result = database.checkRecordCount(runQueryResult,null,null,rec);
 
         test.equal(result,false,'The result should be false!');
 
@@ -307,7 +307,7 @@ exports['Test SQL'] = {
 
         var runQueryResult = undefined;
 
-        var result = database.checkRecordNum(runQueryResult,null,null,rec);
+        var result = database.checkRecordCount(runQueryResult,null,null,rec);
 
         test.equal(result,true,'The result should be success.');
         logger.debug('Excute Query Result: ',result);
