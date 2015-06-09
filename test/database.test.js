@@ -51,6 +51,8 @@ exports['Drop and establish DB Table'] = {
 
                 logger.error(err);
 
+                test.done();
+
             }
 
             test.ok(err === null || err.errno === 1051,'The table should be not found or result should be success.');
@@ -126,7 +128,7 @@ exports['Test SQL'] = {
 
         var query = 'SELECT * FROM TestTable';
 
-        var runQueryResult = {result:1}
+        var runQueryResult = {record:[{Hello:'Hello'}]};
 
         var result = database.checkRecordNum(query,runQueryResult,defaultSelectRec);
 
@@ -143,7 +145,7 @@ exports['Test SQL'] = {
 
         var rec = 1
 
-        var runQueryResult = {result:1}
+        var runQueryResult = {record:[{Hello:'Hello'}]}
 
         var result = database.checkRecordNum(query,runQueryResult,null,null,rec);
 
@@ -170,11 +172,11 @@ exports['Test SQL'] = {
 
     'Test SQL failed(select with defaultSelectRec)': function(test){
 
-        var defaultSelectRec = 1 
+        var defaultSelectRec = 2
 
         var query = 'SELECT * FROM TestTable';
 
-        var runQueryResult = {result:2}
+        var runQueryResult = {record:[{Hello:'Hello'}]}
 
         var result = database.checkRecordNum(query,runQueryResult,defaultSelectRec);
 
@@ -191,7 +193,7 @@ exports['Test SQL'] = {
 
         var query = 'SELECT * FROM TestTable';
 
-        var runQueryResult = {result:1}
+        var runQueryResult = {record:[{Hello:'Hello'}]}
 
         var result = database.checkRecordNum(query,runQueryResult,null,null,rec);
 
