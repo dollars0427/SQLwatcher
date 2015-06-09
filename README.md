@@ -2,6 +2,8 @@ SQLwatcher
 ======
 A script of watching the status of mysql database.
 
+**Warning! It can not using for test create or drop table query.**
+
 Installation
 ---
 Note: This requires Node.js to run. If you had not install it , you can download it at http://nodejs.org/download/ .
@@ -85,12 +87,32 @@ timezoneoffset: Set the time zone offset, if it is null the script will using th
     }
 ```
 
-5.Edit the query list for testing the database:
+5.Edit the query list ,  defaultSelectRec, defaultUpdateRec and rec for testing the database:
 ```json
-  {
-       "query":["Your SQL Query"]
- }
+{
+  "defaultSelectRec": 1,
+  "defaultUpdateRec": 1,
+  "job": [
+    {   
+      "sql": "INSERT INTO TestTable (FirstName, LastName, Age) VALUES (\"Sardo\", \"Ip\", \"21\");",
+      "rec": null
+    },  
+    {   
+      "sql": "SELECT * from TestTable limit 1;",
+      "rec": null
+    },  
+    {   
+      "sql": "UPDATE TestTable SET FirstName =\"Hiei\" WHERE FirstName = \"Sardo\";",
+      "rec": null
+    }   
+  ]
+}
 ```
+defaultSelectRec: A number of  how many record should be the select query found by default.
+
+defaultUpdateRec: A number of  how many rows should be the update/insert query affected by default.
+
+rec: The number of how many rows should be affected, or found by own query. If you don't need it, it should be null or 0.
 
 If you have a text file which contain SQL query, you can using  convertsql.js which in config directory to convert it to json format too. 
 
