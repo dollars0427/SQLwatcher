@@ -3,15 +3,23 @@
   "defaultUpdateRec": 1,
   "job": [
     {
-      "sql": "SELECT * from TestTable;",
-      "rec": null
-    },
-    {
-      "sql": "SELECT * from TestTable limit 2;",
+      "sql": "CREATE TABLE TestTable(Firstname VARCHAR(30) NOT NULL,Lastname VARCHAR(30) NOT NULL,Age INT(100) NOT NULL);",
       "rec": null
     },
     {
       "sql": "INSERT INTO TestTable (FirstName, LastName, Age) VALUES (\"Sardo\", \"Ip\", \"21\");",
+      "rec": null
+    },
+    {
+      "sql": "SELECT * from TestTable limit 1;",
+      "rec": null
+    },
+    {
+      "sql": "UPDATE TestTable SET FirstName =\"Hiei\" WHERE FirstName = \"Sardo\";",
+      "rec": null
+    },
+    {
+      "sql": "DROP TABLE TestTable;",
       "rec": null
     }
   ]
