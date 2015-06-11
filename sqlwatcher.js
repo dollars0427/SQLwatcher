@@ -180,7 +180,14 @@ function runSQL(){
 
             if(err){
                 logger.error('Cannot Connect To Database!',err);
-                process.exit(1);
+                sendNotification({
+                    time:new Date(),
+                    err: new Error(err),
+                });
+
+                release(true);
+
+                return;
             }
 
             logger.info('Connected to database.');
