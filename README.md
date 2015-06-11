@@ -6,7 +6,7 @@ A script of watching the status of mysql database.
 
 Installation
 ---
-Note: This requires Node.js to run. If you had not install it , you can download it at http://nodejs.org/download/ .
+Note: This requires Node.js v0.10.25 to run. If you had not install it , you can download it at http://nodejs.org/download/ . 
 
 1.Download the SQLwatcher source or clone the git repository:
 ```bash
