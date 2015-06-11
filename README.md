@@ -2,11 +2,11 @@ SQLwatcher
 ======
 A script of watching the status of mysql database.
 
-**Warning! It can not using for test create or drop table query.**
+**Warning! It can not be used for create or drop table queries.**
 
 Installation
 ---
-Note: This requires Node.js v0.10.25 to run. If you had not install it , you can download it at http://nodejs.org/download/ . 
+Note: This requires Node.js v0.10 to run. If you had not install it , you can download it at http://nodejs.org/download/ . 
 
 1.Download the SQLwatcher source or clone the git repository:
 ```bash
@@ -15,7 +15,7 @@ $ git clone git@10.180.51.88:nxtomo-it/sqlwatcher.git
 
 2.Switch to the project root directory:
 ```bash
-$ cd SQLwathcer
+$ cd sqlwathcer
 ```
 3.Install the dependencies: 
 ```bash
@@ -53,7 +53,7 @@ $ vi option.conf
 repeattime: After this time, the script will run again automatic.
 
 keepalivetimes: If the database is fine, the script will send keep alive 
-mail when these times.
+mail at these times.
 
 timezoneoffset: Set the time zone offset, if it is null the script will using the default time zone offset of your system.
 
@@ -114,12 +114,12 @@ defaultUpdateRec: A number of  how many rows should be the update/insert query a
 
 rec: The number of how many rows should be affected, or found by own query. If you don't need it, it should be null or 0.
 
-If you have a text file which contain SQL query, you can using  convertsql.js which in config directory to convert it to json format too. 
+If you have a text file which contain SQL query, you can using  convertsql.js which in config directory to convert it to JSON format too. 
 
 ```bash
-$ node convertsql.js [Path of text file] >> [Path of json file] ]
+$ node convertsql.js [Path of text file] >> [Path of JSON file] ]
 ```
-Than you will get a query list file in json format.
+Then you will get a query list file in JSON format.
 
 Usage
 ---
