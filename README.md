@@ -124,12 +124,12 @@ Then you will get a query list file in JSON format.
 Usage
 ---
 1.Run index.js with this command: 
-`$node index.js [Path of setting file] [Path of query list]`
+`$node sqlwatcher.js [Path of setting file] [Path of query list]`
 
 In default, these file is at the **config** directory which at the root folder of project.
 
 If you want to run it at the background, you can use these command:
-`nohup node index.js [Path of setting file] [Path of query list] &`
+`nohup node sqlwatcher.js [Path of setting file] [Path of query list] &`
 
 
 Unit Test
