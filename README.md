@@ -112,7 +112,7 @@ defaultSelectRec: A number of  how many record should be the select query found 
 
 defaultUpdateRec: A number of  how many rows should be the update/insert query affected by default.
 
-rec: The number of how many rows should be affected, or found by own query. If you don't need it, it should be null or 0.
+rec: The number of how many rows should be affected, or found by own query. If you don't need it, it should be 0.
 
 If you have a text file which contain SQL query, you can using  convertsql.js which in config directory to convert it to JSON format too. 
 
