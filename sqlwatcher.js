@@ -249,7 +249,7 @@ function runSQL(){
 
                     p.reject({
                         time:new Date(),
-                        err: 'The select/update result do not match default value.',
+                        err: new Error('REC_COUNT_NOT_MATCH'),
                         sql: query
                     });
 
