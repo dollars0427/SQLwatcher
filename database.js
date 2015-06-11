@@ -64,14 +64,14 @@ function checkRecordCount(result,defaultSelectRec,defaultUpdateRec,rec){
 
         var recordLength = result['record'].length;
 
-        if(rec && recordLength && recordLength !== rec){
+        if(!isNaN(rec) && recordLength && recordLength !== rec){
 
             logger.error('Detected Error! ', 'Number of record not match! It must be ' + rec);
 
             return false;
         }
 
-        if(!rec && recordLength && recordLength !== defaultSelectRec){
+        if(isNaN(rec) && recordLength && recordLength !== defaultSelectRec){
 
             logger.error('Detected Error! ', 'Number of record not match! It must be ' + defaultSelectRec);
 
@@ -79,14 +79,14 @@ function checkRecordCount(result,defaultSelectRec,defaultUpdateRec,rec){
 
         }
 
-        if(rec && !recordLength && result['affectedRows'] !== rec){
+        if(!isNaN(rec) && !recordLength && result['affectedRows'] !== rec){
 
             logger.error('Detected Error! ', 'Affcted Number of record not match! It must be ' + rec);
 
             return false;
         }
 
-        if(!rec && !recordLength && result['affectedRows'] !== defaultUpdateRec){
+        if(isNaN(rec) && !recordLength && result['affectedRows'] !== defaultUpdateRec){
 
             logger.error('Detected Error! ', 'Affcted Row not match! It must be ' + defaultUpdateRec);
 

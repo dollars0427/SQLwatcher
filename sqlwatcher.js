@@ -235,10 +235,9 @@ function runSQL(){
                 return;
             }
 
-            if(!rec){
+            if(isNaN(rec) || rec === null){
 
                 var checkRecordCountResult = database.checkRecordCount(result,defaultSelectRec,defaultUpdateRec);
-
                 if (checkRecordCountResult === false){
 
                     p.reject({
@@ -258,7 +257,7 @@ function runSQL(){
 
             }
 
-            var checkRecordCountResult = database.checkRecordCount(query,result,null,null,rec);
+            var checkRecordCountResult = database.checkRecordCount(result,null,null,rec);
 
             if(checkRecordCountResult === false){
 
