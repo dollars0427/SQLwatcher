@@ -138,7 +138,7 @@ You can run the unit-test of this project by using nodeunit.
 
 1.Switch to the test directory . It is in the root directory of project. 
 ```bash
-cd ./ test
+cd ./test
 ```
 
 2.Install the dependencies:
