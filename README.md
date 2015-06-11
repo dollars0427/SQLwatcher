@@ -10,7 +10,7 @@ Note: This requires Node.js to run. If you had not install it , you can download
 
 1.Download the SQLwatcher source or clone the git repository:
 ```bash
-$ git clone git@github.com:dollars0427/SQLwatcher.git
+$ git clone git@10.180.51.88:nxtomo-it/sqlwatcher.git
 ```
 
 2.Switch to the project root directory:
