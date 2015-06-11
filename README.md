@@ -156,7 +156,7 @@ It is same as configuration part.
 
 3.Run nodeunit to test each part:
 ```bash
-#It just a exmaple!
+#This is just an exmaple!
 nodeunit testcase.js
 ``` 
 
