@@ -45,12 +45,12 @@ var mailConfig = nconf.get('mail');
 var defaultSelectRec = 1;
 var defaultUpdateRec = 1;
 
-if (selectRecordConfig){
+if (!isNaN(selectRecordConfig)){
     
     defaultSelectRec = queryListFile['defaultSelectRec'];
 }
 
-if(!selectRecordConfig){
+if(!isNaN(updateRecordConfig)){
 
     defaultUpdateRec = queryListFile['defaultUpdateRec'];
 }
@@ -249,7 +249,7 @@ function runSQL(){
 
                     p.reject({
                         time:new Date(),
-                        err: new Error(err),
+                        err: 'The select/update result do not match default value.',
                         sql: query
                     });
 
@@ -270,7 +270,7 @@ function runSQL(){
 
                 p.reject({
                     time:new Date(),
-                    err: new Error(err),
+                    err: 'The select/update result do not match default value.',
                     sql: query
                 });
 
