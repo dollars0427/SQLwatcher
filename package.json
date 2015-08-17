@@ -9,7 +9,8 @@
       "promised-io":"0.3.4",
       "mysql":"2.6.2",
       "moment-timezone":"0.3.1",
-      "nconf":"0.7.1"
+      "nconf":"0.7.1",
+      "retry":"0.6.1"
   },
   "license": "MIT",
   "engines": {
