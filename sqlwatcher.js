@@ -424,15 +424,17 @@ function runSQL() {
 
           var funList = [];
 
-          for (var i = 0; i < 3; i++) {
+          for (var i = 0; i < 2; i++) {
 
             funList.push(retry);
+
+            logger.warn(retry);
           }
 
           var pRetry = promise.seq(funList, {
             mailConnection: mailConnection,
             mailOpt: opt,
-            retry: 3,
+            retry: true,
             type: 'warning'
           });
 
@@ -481,7 +483,7 @@ function runSQL() {
 
           var funList = [];
 
-          for (var i = 0; i < 3; i++) {
+          for (var i = 0; i < 2; i++) {
 
             funList.push(retry);
           }
@@ -489,7 +491,7 @@ function runSQL() {
           var pRetry = promise.seq(funList, {
             mailConnection: mailConnection,
             mailOpt: opt,
-            retry: 3,
+            retry: true,
             type: 'alive'
           });
 
@@ -522,7 +524,7 @@ function runSQL() {
     if (!opt['retry']) {
 
       p.resolve({
-        retry: 0
+        retry: false
       });
 
       return p;
@@ -555,8 +557,6 @@ function runSQL() {
 
         logger.error(err);
 
-        opt['retry'] = opt['retry'] - 1;
-
         p.resolve(opt);
 
         return;
@@ -565,7 +565,9 @@ function runSQL() {
 
       logger.info(mail);
 
-      p.resolve();
+      opt['retry'] = false;
+
+      p.resolve(opt);
 
       return;
 
