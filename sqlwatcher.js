@@ -424,7 +424,7 @@ function runSQL() {
 
           var funList = [];
 
-          for (var i = 0; i < jobConfig.length; i++) {
+          for (var i = 0; i < 3; i++) {
 
             funList.push(retry);
           }
@@ -481,7 +481,7 @@ function runSQL() {
 
           var funList = [];
 
-          for (var i = 0; i < jobConfig.length; i++) {
+          for (var i = 0; i < 3; i++) {
 
             funList.push(retry);
           }
@@ -529,12 +529,14 @@ function runSQL() {
 
     }
 
+    logger.warn(opt['retry']);
+
     var mailConnection = opt['mailConnection'];
     var mailOpt = opt['mailOpt'];
 
     if (opt['type'] === 'warning') {
 
-      email.sendWarningMail(mailConnection, mailOpt, _sendMail);
+      email.sendWarningMail(mailConnection, mailOpt, _sentMail);
 
       return p;
     }
