@@ -427,8 +427,6 @@ function runSQL() {
           for (var i = 0; i < 2; i++) {
 
             funList.push(retry);
-
-            logger.warn(retry);
           }
 
           var pRetry = promise.seq(funList, {
@@ -448,7 +446,7 @@ function runSQL() {
         p.resolve();
       });
 
-      return;
+      return p;
     }
     var text = mailConfig.alive.text + ' \n' + ' \n' + 'Last Sucess Time: ' + result['time'] + ' \n'
 
@@ -530,8 +528,6 @@ function runSQL() {
       return p;
 
     }
-
-    logger.warn(opt['retry']);
 
     var mailConnection = opt['mailConnection'];
     var mailOpt = opt['mailOpt'];
