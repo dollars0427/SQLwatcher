@@ -14,14 +14,14 @@ var settingPath = process.argv[2];
 var queryListPath = process.argv[3];
 
 if (!settingPath || !queryListPath) {
-  printUsage();
-  process.exit(1);
+	printUsage();
+	process.exit(1);
 }
 nconf.argv()
-  .env()
-  .file({
-    file: settingPath
-  })
+	.env()
+	.file({
+		file: settingPath
+	})
 
 var database = require('./database');
 var email = require('./email');
@@ -29,9 +29,9 @@ var processTimes = require('./processtimes');
 
 function printUsage() {
 
-  var out = "Usage: " + process.argv[1] + " [Setting file] [Query list file]"
+	var out = "Usage: " + process.argv[1] + " [Setting file] [Query list file]"
 
-  console.log(out);
+	console.log(out);
 }
 
 var queryListFile = JSON.parse(fs.readFileSync(queryListPath));
@@ -49,12 +49,12 @@ var defaultUpdateRec = 1;
 
 if (!isNaN(selectRecordConfig)) {
 
-  defaultSelectRec = queryListFile['defaultSelectRec'];
+	defaultSelectRec = queryListFile['defaultSelectRec'];
 }
 
 if (!isNaN(updateRecordConfig)) {
 
-  defaultUpdateRec = queryListFile['defaultUpdateRec'];
+	defaultUpdateRec = queryListFile['defaultUpdateRec'];
 }
 
 
@@ -64,11 +64,11 @@ var getInitTime = processTimes.getInitTime;
 var checkKeepAliveTime = processTimes.checkKeepAliveTime;
 
 var mysqlOpt = {
-  host: dbConfig.host,
-  port: dbConfig.port,
-  user: dbConfig.username,
-  password: dbConfig.password,
-  database: dbConfig.dbname
+	host: dbConfig.host,
+	port: dbConfig.port,
+	user: dbConfig.username,
+	password: dbConfig.password,
+	database: dbConfig.dbname
 }
 
 var workerFree = true;
@@ -88,13 +88,13 @@ var timeZone = timerConfig.timezone;
 
 for (var i = 0; i < keepAliveTimes.length; i++) {
 
-  var keepAliveTime = keepAliveTimes[i];
+	var keepAliveTime = keepAliveTimes[i];
 
-  checkTimeFormat(keepAliveTime);
+	checkTimeFormat(keepAliveTime);
 
-  var keepAliveTimeMs = getTimeMs(keepAliveTime);
+	var keepAliveTimeMs = getTimeMs(keepAliveTime);
 
-  keepAliveTimes[i] = keepAliveTimeMs;
+	keepAliveTimes[i] = keepAliveTimeMs;
 
 }
 
@@ -111,18 +111,18 @@ setInterval(runSQL, 500);
 
 function getLock() {
 
-  //If the worker status is not free, return false represent lock failed.
+	//If the worker status is not free, return false represent lock failed.
 
-  if (!workerFree) {
+	if (!workerFree) {
 
-    return false;
-  }
+		return false;
+	}
 
-  //If the worker status is free, lock it and return true represent lock success.
+	//If the worker status is free, lock it and return true represent lock success.
 
-  workerFree = false;
+	workerFree = false;
 
-  return true;
+	return true;
 }
 
 /**
@@ -134,16 +134,16 @@ function getLock() {
 
 function release(reset) {
 
-  //If reset is defined, reset the lastExecute time
+	//If reset is defined, reset the lastExecute time
 
-  if (reset) {
+	if (reset) {
 
-    lastExecute = new Date().getTime();
-  }
+		lastExecute = new Date().getTime();
+	}
 
-  //Set worker status to free.
+	//Set worker status to free.
 
-  workerFree = true;
+	workerFree = true;
 }
 
 /*
@@ -152,435 +152,390 @@ function release(reset) {
 
 function runSQL() {
 
-  if (!getLock()) {
+	if (!getLock()) {
 
-    return;
-  }
+		return;
+	}
 
-  /*
-   * If the difference of current time and last execute time is smaller
-   * than setted time, run release to reset the lastExecute time and exit.
-   */
+	/*
+	 * If the difference of current time and last execute time is smaller
+	 * than setted time, run release to reset the lastExecute time and exit.
+	 */
 
-  var now = new Date().getTime();
+	var now = new Date().getTime();
 
-  if (now - lastExecute < time) {
+	if (now - lastExecute < time) {
 
-    release();
+		release();
 
-    return;
+		return;
 
-  }
+	}
 
-  var dbConnection = mysql.createConnection(mysqlOpt);
+	var dbConnection = mysql.createConnection(mysqlOpt);
 
-  function connectDatabase() {
+	function connectDatabase() {
 
-    var p = new promise.defer();
+		var p = new promise.defer();
 
-    dbConnection.connect(function(err) {
+		dbConnection.connect(function(err) {
 
-      if (err) {
-        logger.error('Cannot Connect To Database!', err);
-        sendNotification({
-          time: new Date(),
-          err: new Error(err),
-        });
+			if (err) {
+				logger.error('Cannot Connect To Database!', err);
+				sendNotification({
+					time: new Date(),
+					err: new Error(err),
+				});
 
-        release(true);
+				release(true);
 
-        return;
-      }
+				return;
+			}
 
-      logger.info('Connected to database.');
+			logger.info('Connected to database.');
 
-      p.resolve();
+			p.resolve();
 
-    });
+		});
 
-    return p;
-  }
+		return p;
+	}
 
-  /**
-   *
-   * Get query from queryList from the index in the opt object,
-   * then excute it.
-   *
-   * @param {object["idx"]} opt
-   *
-   */
+	/**
+	 *
+	 * Get query from queryList from the index in the opt object,
+	 * then excute it.
+	 *
+	 * @param {object["idx"]} opt
+	 *
+	 */
 
-  function _runSQL(opt) {
+	function _runSQL(opt) {
 
-    var p = new promise.defer();
+		var p = new promise.defer();
 
-    //Get query from queryList by the index.
+		//Get query from queryList by the index.
 
-    var query = jobConfig[opt["idx"]].sql;
-    var rec = jobConfig[opt["idx"]].rec;
+		var query = jobConfig[opt["idx"]].sql;
+		var rec = jobConfig[opt["idx"]].rec;
 
-    if (!query) {
+		if (!query) {
 
-      p.resolve();
+			p.resolve();
 
-      return p;
-    }
+			return p;
+		}
 
-    database.excuteMySQLQuery(dbConnection, query, function(err, result) {
+		database.excuteMySQLQuery(dbConnection, query, function(err, result) {
 
-      if (err) {
+			if (err) {
 
-        //If Detected any error, reject the promise with a object
-        //which have time,error and excuted query.
+				//If Detected any error, reject the promise with a object
+				//which have time,error and excuted query.
 
-        logger.error('Detected Error! ', err);
+				logger.error('Detected Error! ', err);
 
-        p.reject({
-          time: new Date(),
-          err: new Error(err),
-          sql: query
-        });
+				p.reject({
+					time: new Date(),
+					err: new Error(err),
+					sql: query
+				});
 
-        return;
-      }
+				return;
+			}
 
-      if (isNaN(rec) || rec === null) {
+			if (isNaN(rec) || rec === null) {
 
-        var checkRecordCountResult = database.checkRecordCount(result, defaultSelectRec, defaultUpdateRec);
-        if (checkRecordCountResult === false) {
+				var checkRecordCountResult = database.checkRecordCount(result, defaultSelectRec, defaultUpdateRec);
+				if (checkRecordCountResult === false) {
 
-          p.reject({
-            time: new Date(),
-            err: new Error('REC_COUNT_NOT_MATCH'),
-            sql: query
-          });
+					p.reject({
+						time: new Date(),
+						err: new Error('REC_COUNT_NOT_MATCH'),
+						sql: query
+					});
 
-          return;
+					return;
+				}
+
+				logger.info('SQL success:', query);
+
+				p.resolve({
+					idx: opt["idx"] + 1
+				});
+
+				return p;
+
+			}
+
+			var checkRecordCountResult = database.checkRecordCount(result, null, null, rec);
+
+			if (checkRecordCountResult === false) {
+
+				p.reject({
+					time: new Date(),
+					err: 'The select/update result do not match default value.',
+					sql: query
+				});
+
+				return;
+			}
+
+			//resolve the promise with the opt object which have index + 1.
+			logger.info('SQL success:', query);
+
+			p.resolve({
+				idx: opt["idx"] + 1
+			});
+
+		});
+
+		return p;
+
+	}
+
+	function complete() {
+
+		/**
+		 * After finish all the task, end the database connection and release the worker.
+		 * */
+
+		var p = new promise.defer();
+
+		dbConnection.end(function(err) {
+
+			if (err) {
+
+				logger.error(err);
+
+				connection.end();
+			}
+
+			logger.info('Complete!');
+
+			release(true);
+
+			p.resolve();
+
+		});
+
+		return p;
+
+	}
+
+	function runQueries() {
+
+		var p = new promise.defer();
+
+		//If all of query can be excute successful,Run runSucess.
+
+		function runSucess() {
+
+			/**
+			 *Save the lastSucess time to opt amd resolve with this object
+			 **/
+
+			logger.warn('Run Sucess!');
+
+
+			var opt = {
+				time: new Date(),
+			};
+
+			p.resolve(opt);
+
+		}
+
+		//If there are any query can not be excute successful, Run runFailed.
+
+		function runFailed(opt) {
+
+			/**
+			 * Show the error and query in the object which called opt,
+			 * then resolve it with this object.
+			 * */
+
+			logger.warn('Run Failed:');
+			logger.warn(opt.err);
+			logger.warn(opt.sql);
+
+			p.resolve(opt);
+
+		}
+
+		// Create a function list and use promise.when to run it by order.
+
+		var funList = [];
+
+		for (var i = 0; i < jobConfig.length; i++) {
+
+			funList.push(_runSQL);
+		}
+
+		var pSQL = promise.seq(funList, {
+			idx: 0
+		});
+
+		when(pSQL, runSucess, runFailed);
+
+		return p;
+	}
+
+	/**
+	 *
+	 * Check the SQL excute reuslt and send notification mail.
+	 *
+	 * @param {object(time,err,sql)} result
+	 *
+	 */
+
+	function sendNotification(result) {
+
+		var p = new promise.defer();
+
+		var mailConnection = mailer.server.connect({
+			user: mailConfig.server.user,
+			password: mailConfig.server.password,
+			host: mailConfig.server.host,
+			port: mailConfig.server.port,
+			ssl: mailConfig.server.ssl,
+			tls: mailConfig.server.tls
+		});
+
+		//If the result of excute sql have error,
+		//send warning mail with the text in config,result time and excuted query.
+
+		if (result['err']) {
+
+			var text = mailConfig.dead.text + ' \n' + ' \n' + 'Result Time: ' + result['time'] + ' \n' + ' \n' + ' Error: ' + result['err'] + '\n' + ' \n Excuted Query:' + result['sql'];
+
+			var opt = {
+				text: text,
+				from: mailConfig.dead.from,
+				to: mailConfig.dead.to,
+				subject: mailConfig.dead.subject
+			};
+
+			logger.info('Sending Warning Mail......');
+
+			var funList = [];
+
+			for (var i = 0; i < 2; i++) {
+
+				funList.push(sentMail);
+			}
+
+			var pSent = promise.seq(funList, {
+				mailConnection: mailConnection,
+				mailOpt: opt,
+				retry: true
+			});
+
+			when(pSent, complete);
+
+			return p;
+		}
+
+		var text = mailConfig.alive.text + ' \n' +
+			' \n' + 'Last Sucess Time: ' + result['time'] + ' \n'
+
+		var opt = {
+			text: text,
+			from: mailConfig.alive.from,
+			to: mailConfig.alive.to,
+			subject: mailConfig.alive.subject
+		};
+
+		//call the check alive time function to
+		//check the last sucess time of excute query is match the keep alive time.
+
+		var lastSuccessTime = result['time'].getTime();
+
+		try {
+			lastAliveTime = lastAliveTime.getTime();
+		} catch (err) {}
+
+		var checkKeepAliveTimeSuccess =
+			checkKeepAliveTime(keepAliveTimes, lastAliveTime, lastSuccessTime, timeZone);
+
+		//If checkTimeSuccess had return anything, send alive mail.
+
+		if (checkKeepAliveTimeSuccess) {
+
+			logger.info('Sending Alive Mail......');
+
+			var funList = [];
+
+			for (var i = 0; i < 2; i++) {
+
+				funList.push(sentMail);
+			}
+
+			logger.info(checkKeepAliveTimeSuccess);
+
+			lastAliveTime = new Date();
+
+			var pSent = promise.seq(funList, {
+				mailConnection: mailConnection,
+				mailOpt: opt,
+				retry: true
+			});
+
+			when(pSent, complete);
+
+		} else {
+
+			p.resolve();
+		}
+
+		return p;
+	}
+
+    function sentMail(opt) {
+
+        var p = new promise.defer();
+
+        if (!opt['retry']) {
+
+            p.resolve({
+                retry: false
+            });
+
+            return p;
         }
 
-        logger.info('SQL success:', query);
+        var mailConnection = opt.mailConnection;
+        var mailOpt = opt.mailOpt;
 
-        p.resolve({
-          idx: opt["idx"] + 1
-        });
+        mailConnection.send(mailOpt, _send);
+
+        function _send(err, mail) {
+
+            if (err) {
+
+                logger.error(err);
+
+                p.resolve(opt);
+
+                return;
+            }
+
+            logger.info(mail);
+
+            p.resolve(opt);
+        }
 
         return p;
-
-      }
-
-      var checkRecordCountResult = database.checkRecordCount(result, null, null, rec);
-
-      if (checkRecordCountResult === false) {
-
-        p.reject({
-          time: new Date(),
-          err: 'The select/update result do not match default value.',
-          sql: query
-        });
-
-        return;
-      }
-
-      //resolve the promise with the opt object which have index + 1.
-      logger.info('SQL success:', query);
-
-      p.resolve({
-        idx: opt["idx"] + 1
-      });
-
-    });
-
-    return p;
-
-  }
-
-  function complete() {
-
-    /**
-     * After finish all the task, end the database connection and release the worker.
-     * */
-
-    var p = new promise.defer();
-
-    dbConnection.end(function(err) {
-
-      if (err) {
-
-        logger.error(err);
-
-        connection.end();
-      }
-
-      logger.info('Complete!');
-
-      release(true);
-
-      p.resolve();
-
-    });
-
-    return p;
-
-  }
-
-  function runQueries() {
-
-    var p = new promise.defer();
-
-    //If all of query can be excute successful,Run runSucess.
-
-    function runSucess() {
-
-      /**
-       *Save the lastSucess time to opt amd resolve with this object
-       **/
-
-      logger.warn('Run Sucess!');
-
-
-      var opt = {
-        time: new Date(),
-      };
-
-      p.resolve(opt);
-
     }
 
-    //If there are any query can not be excute successful, Run runFailed.
-
-    function runFailed(opt) {
-
-      /**
-       * Show the error and query in the object which called opt,
-       * then resolve it with this object.
-       * */
-
-      logger.warn('Run Failed:');
-      logger.warn(opt.err);
-      logger.warn(opt.sql);
-
-      p.resolve(opt);
-
-    }
-
-    // Create a function list and use promise.when to run it by order.
-
-    var funList = [];
-
-    for (var i = 0; i < jobConfig.length; i++) {
-
-      funList.push(_runSQL);
-    }
-
-    var pSQL = promise.seq(funList, {
-      idx: 0
-    });
-
-    when(pSQL, runSucess, runFailed);
-
-    return p;
-  }
-
-  /**
-   *
-   * Check the SQL excute reuslt and send notification mail.
-   *
-   * @param {object(time,err,sql)} result
-   *
-   */
-
-  function sendNotification(result) {
-
-    var p = new promise.defer();
-
-    var mailConnection = mailer.server.connect({
-      user: mailConfig.server.user,
-      password: mailConfig.server.password,
-      host: mailConfig.server.host,
-      port: mailConfig.server.port,
-      ssl: mailConfig.server.ssl,
-      tls: mailConfig.server.tls
-    });
-
-    //If the result of excute sql have error,
-    //send warning mail with the text in config,result time and excuted query.
-
-    if (result['err']) {
-
-      var text = mailConfig.dead.text + ' \n' + ' \n' + 'Result Time: ' + result['time'] + ' \n' + ' \n' + ' Error: ' + result['err'] + '\n' + ' \n Excuted Query:' + result['sql'];
-
-      var opt = {
-        text: text,
-        from: mailConfig.dead.from,
-        to: mailConfig.dead.to,
-        subject: mailConfig.dead.subject
-      };
-
-      email.sendWarningMail(mailConnection, opt, function(err, email) {
-
-        if (err) {
-
-          logger.error(err);
-
-          var funList = [];
-
-          for (var i = 0; i < 2; i++) {
-
-            funList.push(retry);
-          }
-
-          var pRetry = promise.seq(funList, {
-            mailConnection: mailConnection,
-            mailOpt: opt,
-            retry: true,
-            type: 'warning'
-          });
-
-          when(pRetry, complete);
-
-          return;
-        }
-
-        logger.info(email);
-
-        p.resolve();
-      });
-
-      return p;
-    }
-    var text = mailConfig.alive.text + ' \n' + ' \n' + 'Last Sucess Time: ' + result['time'] + ' \n'
-
-    var opt = {
-      text: text,
-      from: mailConfig.alive.from,
-      to: mailConfig.alive.to,
-      subject: mailConfig.alive.subject
-    };
-
-    //call the check alive time function to
-    //check the last sucess time of excute query is match the keep alive time.
-
-    var lastSuccessTime = result['time'].getTime();
-
-    try {
-      lastAliveTime = lastAliveTime.getTime();
-    } catch (err) {}
-
-    var checkKeepAliveTimeSuccess =
-      checkKeepAliveTime(keepAliveTimes, lastAliveTime, lastSuccessTime, timeZone);
-
-    //If checkTimeSuccess had return anything, send alive mail.
-
-    if (checkKeepAliveTimeSuccess) {
-
-      email.sendAliveMail(mailConnection, opt, function(err, mail) {
-
-        if (err) {
-
-          logger.error(err);
-
-          var funList = [];
-
-          for (var i = 0; i < 2; i++) {
-
-            funList.push(retry);
-          }
-
-          var pRetry = promise.seq(funList, {
-            mailConnection: mailConnection,
-            mailOpt: opt,
-            retry: true,
-            type: 'alive'
-          });
-
-          when(pRetry, complete);
-
-          return;
-        }
-
-        logger.info(mail);
-
-        logger.info(checkKeepAliveTimeSuccess);
-
-        lastAliveTime = new Date();
-
-        p.resolve();
-
-      });
-    } else {
-
-      p.resolve();
-    }
-
-    return p;
-  }
-
-  function retry(opt) {
-
-    var p = new promise.defer();
-
-    if (!opt['retry']) {
-
-      p.resolve({
-        retry: false
-      });
-
-      return p;
-
-    }
-
-    var mailConnection = opt['mailConnection'];
-    var mailOpt = opt['mailOpt'];
-
-    if (opt['type'] === 'warning') {
-
-      email.sendWarningMail(mailConnection, mailOpt, _sentMail);
-
-      return p;
-    }
-
-    if (opt['type'] === 'alive') {
-
-      email.sendAliveMail(mailConnection, mailOpt, _sentMail);
-
-      return p;
-
-    }
-
-    function _sentMail(err, mail) {
-
-      if (err) {
-
-        logger.error(err);
-
-        p.resolve(opt);
-
-        return;
-
-      }
-
-      logger.info(mail);
-
-      opt['retry'] = false;
-
-      p.resolve(opt);
-
-      return;
-
-    }
-
-    return p;
-
-  }
-
-  //Create a chain of function, let the script can run the function by order.
-  var chain = new promise.defer();
-  chain
-    .then(connectDatabase)
-    .then(runQueries)
-    .then(sendNotification)
-    .then(complete)
-
-  chain.resolve();
+	//Create a chain of function, let the script can run the function by order.
+	var chain = new promise.defer();
+	chain
+		.then(connectDatabase)
+		.then(runQueries)
+		.then(sendNotification)
+		.then(complete)
+
+	chain.resolve();
 
 }
