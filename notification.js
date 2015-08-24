@@ -14,44 +14,45 @@ var mailer = require('emailjs');
  *
  */
 
-function sendMail(opt,callback) {
+function _sendMail(opt, callback) {
 
-    var mailConnection = opt['mailConneciton'];
-    var mailOpt= opt['mailOpt'];
+	var mailConnection = opt['mailConneciton'];
+	var mailOpt = opt['mailOpt'];
 
-    mailConnection.send(mailOpt, callback);
+	mailConnection.send(mailOpt, callback);
 }
 
 /**
  *
- * Retry send mail action with promise seq.
+ * Receive callback function which will send email,
+ * then retry it with promise seq.
  * @param {object} mailConnection
  * @param {object} mailOpt
- * @param {function} action
+ * @param {function} callback
  * @return {object} pRetry
  *
  */
 
-function retrySendMail(mailConnection,mailOpt,action){
+function sendMail(mailConnection, mailOpt, retry, callback) {
 
-    var funList = [];
+	var funList = [];
 
-    for (var i = 0; i < 3; i++) {
+	for (var i = 0; i < retry; i++) {
 
-        funList.push(action);
-    }
+		funList.push(callback);
+	}
 
-    var pRetry = promise.seq(funList, {
-            mailConnection: mailConnection,
-            mailOpt: mailOpt,
-            retry: 0
-        });
+	var pRetry = promise.seq(funList, {
+		mailConnection: mailConnection,
+		mailOpt: mailOpt,
+		retry: retry
+	});
 
-        return pRetry;
+	return pRetry;
 }
 
 module.exports = {
+	_sendMail: _sendMail,
 	sendMail: sendMail,
-    retrySendMail:retrySendMail,
 
 }

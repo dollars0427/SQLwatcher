@@ -382,6 +382,37 @@ function runSQL() {
 		return p;
 	}
 
+	function sendNotification(result) {
+
+		var p = new promise.defer();
+
+		var mailConnection = mailer.server.connect({
+			user: mailConfig.server.user,
+			password: mailConfig.server.password,
+			host: mailConfig.server.host,
+			port: mailConfig.server.port,
+			ssl: mailConfig.server.ssl,
+			tls: mailConfig.server.tls
+		});
+
+		if (result['err']) {
+
+			var text = mailConfig.dead.text + ' \n' + ' \n' + 'Result Time: ' + result['time'] + ' \n' + ' \n' +
+				' Error: ' + result['err'] + '\n' +
+				' \n Excuted Query:' + result['sql'];
+
+			var mailOpt = {
+				text: text,
+				from: mailConfig.dead.from,
+				to: mailConfig.dead.to,
+				subject: mailConfig.dead.subject
+			};
+
+			notification.
+
+		}
+	}
+
 	//Create a chain of function, let the script can run the function by order.
 	var chain = new promise.defer();
 	chain
