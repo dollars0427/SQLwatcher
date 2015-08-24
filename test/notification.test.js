@@ -17,7 +17,7 @@ var mailConfig = nconf.get('mail');
 
 var notification = require('../notification');
 
-var mailConneciton = mailer.server.connect({
+var mailConnection = mailer.server.connect({
 	user: mailConfig.server.user,
 	password: mailConfig.server.password,
 	host: mailConfig.server.host,
@@ -26,7 +26,7 @@ var mailConneciton = mailer.server.connect({
 	tls: mailConfig.server.tls
 });
 
-exports['Test Send Mail'] = {
+exports['Test _sendMail'] = {
 
 	'Test send alive mail success': function(test) {
 
@@ -37,16 +37,19 @@ exports['Test Send Mail'] = {
 			subject: mailConfig.alive.subject
 		};
 
-        var opt = {mailConneciton:mailConneciton,mailOpt:mailOpt};
+        var opt = {mailConnection:mailConnection,mailOpt:mailOpt,retry:1};
 
-		notification._sendMail(opt, function(err, mail) {
+		var p = notification._sendMail(opt);
 
-			test.equal(err, null, 'The result should be success.');
-			logger.debug('Sended Messages: ', mail);
+        p.then(function(result){
 
-			test.done();
+            test.ok(result !== undefined,'The result should be success.');
 
-		});
+            logger.debug('Sended Messages: ', result);
+
+            test.done();
+
+        });
 	},
 
 	'Test send warning mail success': function(test) {
@@ -58,120 +61,67 @@ exports['Test Send Mail'] = {
 			subject: mailConfig.dead.subject
 		};
 
-        var opt = {mailConneciton:mailConneciton,mailOpt:mailOpt};
+        var opt = {mailConnection:mailConnection,mailOpt:mailOpt,retry:1};
 
-		notification._sendMail(opt, function(err, mail) {
+		var p = notification._sendMail(opt);
 
-			test.equal(err, null, 'The result should be success.');
-			logger.debug('Sended Messages: ', mail);
+        p.then(function(result){
 
-			test.done();
+            test.ok(result !== undefined,'The result should be success.');
 
-		});
-	},
+            logger.debug('Sended Messages: ', result);
 
-	'Test send alive mail failed(wrong mailConneciton setting)': function(test) {
+            test.done();
 
-		var mailConneciton = mailer.server.connect({
-			user: mailConfig.server.user,
-			password: mailConfig.server.password,
-			host: 'stmp.testing.com',
-			port: mailConfig.server.port,
-			ssl: mailConfig.server.ssl,
-			tls: mailConfig.server.tls
-		});
-
-		var mailOpt = {
-			text: mailConfig.alive.text,
-			from: mailConfig.alive.from,
-			to: mailConfig.alive.to,
-			subject: mailConfig.alive.subject
-		};
-
-        var opt = {mailConneciton:mailConneciton,mailOpt:mailOpt};
-
-		notification._sendMail(opt, function(err, mail) {
-
-			test.ok(err != null, 'The result should be failed.');
-
-			logger.error(err);
-
-			logger.debug('Sended Messages: ', mail);
-
-			test.done();
-
-		});
-	},
-
-	'Test send warning mail failed(wrong mailConneciton setting)': function(test) {
-
-		var mailConneciton = mailer.server.connect({
-			user: mailConfig.server.user,
-			password: mailConfig.server.password,
-			host: 'stmp.testing.com',
-			port: mailConfig.server.port,
-			ssl: mailConfig.server.ssl,
-			tls: mailConfig.server.tls
-		});
-
-		var mailOpt = {
-			text: mailConfig.dead.text,
-			from: mailConfig.dead.from,
-			to: mailConfig.dead.to,
-			subject: mailConfig.dead.subject
-		};
-
-        var opt = {mailConneciton:mailConneciton,mailOpt:mailOpt};
-
-		notification._sendMail(opt, function(err, mail) {
-
-			test.ok(err != null, 'The result should be failed.');
-
-			logger.error(err);
-
-			logger.debug('Sended Messages: ', mail);
-
-			test.done();
-
-		});
-	},
+        });
+	}
 }
 
-exports['Test Retry Mail'] = function(test) {
+exports['Test sendMail'] = {
 
-    var opt = {
-        text: mailConfig.alive.text,
-        from: mailConfig.alive.from,
-        to: mailConfig.alive.to,
-        subject: mailConfig.alive.subject
-    };
+    'Test send alive mail success': function(test){
 
-	function testing(opt) {
+        var mailOpt = {
+            text: mailConfig.alive.text,
+            from: mailConfig.alive.from,
+            to: mailConfig.alive.to,
+            subject: mailConfig.alive.subject
+        };
 
-		var p = new promise.defer();
+        var pRetry = notification.sendMail(mailConnection,mailOpt,3);
 
-        opt['retry'] = opt['retry'] -1;
+        promise.when(pRetry,function(result){
 
-        logger.debug(opt['retry']);
+            test.ok(result['retry'] === 0 ,'The retry number should be 0.');
 
-		p.resolve(opt);
+            test.ok(result['mail'] !== null ,'The mail should not be null.');
 
-		return p;
+            logger.debug('Sended Messages: ', result['mail']);
 
-	}
+            test.done();
+        });
+    },
 
-    var retry = 3;
+    'Test send warning mail success': function(test){
 
-	var pRetry= notification.sendMail(mailConneciton,opt,retry,testing);
+        var mailOpt = {
+            text: mailConfig.dead.text,
+            from: mailConfig.dead.from,
+            to: mailConfig.dead.to,
+            subject: mailConfig.dead.subject
+        };
 
-    promise.when(pRetry,function(result){
+        var pRetry = notification.sendMail(mailConnection,mailOpt,3);
 
-        logger.debug('Retry Time :' + result['retry']);
+        promise.when(pRetry,function(result){
 
-        test.equal(result['retry'], 0 , 'The result should be 0.');
+            test.ok(result['retry'] === 0 ,'The retry number should be 0.');
 
-        test.done();
+            test.ok(result['mail'] !== null ,'The mail should not be null.');
 
-    });
+            logger.debug('Sended Messages: ', result['mail']);
 
+            test.done();
+        });
+    }
 }
