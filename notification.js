@@ -8,14 +8,16 @@ var mailer = require('emailjs');
  *
  * Send notification mail.
  *
- * @param {object} mailConneciton
- * @param {object} mailOpt
+ * @param {object} opt
  * @param {function} callback
- * @param {object} p
+ *
  *
  */
 
-function sendMail(mailConnection,mailOpt, callback) {
+function sendMail(opt,callback) {
+
+    var mailConnection = opt['mailConneciton'];
+    var mailOpt= opt['mailOpt'];
 
     mailConnection.send(mailOpt, callback);
 }
@@ -23,31 +25,33 @@ function sendMail(mailConnection,mailOpt, callback) {
 /**
  *
  * Retry send mail action with promise seq.
- *
+ * @param {object} mailConnection
+ * @param {object} mailOpt
  * @param {function} action
  * @return {object} pRetry
  *
  */
 
-function retrySendMail(action){
+function retrySendMail(mailConnection,mailOpt,action){
 
     var funList = [];
 
-    for (var i = 0; i < 2; i++) {
+    for (var i = 0; i < 3; i++) {
 
         funList.push(action);
     }
 
     var pRetry = promise.seq(funList, {
             mailConnection: mailConnection,
-            mailOpt: opt,
-            retry: true
+            mailOpt: mailOpt,
+            retry: 0
         });
 
         return pRetry;
 }
 
 module.exports = {
-	sendMail: sendMail
-    retrySendMail:retrySendMail
+	sendMail: sendMail,
+    retrySendMail:retrySendMail,
+
 }

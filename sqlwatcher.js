@@ -239,8 +239,7 @@ function runSQL() {
 				p.reject({
 					time: new Date(),
 					err: new Error(err),
-					sql: query,
-					mailConfig: mailConfig
+					sql: query
 				});
 
 				return;
@@ -254,8 +253,7 @@ function runSQL() {
 					p.reject({
 						time: new Date(),
 						err: new Error('REC_COUNT_NOT_MATCH'),
-						sql: query,
-						mailConfig: mailConfig
+						sql: query
 					});
 
 					return;
@@ -342,8 +340,7 @@ function runSQL() {
 
 
 			var opt = {
-				time: new Date(),
-				mailConfig: mailConfig
+				time: new Date()
 			};
 
 			p.resolve(opt);
