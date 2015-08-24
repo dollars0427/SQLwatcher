@@ -47,22 +47,84 @@ exports['Test Notification'] = {
 		});
 	},
 
-    'Test send warning mail success': function(test) {
+	'Test send warning mail success': function(test) {
 
-        var opt = {
-            text: mailConfig.dead.text,
-            from: mailConfig.dead.from,
-            to: mailConfig.dead.to,
-            subject: mailConfig.dead.subject
-        };
+		var opt = {
+			text: mailConfig.dead.text,
+			from: mailConfig.dead.from,
+			to: mailConfig.dead.to,
+			subject: mailConfig.dead.subject
+		};
 
-        notification.sendMail(connection, opt, function(err, mail) {
+		notification.sendMail(connection, opt, function(err, mail) {
 
-            test.equal(err, null, 'The result should be success.');
-            logger.debug('Sended Messages: ', mail);
+			test.equal(err, null, 'The result should be success.');
+			logger.debug('Sended Messages: ', mail);
 
-            test.done();
+			test.done();
 
-        });
-    }
+		});
+	},
+
+	'Test send alive mail failed(wrong connection setting)': function(test) {
+
+		var connection = mailer.server.connect({
+			user: mailConfig.server.user,
+			password: mailConfig.server.password,
+			host: 'stmp.testing.com',
+			port: mailConfig.server.port,
+			ssl: mailConfig.server.ssl,
+			tls: mailConfig.server.tls
+		});
+
+		var opt = {
+			text: mailConfig.alive.text,
+			from: mailConfig.alive.from,
+			to: mailConfig.alive.to,
+			subject: mailConfig.alive.subject
+		};
+
+		notification.sendMail(connection, opt, function(err, mail) {
+
+			test.ok(err != null, 'The result should be failed.');
+
+			logger.error(err);
+
+			logger.debug('Sended Messages: ', mail);
+
+			test.done();
+
+		});
+	},
+
+	'Test send warning mail failed(wrong connection setting)': function(test) {
+
+		var connection = mailer.server.connect({
+			user: mailConfig.server.user,
+			password: mailConfig.server.password,
+			host: 'stmp.testing.com',
+			port: mailConfig.server.port,
+			ssl: mailConfig.server.ssl,
+			tls: mailConfig.server.tls
+		});
+
+		var opt = {
+			text: mailConfig.dead.text,
+			from: mailConfig.dead.from,
+			to: mailConfig.dead.to,
+			subject: mailConfig.dead.subject
+		};
+
+		notification.sendMail(connection, opt, function(err, mail) {
+
+			test.ok(err != null, 'The result should be failed.');
+
+			logger.error(err);
+
+			logger.debug('Sended Messages: ', mail);
+
+			test.done();
+
+		});
+	},
 }
