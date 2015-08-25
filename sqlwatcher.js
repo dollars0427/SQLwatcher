@@ -72,6 +72,15 @@ var mysqlOpt = {
 	database: dbConfig.dbname
 }
 
+var connectionOpt = {
+	user: mailConfig.server.user,
+	password: mailConfig.server.password,
+	host: mailConfig.server.host,
+	port: mailConfig.server.port,
+	ssl: mailConfig.server.ssl,
+	tls: mailConfig.server.tls
+};
+
 var workerFree = true;
 
 var lastExecute = 0;
@@ -386,18 +395,10 @@ function runSQL() {
 
 		var p = new promise.defer();
 
-		var mailConnection = mailer.server.connect({
-			user: mailConfig.server.user,
-			password: mailConfig.server.password,
-			host: mailConfig.server.host,
-			port: mailConfig.server.port,
-			ssl: mailConfig.server.ssl,
-			tls: mailConfig.server.tls
-		});
-
 		if (result['err']) {
 
-			var text = mailConfig.dead.text + ' \n' + ' \n' + 'Result Time: ' + result['time'] + ' \n' + ' \n' +
+			var text = mailConfig.dead.text + ' \n' + ' \n' +
+				'Result Time: ' + result['time'] + ' \n' + ' \n' +
 				' Error: ' + result['err'] + '\n' +
 				' \n Excuted Query:' + result['sql'];
 
@@ -408,9 +409,61 @@ function runSQL() {
 				subject: mailConfig.dead.subject
 			};
 
-			notification.
+			logger.error('Sending warning mail.....');
 
+			var pRetry = notification.sendMail(connectionOpt, mailOpt, 3);
+
+			when(pRetry, function(result) {
+
+				logger.debug('Sended Messages: ', result['mail']);
+
+				p.resolve();
+
+			});
+
+			return p;
 		}
+
+		var text = mailConfig.alive.text + ' \n' + ' \n' + 'Last Sucess Time: ' + result['time'] + ' \n';
+
+		var mailOpt = {
+			text: text,
+			from: mailConfig.alive.from,
+			to: mailConfig.alive.to,
+			subject: mailConfig.alive.subject
+		};
+
+		//call the check alive time function to
+		//check the last sucess time of excute query is match the keep alive time.
+
+		var lastSuccessTime = result['time'].getTime();
+
+		try {
+			lastAliveTime = lastAliveTime.getTime();
+		} catch (err) {}
+
+		var checkKeepAliveTimeSuccess =
+			checkKeepAliveTime(keepAliveTimes, lastAliveTime, lastSuccessTime, timeZone);
+
+		if (checkKeepAliveTimeSuccess) {
+
+			logger.info(checkKeepAliveTimeSuccess);
+
+			lastAliveTime = new Date();
+
+			var pRetry = notification.sendMail(connectionOpt, mailOpt, 3);
+
+			when(pRetry, function(result) {
+
+				p.resolve();
+
+			});
+
+		} else {
+			p.resolve();
+		}
+
+		return p;
 	}
 
 	//Create a chain of function, let the script can run the function by order.
