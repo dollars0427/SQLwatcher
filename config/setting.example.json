@@ -13,6 +13,14 @@
         "timezone":""
     },
 
+    "sender":{
+        "http":false
+    },
+
+    "http":{
+        "callurl":"http://example.com/message"
+    },
+
     "mail":{
         "server":{
             "user":"Enter Your mail address at here.",
@@ -40,5 +48,3 @@
 
     }
 }
-
-
