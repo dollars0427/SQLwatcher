@@ -14,7 +14,7 @@
     },
 
     "notification":{
-        "http":false
+        "type":["mail","http"]
     },
 
     "http":{
