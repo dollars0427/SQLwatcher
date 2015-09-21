@@ -1,7 +1,6 @@
 'use strict';
 
 //Require Module
-var fs = require('fs');
 var nconf = require('nconf');
 nconf.argv()
 	.env()
@@ -10,9 +9,17 @@ nconf.argv()
 	})
 
 var log4js = require('log4js');
-var logger = log4js.getLogger('unit-test');
+
 var promise = require('promised-io');
+var express = require('express');
+var supertest = require('supertest');
+
+var app = express();
+
+var logger = log4js.getLogger('unit-test');
 var mailConfig = nconf.get('mail');
+var notiConfig = nconf.get('notification');
+var httpConfig = nconf.get('http');
 
 var notification = require('../notification');
 
@@ -24,6 +31,47 @@ var connectionOpt = {
 	ssl: mailConfig.server.ssl,
 	tls: mailConfig.server.tls
 };
+
+function _appTest(req, res) {
+
+	res.sendStatus(200);
+}
+
+var request = supertest(app);
+
+app.get('/test', _appTest);
+app.post('/test', _appTest);
+
+exports['Test sendHttp'] = {
+
+	'Test sendHttp success(get)': function(test) {
+
+		request.get('/test').end(function(err, res) {
+
+			logger.debug('The http status of message view: ' + res.statusCode);
+
+			test.equal(err, null, 'It should not had any error!');
+
+			test.equal(res.statusCode, 200, 'It should return 200!');
+
+			test.done();
+		});
+	},
+
+	'Test sendHttp success(post)': function(test) {
+
+		request.post('/test').end(function(err, res) {
+
+			logger.debug('The http status of message view: ' + res.statusCode);
+
+			test.equal(err, null, 'It should not had any error!');
+
+			test.equal(res.statusCode, 200, 'It should return 200!');
+
+			test.done();
+		});
+	}
+}
 
 exports['Test _sendMail'] = {
 
