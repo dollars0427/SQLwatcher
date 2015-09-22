@@ -1,12 +1,11 @@
 {
     "database": {
         "host":"localhost",
-        "port":"3306",
+        "port":3306,
         "dbname":"Enter Your Database Name At Here.",
         "username":"Enter Your Database Username At Here.",
         "password":"Enter Your Database Password At Here."
     },
-
 
     "timer":{
         "repeattime":3000,
@@ -14,6 +13,14 @@
         "timezone":""
     },
 
+    "notification":{
+        "type":["mail","http"]
+    },
+
+    "http":{
+        "callurl":"http://example.com/message",
+        "method":["post","get"]
+    },
 
     "mail":{
         "server":{
@@ -42,5 +49,3 @@
 
     }
 }
-
-

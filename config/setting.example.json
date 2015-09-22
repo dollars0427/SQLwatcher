@@ -18,7 +18,8 @@
     },
 
     "http":{
-        "callurl":"http://example.com/message"
+        "callurl":"http://example.com/message",
+        "method":["post","get"]
     },
 
     "mail":{
