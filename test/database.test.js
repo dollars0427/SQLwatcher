@@ -11,7 +11,7 @@ nconf.argv()
 .file({file:'./config/setting.json'})
 
 var mysql = require('mysql');
-var database = require('../database');
+var database = require('../sqlwatcher/database');
 
 //Load Config File
 var fs = require('fs');
@@ -66,7 +66,7 @@ exports['Drop and establish DB Table'] = {
             test.done();
 
         });
-    },   
+    },
 },
 
 exports['Test SQL'] = {
@@ -116,7 +116,7 @@ exports['Test SQL'] = {
 
     'Test SQL success(select with defaultSelectRec)': function(test){
 
-        var defaultSelectRec = 1 
+        var defaultSelectRec = 1
 
         var runQueryResult = {record:[{Hello:'Hello'}]};
 
@@ -211,7 +211,7 @@ exports['Test SQL'] = {
 
     'Test SQL success(insert/update with defaultUpdateRec)': function(test){
 
-        var defaultUpdateRec = 1 
+        var defaultUpdateRec = 1
 
         var query = 'UPDATE TestTable SET FirstName ="Hiei" WHERE FirstName = "Sardo"';
 
@@ -228,7 +228,7 @@ exports['Test SQL'] = {
 
     'Test SQL success(insert/update with rec)': function(test){
 
-        var rec = 1 
+        var rec = 1
 
         var runQueryResult = {record:{Hello:'Hello'},affectedRows:1}
 
@@ -258,7 +258,7 @@ exports['Test SQL'] = {
 
     'Test SQL failed(insert/update with defaultUpdateRec)': function(test){
 
-        var defaultUpdateRec = 1 
+        var defaultUpdateRec = 1
 
         var runQueryResult = {record:{Hello:'Hello'},affectedRows:0}
 
@@ -355,7 +355,7 @@ exports['Test SQL'] = {
             test.done();
 
         });
-    },   
+    },
 }
 
 exports['Terminate DB connection'] = function(test){
@@ -368,4 +368,3 @@ exports['Terminate DB connection'] = function(test){
 
     });
 }
-

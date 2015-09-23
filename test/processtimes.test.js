@@ -1,7 +1,7 @@
 'use strict';
 
 var fs = require('fs');
-var processTimes = require('../processtimes');
+var processTimes = require('../sqlwatcher/processtimes');
 var log4js = require('log4js');
 var logger = log4js.getLogger('unit-test');
 var moment = require('moment-timezone');
@@ -13,7 +13,7 @@ nconf.argv()
 var timerConfig = nconf.get('timer');
 var keepAliveTimes = timerConfig.keepalivetimes;
 
-exports['Test Checking Time Format Function'] ={ 
+exports['Test Checking Time Format Function'] ={
 
     'Test checkTimeFormat success(12:00)':function(test){
 
@@ -117,13 +117,13 @@ exports['Test Get Time Function'] = {
         currentDate.setHours(8);
         currentDate.setMinutes(0);
         currentDate.setMilliseconds(0);
-        
+
         var result = processTimes.getInitTime(timeZone);
 
         test.ok(result !== currentDate.getTime(),'It should not get any result.');
 
         test.done();
-    }     
+    }
 },
 
 exports['Test check time function'] = {
@@ -280,7 +280,7 @@ exports['Test check time function'] = {
         var lastCorrectTimeMs = lastCorrectTime.getTime();
 
         var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTimeMs,timeZone);
-        
+
         logger.info(result);
 
         test.ok(result !== null,'It should not be null!');
@@ -365,7 +365,7 @@ exports['Test check time function'] = {
         lastCorrectTime.setHours(15);
 
         lastCorrectTime.setMinutes(0);
- 
+
         var lastCorrectTimeMs = lastCorrectTime.getTime();
 
         var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTimeMs,timeZone);
@@ -443,7 +443,7 @@ exports['Test check time function'] = {
         lastCorrectTime.setHours(7);
 
         lastCorrectTime.setMinutes(30);
-        
+
         var lastCorrectTimeMs = lastCorrectTime.getTime();
 
         var result = processTimes.checkKeepAliveTime(keepAliveTime,lastAliveTime,lastCorrectTimeMs,timeZone);
@@ -545,7 +545,7 @@ exports['Test check time function'] = {
         var lastAliveTime = new Date();
 
         lastAliveTime.setHours(17);
-        
+
         lastAliveTime.setMinutes(47);
 
         var lastAliveTimeMs = lastAliveTime.getTime();
@@ -628,7 +628,7 @@ exports['Test check time function'] = {
         var lastAliveTime = new Date();
 
         lastAliveTime.setHours(16);
-        
+
         lastAliveTime.setMinutes(40);
 
         var lastAliveTimeMs = lastAliveTime.getTime();
@@ -663,7 +663,7 @@ exports['Test check time function'] = {
         var lastAliveTime = new Date();
 
         lastAliveTime.setHours(20);
-        
+
         lastAliveTime.setMinutes(2);
 
         var lastAliveTimeMs = lastAliveTime.getTime();
@@ -698,7 +698,7 @@ exports['Test check time function'] = {
         var lastAliveTime = new Date();
 
         lastAliveTime.setHours(20);
-        
+
         lastAliveTime.setMinutes(2);
 
         var lastAliveTimeMs = lastAliveTime.getTime();
@@ -733,7 +733,7 @@ exports['Test check time function'] = {
         var lastAliveTime = new Date();
 
         lastAliveTime.setHours(0);
-        
+
         lastAliveTime.setMinutes(0);
 
         var lastAliveTimeMs = lastAliveTime.getTime();
@@ -770,7 +770,7 @@ exports['Test check time function'] = {
         var lastAliveTimeMs = lastAliveTime.getTime();
 
         lastAliveTime.setHours(0);
-        
+
         lastAliveTime.setMinutes(0);
 
         var timeZone = 'America/Los_Angeles';
@@ -816,7 +816,7 @@ exports['Test check time function'] = {
         var lastAliveTime = new Date();
 
         lastAliveTime.setHours(16);
-        
+
         lastAliveTime.setMinutes(2);
 
         var lastAliveTimeMs = lastAliveTime.getTime();
