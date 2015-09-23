@@ -40,6 +40,8 @@ exports['Test _sendHttp'] = {
 
 			logger.debug('Result: ', result);
 
+			test.done();
+
 		});
 	},
 
