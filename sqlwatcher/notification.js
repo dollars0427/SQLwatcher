@@ -3,6 +3,7 @@ var log4js = require('log4js');
 var logger = log4js.getLogger('sendNotification');
 var promise = require('promised-io');
 var mailer = require('emailjs');
+var request = require('request');
 
 /**
  *
@@ -26,6 +27,37 @@ function sendMail(connectionOpt, mailOpt, retry) {
 	var opt = {
 		connectionOpt: connectionOpt,
 		mailOpt: mailOpt,
+		retry: retry
+	};
+
+	var pRetry = promise.seq(funList, opt);
+
+	return pRetry;
+}
+
+/**
+ *
+ * Retry send http action it with promise seq.
+ * @param {object} connectionOpt
+ * @param {object} mailOpt
+ * @param {number} retry
+ * @return {object} pRetry
+ *
+ */
+
+function sendHttp(httpOpt, retry) {
+
+	var funList = [];
+
+	for (var i = 0; i < retry; i++) {
+
+		funList.push(_sendHttp);
+	}
+
+	var opt = {
+		url: httpOpt.url,
+		type: httpOpt.type,
+		param: httpOpt.param,
 		retry: retry
 	};
 
@@ -92,8 +124,32 @@ function _sendMail(opt) {
 	return p;
 }
 
+/**
+ *
+ * Send http request.
+ *
+ * @param {object} opt
+ * @return {object} p
+ *
+ */
+
+function _sendHttp(opt) {
+
+	var p = promise.defer();
+
+	if (!opt['retry']) {
+
+		opt['retry'] = 0;
+
+		p.resolve(opt);
+
+		return p;
+	}
+}
+
 module.exports = {
 	_sendMail: _sendMail,
 	sendMail: sendMail,
-
+	_sendHttp: _sendHttp,
+	sendHttp: sendHttp
 }
