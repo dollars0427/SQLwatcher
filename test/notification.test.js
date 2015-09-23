@@ -26,23 +26,38 @@ var connectionOpt = {
 	tls: mailConfig.server.tls
 };
 
-exports['Test sendHttp'] = {
+exports['Test _sendHttp'] = {
 
-	'Test sendHttp success(get)': function(test) {
+	'Test _sendHttp success(get)': function(test) {
 
 		var type = ['get'];
 
-		notification.sendHttp(type, '127.0.0.1:/test');
+		var p = notification._sendHttp(type, '127.0.0.1:/test');
 
+		p.then(function(result) {
+
+			test.equal(result.statusCode, 200, 'The result should be success.');
+
+			logger.debug('Result: ', result);
+
+		});
 	},
 
-	'Test sendHttp success(post)': function(test) {
+	'Test _sendHttp success(post)': function(test) {
 
 		var type = ['post']
 
-		notification.sendHttp(type, '127.0.0.1:/test');
+		var p = notification.sendHttp(type, '127.0.0.1:/test');
 
+		p.then(function(result) {
 
+			test.equal(result.statusCode, 200, 'The result should be success.');
+
+			logger.debug('Result: ', result);
+
+			test.done();
+
+		});
 	}
 }
 
