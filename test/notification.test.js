@@ -10,12 +10,25 @@ nconf.argv()
 
 var log4js = require('log4js');
 var promise = require('promised-io');
+var http = require('http');
+var qs = require('querystring');
+var url = require('url');
 var notification = require('../sqlwatcher/notification');
 
 var logger = log4js.getLogger('unit-test');
 var mailConfig = nconf.get('mail');
 
-var http = require('http');
+var server = http.createServer(route);
+var route = function(req,res){
+
+	if(req.method === 'POST'){
+		res.send(qs.parse(body));
+		return;
+	}
+
+	var query = url.parse(request.url, true).query;
+	res.send(query);
+}
 
 var connectionOpt = {
 	user: mailConfig.server.user,
@@ -32,7 +45,11 @@ exports['Test _sendHttp'] = {
 
 		var type = ['get'];
 
-		var p = notification._sendHttp(type, '127.0.0.1:/test');
+		server.listen(3000,'127.0.0.1',function(){
+		    logger.debug('The Http Server is running at 3000 port. ∠( ᐛ 」∠)＿' );
+		});
+
+		var p = notification._sendHttp(type, '127.0.0.1:3000/test');
 
 		p.then(function(result) {
 
@@ -49,7 +66,7 @@ exports['Test _sendHttp'] = {
 
 		var type = ['post']
 
-		var p = notification.sendHttp(type, '127.0.0.1:/test');
+		var p = notification.sendHttp(type, '127.0.0.1:3000/test');
 
 		p.then(function(result) {
 
