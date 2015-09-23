@@ -9,19 +9,13 @@ nconf.argv()
 	})
 
 var log4js = require('log4js');
-
 var promise = require('promised-io');
-var express = require('express');
-var supertest = require('supertest');
-
-var app = express();
+var notification = require('../sqlwatcher/notification');
 
 var logger = log4js.getLogger('unit-test');
 var mailConfig = nconf.get('mail');
-var notiConfig = nconf.get('notification');
-var httpConfig = nconf.get('http');
 
-var notification = require('../notification');
+var http = require('http');
 
 var connectionOpt = {
 	user: mailConfig.server.user,
@@ -32,44 +26,23 @@ var connectionOpt = {
 	tls: mailConfig.server.tls
 };
 
-function _appTest(req, res) {
-
-	res.sendStatus(200);
-}
-
-var request = supertest(app);
-
-app.get('/test', _appTest);
-app.post('/test', _appTest);
-
 exports['Test sendHttp'] = {
 
 	'Test sendHttp success(get)': function(test) {
 
-		request.get('/test').end(function(err, res) {
+		var type = ['get'];
 
-			logger.debug('The http status of message view: ' + res.statusCode);
+		notification.sendHttp(type, '127.0.0.1:/test');
 
-			test.equal(err, null, 'It should not had any error!');
-
-			test.equal(res.statusCode, 200, 'It should return 200!');
-
-			test.done();
-		});
 	},
 
 	'Test sendHttp success(post)': function(test) {
 
-		request.post('/test').end(function(err, res) {
+		var type = ['post']
 
-			logger.debug('The http status of message view: ' + res.statusCode);
+		notification.sendHttp(type, '127.0.0.1:/test');
 
-			test.equal(err, null, 'It should not had any error!');
 
-			test.equal(res.statusCode, 200, 'It should return 200!');
-
-			test.done();
-		});
 	}
 }
 
