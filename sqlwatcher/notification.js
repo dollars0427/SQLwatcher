@@ -38,8 +38,7 @@ function sendMail(connectionOpt, mailOpt, retry) {
 /**
  *
  * Retry send http action it with promise seq.
- * @param {object} connectionOpt
- * @param {object} mailOpt
+ * @param {object} httpOpt
  * @param {number} retry
  * @return {object} pRetry
  *
@@ -56,7 +55,6 @@ function sendHttp(httpOpt, retry) {
 
 	var opt = {
 		url: httpOpt.url,
-		type: httpOpt.type,
 		param: httpOpt.param,
 		retry: retry
 	};
@@ -145,6 +143,32 @@ function _sendHttp(opt) {
 
 		return p;
 	}
+
+	if (opt['param']) {
+
+		request.post({
+				url: httpOpt.url,
+				form: httpOpt.param
+			},function(err, res , body){
+
+			body = JSON.parse(body);
+
+			if (err) {
+				logger.error(err);
+				opt['retry'] -= 1;
+				p.resolve(opt);
+				return;
+			}
+
+			opt['statusCode'] = res.statusCode;
+			opt['body'] = body;
+			p.resolve(opt);
+		});
+	}
+
+	request.get({})
+
+	return p;
 }
 
 module.exports = {
