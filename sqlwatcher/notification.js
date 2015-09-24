@@ -147,18 +147,14 @@ function _sendHttp(opt) {
 	if (opt['param']) {
 
 		request.post({
-			url: httpOpt.url,
-			form: httpOpt.param
+			url: opt.url,
+			form: opt.param
 		}, sendRequest);
 
 		return p;
 	}
 
-	request.get(httpOpt.url, sendRequest);
-
-	function sendRequest(err, res, body) {
-
-		body = JSON.parse(body);
+	request.get(opt.url, function(err, res , body){
 
 		if (err) {
 			logger.error(err);
@@ -170,7 +166,7 @@ function _sendHttp(opt) {
 		opt['statusCode'] = res.statusCode;
 		opt['body'] = body;
 		p.resolve(opt);
-	}
+	});
 
 	return p;
 }
