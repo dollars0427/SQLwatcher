@@ -19,7 +19,7 @@
 
     "http":{
         "callurl":"http://example.com/message",
-        "method":["post","get"]
+        "param":{"Hello":"World"}
     },
 
     "mail":{
