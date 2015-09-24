@@ -44,6 +44,7 @@ var updateRecordConfig = queryListFile['defaultUpdateRec'];
 
 var timerConfig = nconf.get('timer');
 var mailConfig = nconf.get('mail');
+var httpConfig = nconf.get('http');
 
 var defaultSelectRec = 1;
 var defaultUpdateRec = 1;
@@ -395,84 +396,84 @@ function runSQL() {
 
 		var p = new promise.defer();
 
-		if (result['err']) {
+			if (result['err']) {
 
-			var text = mailConfig.dead.text + ' \n' + ' \n' +
-				'Result Time: ' + result['time'] + ' \n' + ' \n' +
-				' Error: ' + result['err'] + '\n' +
-				' \n Excuted Query:' + result['sql'];
+				var text = mailConfig.dead.text + ' \n' + ' \n' +
+					'Result Time: ' + result['time'] + ' \n' + ' \n' +
+					' Error: ' + result['err'] + '\n' +
+					' \n Excuted Query:' + result['sql'];
+
+				var mailOpt = {
+					text: text,
+					from: mailConfig.dead.from,
+					to: mailConfig.dead.to,
+					subject: mailConfig.dead.subject
+				};
+
+				logger.error('Sending warning mail.....');
+
+				var pRetry = notification.sendMail(connectionOpt, mailOpt, 3);
+
+				when(pRetry, function(result) {
+
+					logger.debug('Sended Messages: ', result['mail']);
+
+					p.resolve();
+
+				});
+
+				return p;
+			}
+
+			var text = mailConfig.alive.text + ' \n' + ' \n' + 'Last Sucess Time: ' + result['time'] + ' \n';
 
 			var mailOpt = {
 				text: text,
-				from: mailConfig.dead.from,
-				to: mailConfig.dead.to,
-				subject: mailConfig.dead.subject
+				from: mailConfig.alive.from,
+				to: mailConfig.alive.to,
+				subject: mailConfig.alive.subject
 			};
 
-			logger.error('Sending warning mail.....');
+			//call the check alive time function to
+			//check the last sucess time of excute query is match the keep alive time.
 
-			var pRetry = notification.sendMail(connectionOpt, mailOpt, 3);
+			var lastSuccessTime = result['time'].getTime();
 
-			when(pRetry, function(result) {
+			try {
+				lastAliveTime = lastAliveTime.getTime();
+			} catch (err) {}
 
-				logger.debug('Sended Messages: ', result['mail']);
+			var checkKeepAliveTimeSuccess =
+				checkKeepAliveTime(keepAliveTimes, lastAliveTime, lastSuccessTime, timeZone);
 
+			if (checkKeepAliveTimeSuccess) {
+
+				logger.info(checkKeepAliveTimeSuccess);
+
+				lastAliveTime = new Date();
+
+				var pRetry = notification.sendMail(connectionOpt, mailOpt, 3);
+
+				when(pRetry, function(result) {
+
+					p.resolve();
+
+				});
+
+			} else {
 				p.resolve();
-
-			});
+			}
 
 			return p;
 		}
 
-		var text = mailConfig.alive.text + ' \n' + ' \n' + 'Last Sucess Time: ' + result['time'] + ' \n';
+		//Create a chain of function, let the script can run the function by order.
+		var chain = new promise.defer();
+		chain
+			.then(connectDatabase)
+			.then(runQueries)
+			.then(sendNotification)
+			.then(complete)
 
-		var mailOpt = {
-			text: text,
-			from: mailConfig.alive.from,
-			to: mailConfig.alive.to,
-			subject: mailConfig.alive.subject
-		};
-
-		//call the check alive time function to
-		//check the last sucess time of excute query is match the keep alive time.
-
-		var lastSuccessTime = result['time'].getTime();
-
-		try {
-			lastAliveTime = lastAliveTime.getTime();
-		} catch (err) {}
-
-		var checkKeepAliveTimeSuccess =
-			checkKeepAliveTime(keepAliveTimes, lastAliveTime, lastSuccessTime, timeZone);
-
-		if (checkKeepAliveTimeSuccess) {
-
-			logger.info(checkKeepAliveTimeSuccess);
-
-			lastAliveTime = new Date();
-
-			var pRetry = notification.sendMail(connectionOpt, mailOpt, 3);
-
-			when(pRetry, function(result) {
-
-				p.resolve();
-
-			});
-
-		} else {
-			p.resolve();
-		}
-
-		return p;
+		chain.resolve();
 	}
-
-	//Create a chain of function, let the script can run the function by order.
-	var chain = new promise.defer();
-	chain
-		.then(connectDatabase)
-		.then(runQueries)
-		.then(sendNotification)
-		.then(complete)
-
-	chain.resolve();
-}
