@@ -145,7 +145,6 @@ function _sendHttp(opt) {
 	}
 
 	if (opt['param']) {
-
 		request.post({
 			url: opt.url,
 			form: opt.param
@@ -154,7 +153,9 @@ function _sendHttp(opt) {
 		return p;
 	}
 
-	request.get(opt.url, function(err, res , body){
+	request.get(opt.url, sendRequest);
+
+	function sendRequest(err, res, body){
 
 		if (err) {
 			logger.error(err);
@@ -165,8 +166,10 @@ function _sendHttp(opt) {
 
 		opt['statusCode'] = res.statusCode;
 		opt['body'] = body;
+		opt['retry'] = 0;
 		p.resolve(opt);
-	});
+
+	}
 
 	return p;
 }
