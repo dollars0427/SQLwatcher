@@ -19,7 +19,13 @@
 
     "http":{
         "callurl":"http://example.com/message",
-        "param":{"Hello":"World"}
+        "baseparam":{
+            "example1":"hello",
+            "example2":"world"
+        },
+        "notiparam":{
+            "message":""
+        }
     },
 
     "mail":{
