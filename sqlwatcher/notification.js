@@ -147,26 +147,30 @@ function _sendHttp(opt) {
 	if (opt['param']) {
 
 		request.post({
-				url: httpOpt.url,
-				form: httpOpt.param
-			},function(err, res , body){
+			url: httpOpt.url,
+			form: httpOpt.param
+		}, sendRequest);
 
-			body = JSON.parse(body);
-
-			if (err) {
-				logger.error(err);
-				opt['retry'] -= 1;
-				p.resolve(opt);
-				return;
-			}
-
-			opt['statusCode'] = res.statusCode;
-			opt['body'] = body;
-			p.resolve(opt);
-		});
+		return p;
 	}
 
-	request.get({})
+	request.get(httpOpt.url, sendRequest);
+
+	function sendRequest(err, res, body) {
+
+		body = JSON.parse(body);
+
+		if (err) {
+			logger.error(err);
+			opt['retry'] -= 1;
+			p.resolve(opt);
+			return;
+		}
+
+		opt['statusCode'] = res.statusCode;
+		opt['body'] = body;
+		p.resolve(opt);
+	}
 
 	return p;
 }
