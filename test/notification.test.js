@@ -26,206 +26,399 @@ var connectionOpt = {
 
 exports['Test _sendHttp'] = {
 
-		'Test _sendHttp success(get)': function(test) {
+	'Test _sendHttp success(get)': function(test) {
 
-			var opt = {
-				url: 'http://127.0.0.1:3000?Hello=World',
-				retry: 1
+		var opt = {
+			url: 'http://127.0.0.1:3000?Hello=World',
+			retry: 1
+		}
+
+		var p = notification._sendHttp(opt);
+
+		p.then(function(result) {
+
+			test.equal(result.statusCode, 200, 'The result should be success.');
+			test.equal(result.body, JSON.stringify({
+				"Hello": "World"
+			}), 'The body of result should be same with param.');
+
+			logger.debug('Result: ', result);
+
+			test.done();
+
+		});
+	},
+
+	'Test _sendHttp success(post)': function(test) {
+
+		var opt = {
+			url: 'http://127.0.0.1:3000',
+			param: {
+				'Hello': 'World'
+			},
+			retry: 1
+		}
+
+		var p = notification._sendHttp(opt);
+
+		p.then(function(result) {
+
+			test.equal(result.statusCode, 200, 'The result should be success.');
+			test.equal(result.body, JSON.stringify({
+				"Hello": "World"
+			}), 'The body of result should be same with param.');
+
+			logger.debug('Result: ', result);
+
+			test.done();
+
+		});
+	}
+}
+
+exports['Test sendHttp'] = {
+
+	'Test sendHttp with retry 0(get)': function(test) {
+
+		var opt = {
+			url: 'http://127.0.0.1:3000?Hello=World'
+		}
+
+		var pRetry = notification.sendHttp(opt, 0);
+
+		promise.when(pRetry, function(result) {
+
+			test.ok(result['retry'] === 0, 'The retry number should be 0.', result);
+
+			test.ok(result['body'] == undefined, 'The body should be undefined.');
+
+			logger.debug('Result: ', result);
+
+			test.done();
+		});
+	},
+
+	'Test sendHttp with retry 1(get)': function(test) {
+
+		var opt = {
+			url: 'http://127.0.0.1:3000?Hello=World'
+		}
+
+		var pRetry = notification.sendHttp(opt, 1);
+
+		promise.when(pRetry, function(result) {
+
+			test.ok(result['retry'] === 0, 'The retry number should be 0.', result);
+
+			test.ok(result['body'] !== undefined, 'The body should not be undefined.');
+
+			test.equal(result.body, JSON.stringify({
+				"Hello": "World"
+			}), 'The body of result should be same with param.');
+
+			logger.debug('Result: ', result);
+
+			test.done();
+		});
+	},
+
+	'Test sendHttp with retry 2(get)': function(test) {
+
+		var opt = {
+			url: 'http://127.0.0.1:3000?Hello=World'
+		}
+
+		var pRetry = notification.sendHttp(opt, 2);
+
+		promise.when(pRetry, function(result) {
+
+			test.ok(result['retry'] === 0, 'The retry number should be 0.', result);
+
+			test.ok(result['body'] !== undefined, 'The body should not be undefined.');
+
+			test.equal(result.body, JSON.stringify({
+				"Hello": "World"
+			}), 'The body of result should be same with param.');
+
+			logger.debug('Result: ', result);
+
+			test.done();
+		});
+	},
+
+	'Test sendHttp with retry 2(get, with error)': function(test) {
+
+		var opt = {
+			url: 'http://127.0.0.1?Hello=World',
+		}
+
+		var pRetry = notification.sendHttp(opt, 2);
+
+		promise.when(pRetry, function(result) {
+
+			test.ok(result['retry'] === 0, 'The retry number should be 0.', result);
+
+			test.ok(result['body'] == undefined, 'The body should not be undefined.');
+
+			logger.debug('Result: ', result);
+
+			test.done();
+		});
+	},
+
+
+	'Test sendHttp with retry 0(post)': function(test) {
+
+		var opt = {
+			url: 'http://127.0.0.1:3000',
+			param: {
+				"Hello": "World"
 			}
-
-			var p = notification._sendHttp(opt);
-
-			p.then(function(result) {
-
-				test.equal(result.statusCode, 200, 'The result should be success.');
-				test.equal(result.body, JSON.stringify({"Hello":"World"}), 'The body of result should be same with param.');
-
-				logger.debug('Result: ', result);
-
-				test.done();
-
-			});
 		}
-	}
-	/*
-		'Test _sendHttp success(post)': function(test) {
 
-			var type = ['post']
+		var pRetry = notification.sendHttp(opt, 0);
 
-			var p = notification.sendHttp(type, '127.0.0.1:3000/test');
+		promise.when(pRetry, function(result) {
 
-			p.then(function(result) {
+			test.ok(result['retry'] === 0, 'The retry number should be 0.', result);
 
-				test.equal(result.statusCode, 200, 'The result should be success.');
+			test.ok(result['body'] == undefined, 'The body should be undefined.');
 
-				logger.debug('Result: ', result);
+			logger.debug('Result: ', result);
 
-				test.done();
+			test.done();
+		});
+	},
 
-			});
+	'Test sendHttp with retry 1(post)': function(test) {
+
+		var opt = {
+			url: 'http://127.0.0.1:3000',
+			param: {
+				"Hello": "World"
+			}
 		}
-	}
 
-	exports['Test _sendMail'] = {
+		var pRetry = notification.sendHttp(opt, 1);
 
-		'Test _sendMail success with retry 1': function(test) {
+		promise.when(pRetry, function(result) {
 
-			var mailOpt = {
-				text: mailConfig.alive.text,
-				from: mailConfig.alive.from,
-				to: mailConfig.alive.to,
-				subject: mailConfig.alive.subject
-			};
+			test.ok(result['retry'] === 0, 'The retry number should be 0.', result);
 
-			var opt = {
-				connectionOpt: connectionOpt,
-				mailOpt: mailOpt,
-				retry: 1
-			};
+			test.ok(result['body'] !== undefined, 'The body should not be undefined.');
 
-			var p = notification._sendMail(opt);
+			logger.debug('Result: ', result);
 
-			p.then(function(result) {
+			test.done();
+		});
+	},
 
-				test.ok(result !== undefined, 'The result should be success.');
+	'Test sendHttp with retry 2(post)': function(test) {
 
-				logger.debug('Sended Messages: ', result['mail']);
-
-				test.done();
-
-			});
-		},
-
-		'Test _sendMail success with retry 2': function(test) {
-
-			var mailOpt = {
-				text: mailConfig.alive.text,
-				from: mailConfig.alive.from,
-				to: mailConfig.alive.to,
-				subject: mailConfig.alive.subject
-			};
-
-			var opt = {
-				connectionOpt: connectionOpt,
-				mailOpt: mailOpt,
-				retry: 2
-			};
-
-			var p = notification._sendMail(opt);
-
-			p.then(function(result) {
-
-				test.ok(result !== undefined, 'The result should be success.');
-
-				logger.debug('Sended Messages: ', result['mail']);
-
-				test.done();
-
-			});
+		var opt = {
+			url: 'http://127.0.0.1:3000',
+			param: {
+				"Hello": "World"
+			}
 		}
+
+		var pRetry = notification.sendHttp(opt, 2);
+
+		promise.when(pRetry, function(result) {
+
+			test.ok(result['retry'] === 0, 'The retry number should be 0.', result);
+
+			test.ok(result['body'] !== undefined, 'The body should not be undefined.');
+
+			logger.debug('Result: ', result);
+
+			test.done();
+		});
+	},
+
+	'Test sendHttp with retry 2(post, with error)': function(test) {
+
+		var opt = {
+			url: 'http://127.0.0.1',
+			param: {
+				"Hello": "World"
+			}
+		}
+
+		var pRetry = notification.sendHttp(opt, 2);
+
+		promise.when(pRetry, function(result) {
+
+			test.ok(result['retry'] === 0, 'The retry number should be 0.', result);
+
+			test.ok(result['body'] == undefined, 'The body should not be undefined.');
+
+			logger.debug('Result: ', result);
+
+			test.done();
+		});
 	}
+}
 
-	exports['Test sendMail'] = {
+exports['Test _sendMail'] = {
 
-		'Test sendMail success with retry 0': function(test) {
+	'Test _sendMail success with retry 1': function(test) {
 
-			var mailOpt = {
-				text: mailConfig.alive.text,
-				from: mailConfig.alive.from,
-				to: mailConfig.alive.to,
-				subject: mailConfig.alive.subject
-			};
+		var mailOpt = {
+			text: mailConfig.alive.text,
+			from: mailConfig.alive.from,
+			to: mailConfig.alive.to,
+			subject: mailConfig.alive.subject
+		};
 
-			var pRetry = notification.sendMail(connectionOpt, mailOpt, 0);
+		var opt = {
+			connectionOpt: connectionOpt,
+			mailOpt: mailOpt,
+			retry: 1
+		};
 
-			promise.when(pRetry, function(result) {
+		var p = notification._sendMail(opt);
 
-				test.ok(result['retry'] === 0, 'The retry number should be 0.');
+		p.then(function(result) {
 
-				test.ok(result['mail'] == undefined, 'The mail should be undefined.');
+			test.ok(result !== undefined, 'The result should be success.');
 
-				logger.debug('Sended Messages: ', result['mail']);
+			logger.debug('Sended Messages: ', result['mail']);
 
-				test.done();
-			});
-		},
+			test.done();
 
-		'Test send mail success with retry 1': function(test) {
+		});
+	},
 
-			var mailOpt = {
-				text: mailConfig.alive.text,
-				from: mailConfig.alive.from,
-				to: mailConfig.alive.to,
-				subject: mailConfig.alive.subject
-			};
+	'Test _sendMail success with retry 2': function(test) {
 
-			var pRetry = notification.sendMail(connectionOpt, mailOpt, 1);
+		var mailOpt = {
+			text: mailConfig.alive.text,
+			from: mailConfig.alive.from,
+			to: mailConfig.alive.to,
+			subject: mailConfig.alive.subject
+		};
 
-			promise.when(pRetry, function(result) {
+		var opt = {
+			connectionOpt: connectionOpt,
+			mailOpt: mailOpt,
+			retry: 2
+		};
 
-				test.ok(result['retry'] === 0, 'The retry number should be 0.', result);
+		var p = notification._sendMail(opt);
 
-				test.ok(result['mail'] !== undefined, 'The mail should not be undefined.');
+		p.then(function(result) {
 
-				logger.debug('Sended Messages: ', result['mail']);
+			test.ok(result !== undefined, 'The result should be success.');
 
-				test.done();
-			});
-		},
+			logger.debug('Sended Messages: ', result['mail']);
 
-		'Test send mail success with retry 2': function(test) {
+			test.done();
 
-			var mailOpt = {
-				text: mailConfig.alive.text,
-				from: mailConfig.alive.from,
-				to: mailConfig.alive.to,
-				subject: mailConfig.alive.subject
-			};
-
-			var pRetry = notification.sendMail(connectionOpt, mailOpt, 2);
-
-			promise.when(pRetry, function(result) {
-
-				test.ok(result['retry'] === 0, 'The retry number should be 0.', result);
-
-				test.ok(result['mail'] !== undefined, 'The mail should not be undefined.');
-
-				logger.debug('Sended Messages: ', result['mail']);
-
-				test.done();
-			});
-		},
-
-		'Test send alive mail retry 2(With error)': function(test) {
-
-			var mailOpt = {
-				text: mailConfig.alive.text,
-				from: mailConfig.alive.from,
-				to: mailConfig.alive.to,
-				subject: mailConfig.alive.subject
-			};
-
-			var connectionOpt = {
-				user: mailConfig.server.user,
-				password: 'wrongpassword',
-				host: mailConfig.server.host,
-				port: mailConfig.server.port,
-				ssl: mailConfig.server.ssl,
-				tls: mailConfig.server.tls
-			};
-
-			var pRetry = notification.sendMail(connectionOpt, mailOpt, 2);
-
-			promise.when(pRetry, function(result) {
-
-				test.ok(result['retry'] === 0, 'The retry number should be 0.', result);
-
-				test.ok(result['mail'] == undefined, 'The mail should be undefined.');
-
-				logger.debug('Sended Messages: ', result['mail']);
-
-				test.done();
-			});
-		},
+		});
 	}
-	*/
+}
+
+exports['Test sendMail'] = {
+
+	'Test sendMail success with retry 0': function(test) {
+
+		var mailOpt = {
+			text: mailConfig.alive.text,
+			from: mailConfig.alive.from,
+			to: mailConfig.alive.to,
+			subject: mailConfig.alive.subject
+		};
+
+		var pRetry = notification.sendMail(connectionOpt, mailOpt, 0);
+
+		promise.when(pRetry, function(result) {
+
+			test.ok(result['retry'] === 0, 'The retry number should be 0.');
+
+			test.ok(result['mail'] == undefined, 'The mail should be undefined.');
+
+			logger.debug('Sended Messages: ', result['mail']);
+
+			test.done();
+		});
+	},
+
+	'Test send mail success with retry 1': function(test) {
+
+		var mailOpt = {
+			text: mailConfig.alive.text,
+			from: mailConfig.alive.from,
+			to: mailConfig.alive.to,
+			subject: mailConfig.alive.subject
+		};
+
+		var pRetry = notification.sendMail(connectionOpt, mailOpt, 1);
+
+		promise.when(pRetry, function(result) {
+
+			test.ok(result['retry'] === 0, 'The retry number should be 0.', result);
+
+			test.ok(result['mail'] !== undefined, 'The mail should not be undefined.');
+
+			logger.debug('Sended Messages: ', result['mail']);
+
+			test.done();
+		});
+	},
+
+	'Test send mail success with retry 2': function(test) {
+
+		var mailOpt = {
+			text: mailConfig.alive.text,
+			from: mailConfig.alive.from,
+			to: mailConfig.alive.to,
+			subject: mailConfig.alive.subject
+		};
+
+		var pRetry = notification.sendMail(connectionOpt, mailOpt, 2);
+
+		promise.when(pRetry, function(result) {
+
+			test.ok(result['retry'] === 0, 'The retry number should be 0.', result);
+
+			test.ok(result['mail'] !== undefined, 'The mail should not be undefined.');
+
+			logger.debug('Sended Messages: ', result['mail']);
+
+			test.done();
+		});
+	},
+
+	'Test send alive mail retry 2(With error)': function(test) {
+
+		var mailOpt = {
+			text: mailConfig.alive.text,
+			from: mailConfig.alive.from,
+			to: mailConfig.alive.to,
+			subject: mailConfig.alive.subject
+		};
+
+		var connectionOpt = {
+			user: mailConfig.server.user,
+			password: 'wrongpassword',
+			host: mailConfig.server.host,
+			port: mailConfig.server.port,
+			ssl: mailConfig.server.ssl,
+			tls: mailConfig.server.tls
+		};
+
+		var pRetry = notification.sendMail(connectionOpt, mailOpt, 2);
+
+		promise.when(pRetry, function(result) {
+
+			test.ok(result['retry'] === 0, 'The retry number should be 0.', result);
+
+			test.ok(result['mail'] == undefined, 'The mail should be undefined.');
+
+			logger.debug('Sended Messages: ', result['mail']);
+
+			test.done();
+		});
+	},
+}
