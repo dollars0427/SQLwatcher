@@ -18,8 +18,25 @@
     },
 
     "http":{
-        "callurl":"http://example.com/message",
-        "method":["post","get"]
+        "method":"get",
+        "alive": {
+            "callurl": "https://example.com/",
+            "baseparam": {
+                "receiver": "receiver"
+            },
+            "notiparam":{
+                "message":"You have done!"
+            }
+        },
+        "dead": {
+            "callurl": "https://example.com/",
+            "baseparam": {
+                "receiver": "receiver"
+            },
+            "notiparam":{
+                "message":"No, we are failed."
+            }
+        }
     },
 
     "mail":{
