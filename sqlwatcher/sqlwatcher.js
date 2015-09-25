@@ -403,10 +403,17 @@ function runSQL() {
 
 				var url = httpConfig.dead.callurl;
 				var type = httpConfig.dead.type;
+				var baseParam = httpConfig.dead['baseparam'];
 
 				if(httpConfig.dead.method === 'get'){
 
-					url = httpConfig.dead.param
+					for(var i = 0; i < baseParam.length; i++){
+
+						var key = Object.keys(baseParam[i])[0];
+						var value = baseParam[i][key];
+
+						url = url + '?' + key + '=' + value;
+					}
 				}
 			}
 
