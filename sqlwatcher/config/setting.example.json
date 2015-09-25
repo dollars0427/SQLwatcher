@@ -1,57 +1,73 @@
 {
-    "database": {
-        "host":"localhost",
-        "port":3306,
-        "dbname":"Enter Your Database Name At Here.",
-        "username":"Enter Your Database Username At Here.",
-        "password":"Enter Your Database Password At Here."
-    },
+	"database": {
+		"host": "localhost",
+		"port": 3306,
+		"dbname": "Enter Your Database Name At Here.",
+		"username": "Enter Your Database Username At Here.",
+		"password": "Enter Your Database Password At Here."
+	},
 
-    "timer":{
-        "repeattime":3000,
-        "keepalivetimes":["10:00"],
-        "timezone":""
-    },
+	"timer": {
+		"repeattime": 3000,
+		"keepalivetimes": ["10:00"],
+		"timezone": ""
+	},
 
-    "notification":{
-        "type":["mail","http"]
-    },
+	"notification": {
+		"type": ["mail", "http"]
+	},
 
-    "http":{
-        "callurl":"http://example.com/message",
-        "baseparam":{
-            "example1":"hello",
-            "example2":"world"
-        },
-        "notiparam":{
-            "example":""
+	"http": {
+		"alive": {
+			"callurl": "http://example.com/message",
+            "method":"get",
+			"baseparam": [{
+				"example1": "hello"
+			}, {
+				"example2": "world"
+			}],
+			"notiparam": {
+				"example": "It is a example:alive"
+			}
+		},
+        "dead": {
+            "callurl": "http://example.com/message",
+            "method":"get",
+            "baseparam": [{
+                "example1": "hello"
+            }, {
+                "example2": "world"
+            }],
+            "notiparam": {
+                "example_message": "It is a example:dead"
+            }
         }
-    },
+	},
 
-    "mail":{
-        "server":{
-            "user":"Enter Your mail address at here.",
-            "password":"Enter Your mail password at here.",
-            "host":"Enter your smtp server address at here",
-            "port":465,
-            "ssl":true,
-            "tls":false
-        },
+	"mail": {
+		"server": {
+			"user": "Enter Your mail address at here.",
+			"password": "Enter Your mail password at here.",
+			"host": "Enter your smtp server address at here",
+			"port": 465,
+			"ssl": true,
+			"tls": false
+		},
 
-        "alive":{
-            "from":"You <username@your-email.com>",
-            "to":["hello@mail.com","hey@mail.com"],
-            "subject":"You have done!",
-            "text":"Yes, you have done."
-        },
+		"alive": {
+			"from": "You <username@your-email.com>",
+			"to": ["hello@mail.com", "hey@mail.com"],
+			"subject": "You have done!",
+			"text": "Yes, you have done."
+		},
 
-        "dead":{
-            "from":"You <username@your-email.com>",
-            "to":["hello@mail.com","hey@mail.com"],
-            "subject":"We are failed.",
-            "text":"No, we are failed."
+		"dead": {
+			"from": "You <username@your-email.com>",
+			"to": ["hello@mail.com", "hey@mail.com"],
+			"subject": "We are failed.",
+			"text": "No, we are failed."
 
-        }
+		}
 
-    }
+	}
 }
