@@ -402,12 +402,9 @@ function runSQL() {
 			if(result['err']){
 
 				var url = httpConfig.dead.callurl;
+
 				var type = httpConfig.dead.type;
 
-				if(httpConfig.dead.method === 'get'){
-
-					url = httpConfig.dead.param
-				}
 			}
 
 			var url = httpConfig.alive.callurl;
