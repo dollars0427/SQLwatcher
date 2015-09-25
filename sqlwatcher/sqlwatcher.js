@@ -44,6 +44,7 @@ var updateRecordConfig = queryListFile['defaultUpdateRec'];
 
 var timerConfig = nconf.get('timer');
 var mailConfig = nconf.get('mail');
+var notiConfig = nconf.get('notification');
 var httpConfig = nconf.get('http');
 
 var defaultSelectRec = 1;
@@ -396,6 +397,23 @@ function runSQL() {
 
 		var p = new promise.defer();
 
+		if(notiConfig.type.indexOf('http') !== -1){
+
+			if(result['err']){
+
+				var url = httpConfig.dead.callurl;
+
+				var type = httpConfig.dead.type;
+
+			}
+
+			var url = httpConfig.alive.callurl;
+			var type = httpConfig.alive.type;
+
+		}
+
+		if(notiConfig.type.indexOf('mail') !== -1){
+
 			if (result['err']) {
 
 				var text = mailConfig.dead.text + ' \n' + ' \n' +
@@ -466,6 +484,9 @@ function runSQL() {
 
 			return p;
 		}
+
+		return p;
+	}
 
 		//Create a chain of function, let the script can run the function by order.
 		var chain = new promise.defer();
