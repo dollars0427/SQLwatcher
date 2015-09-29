@@ -404,6 +404,7 @@ function runSQL() {
 
 				var type = httpConfig.dead.type;
 				var baseParam = httpConfig.dead['baseparam'];
+				var notiParam = httpConfig.dead['notiparam'];
 
 				if (httpConfig.dead.method === 'get') {
 
@@ -411,10 +412,10 @@ function runSQL() {
 
 					for (var i = 0; i < baseParam.length; i++) {
 
-						var key = Object.keys(baseParam[i])[0];
-						var value = baseParam[i][key];
+						var baseKey = Object.keys(baseParam[i])[0];
+						var baseValue = baseParam[i][key];
 
-						url = url + key + '=' + value + '&';
+						url = url + baseKey + '=' + baseValue + '&';
 					}
 
 					var opt = {
@@ -436,23 +437,30 @@ function runSQL() {
 
 					for (var i = 0; i < baseParam.length; i++) {
 
-						var key = Object.keys(baseParam[i])[0];
-						var value = baseParam[i][key];
+						var baseKey = Object.keys(baseParam[i])[0];
+						var baseValue = baseParam[i][baseKey];
 
-						param[key] = value;
+						param[baseKey] = baseValue;
 					}
+
+					var notiKey = Object.keys(notiParam)[0];
+					var notiValue = notiParam[notiKey];
+
+					param[notiKey] = notiValue;
 
 					var opt = {
-						url: url
+						url: url,
+						param: param,
+						type: type
 					}
 
-					//var pRetry = notification.sendHttp(opt, 3);
+					var pRetry = notification.sendHttp(opt, 3);
 
-					//when(pRetry, function(result) {
+					when(pRetry, function(result) {
 
-					//	logger.debug(result);
+						logger.debug(result);
 
-					//});
+					});
 
 				}
 
