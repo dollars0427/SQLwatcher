@@ -540,12 +540,95 @@ function runSQL() {
 		return p;
 	}
 
+	function sendMail(sqlResult) {
+
+		var p = new promise.defer();
+
+		if (notiConfig.type.indexOf('mail') !== -1) {
+
+			if (sqlResult['err']) {
+
+				var text = mailConfig.dead.text + ' \n' + ' \n' +
+					'Result Time: ' + sqlResult['time'] + ' \n' + ' \n' +
+					' Error: ' + sqlResult['err'] + '\n' +
+					' \n Excuted Query:' + sqlResult['sql'];
+
+				var mailOpt = {
+					text: text,
+					from: mailConfig.dead.from,
+					to: mailConfig.dead.to,
+					subject: mailConfig.dead.subject
+				};
+
+				logger.error('Sending warning mail.....');
+
+				var pRetry = notification.sendMail(connectionOpt, mailOpt, 3);
+
+				when(pRetry, function(result) {
+
+					logger.debug('Sended Messages: ', result['mail']);
+
+					p.resolve();
+
+				});
+
+				return p;
+			}
+			var text = mailConfig.alive.text + ' \n' + ' \n' + 'Last Sucess Time: ' + sqlResult['time'] + ' \n';
+
+			var mailOpt = {
+				text: text,
+				from: mailConfig.alive.from,
+				to: mailConfig.alive.to,
+				subject: mailConfig.alive.subject
+			};
+
+			//call the check alive time function to
+			//check the last sucess time of excute query is match the keep alive time.
+
+			var lastSuccessTime = sqlResult['time'].getTime();
+
+			try {
+				lastAliveTime = lastAliveTime.getTime();
+			} catch (err) {}
+
+			var checkKeepAliveTimeSuccess = checkKeepAliveTime(keepAliveTimes, lastAliveTime, lastSuccessTime, timeZone);
+
+			if (checkKeepAliveTimeSuccess) {
+
+				lastAliveTime = new Date();
+
+				var pRetry = notification.sendMail(connectionOpt, mailOpt, 3);
+
+				logger.debug('Sending alive mail.....');
+
+				when(pRetry, function(result) {
+
+					logger.debug('Sended Messages: ', result['mail']);
+
+					p.resolve();
+
+				});
+
+			} else {
+				p.resolve();
+			}
+
+			return p;
+		}
+
+		p.resolve();
+
+		return p;
+	}
+
 	//Create a chain of function, let the script can run the function by order.
 	var chain = new promise.defer();
 	chain
 		.then(connectDatabase)
 		.then(runQueries)
 		.then(sendHttp)
+		.then(sendMail)
 		.then(complete)
 
 	chain.resolve();
