@@ -426,6 +426,14 @@ function runSQL() {
 						url = url + baseKey + '=' + baseValue + '&';
 					}
 
+					var notiKey = Object.keys(notiParam)[0];
+					var notiValue = notiParam[notiKey] + ' \n' + ' \n' +
+						'Result Time: ' + sqlResult['time'] + ' \n' + ' \n' +
+						' Error: ' + sqlResult['err'] + '\n' +
+						' \n Excuted Query:' + sqlResult['sql'];
+
+					url = url + notiKey + '=' + notiValue;
+
 					var opt = {
 						url: url,
 						type: type
@@ -444,7 +452,10 @@ function runSQL() {
 					}
 
 					var notiKey = Object.keys(notiParam)[0];
-					var notiValue = notiParam[notiKey];
+					var notiValue = notiParam[notiKey] + ' \n' + ' \n' +
+						'Result Time: ' + sqlResult['time'] + ' \n' + ' \n' +
+						' Error: ' + sqlResult['err'] + '\n' +
+						' \n Excuted Query:' + sqlResult['sql'];
 
 					param[notiKey] = notiValue;
 
@@ -485,6 +496,11 @@ function runSQL() {
 
 					url = url + baseKey + '=' + baseValue + '&';
 				}
+
+				var notiKey = Object.keys(notiParam)[0];
+				var notiValue = notiParam[notiKey] + ' \n' + ' \n' + 'Last Sucess Time: ' + sqlResult['time'] + ' \n';
+
+				url = url + notiKey + '=' + notiValue;
 
 				var opt = {
 					url: url,
