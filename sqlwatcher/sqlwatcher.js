@@ -503,15 +503,35 @@ function runSQL() {
 				}
 			}
 
-			var pRetry = notification.sendHttp(opt, 3);
+			//call the check alive time function to
+			//check the last sucess time of excute query is match the keep alive time.
 
-			when(pRetry, function(result) {
+			var lastSuccessTime = sqlResult['time'].getTime();
 
-				logger.debug('Result: ', result);
+			try {
+				lastAliveTime = lastAliveTime.getTime();
+			} catch (err) {}
 
+			var checkKeepAliveTimeSuccess = checkKeepAliveTime(keepAliveTimes, lastAliveTime, lastSuccessTime, timeZone);
+
+			if (checkKeepAliveTimeSuccess) {
+
+				logger.info(checkKeepAliveTimeSuccess);
+
+				lastAliveTime = new Date();
+
+				var pRetry = notification.sendHttp(opt, 3);
+
+				when(pRetry, function(result) {
+
+					logger.debug('Result: ', result);
+
+					p.resolve(sqlResult);
+
+				});
+			} else {
 				p.resolve(sqlResult);
-
-			});
+			}
 
 			return p;
 		}
