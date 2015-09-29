@@ -393,27 +393,30 @@ function runSQL() {
 		return p;
 	}
 
-	function sendNotification(result) {
+	function sendHttp(sqlResult) {
 
 		var p = new promise.defer();
-		var param = {};
 
 		if (notiConfig.type.indexOf('http') !== -1) {
 
-			if (result['err']) {
+			var param = {};
+
+			if (sqlResult['err']) {
 
 				var type = httpConfig.dead.type;
 				var baseParam = httpConfig.dead['baseparam'];
 				var notiParam = httpConfig.dead['notiparam'];
+				var method = httpConfig.dead.method;
+				var url = httpConfig.dead.callurl;
 
-				if (httpConfig.dead.method === 'get') {
+				if (method === 'get') {
 
-					var url = httpConfig.dead.callurl + '?';
+					url = url + '?';
 
 					for (var i = 0; i < baseParam.length; i++) {
 
 						var baseKey = Object.keys(baseParam[i])[0];
-						var baseValue = baseParam[i][key];
+						var baseValue = baseParam[i][baseKey];
 
 						url = url + baseKey + '=' + baseValue + '&';
 					}
@@ -422,18 +425,7 @@ function runSQL() {
 						url: url,
 						type: type
 					}
-
-					var pRetry = notification.sendHttp(opt, 3);
-
-					when(pRetry, function(result) {
-
-						logger.debug(result);
-
-					});
-
 				} else {
-
-					var url = httpConfig.dead.callurl;
 
 					for (var i = 0; i < baseParam.length; i++) {
 
@@ -453,97 +445,78 @@ function runSQL() {
 						param: param,
 						type: type
 					}
-
-					var pRetry = notification.sendHttp(opt, 3);
-
-					when(pRetry, function(result) {
-
-						logger.debug(result);
-
-					});
-
 				}
 
-			} else {
-
-				var url = httpConfig.alive.callurl;
-				var type = httpConfig.alive.type;
-			}
-		}
-
-		if (notiConfig.type.indexOf('mail') !== -1) {
-
-			if (result['err']) {
-
-				var text = mailConfig.dead.text + ' \n' + ' \n' +
-					'Result Time: ' + result['time'] + ' \n' + ' \n' +
-					' Error: ' + result['err'] + '\n' +
-					' \n Excuted Query:' + result['sql'];
-
-				var mailOpt = {
-					text: text,
-					from: mailConfig.dead.from,
-					to: mailConfig.dead.to,
-					subject: mailConfig.dead.subject
-				};
-
-				logger.error('Sending warning mail.....');
-
-				var pRetry = notification.sendMail(connectionOpt, mailOpt, 3);
+				var pRetry = notification.sendHttp(opt, 3);
 
 				when(pRetry, function(result) {
 
-					logger.debug('Sended Messages: ', result['mail']);
+					logger.debug('Result: ', result);
 
-					p.resolve();
+					p.resolve(sqlResult);
 
 				});
 
 				return p;
 			}
 
-			var text = mailConfig.alive.text + ' \n' + ' \n' + 'Last Sucess Time: ' + result['time'] + ' \n';
+			var type = httpConfig.alive.type;
+			var baseParam = httpConfig.alive['baseparam'];
+			var notiParam = httpConfig.alive['notiparam'];
+			var method = httpConfig.alive.method;
+			var url = httpConfig.alive.callurl;
 
-			var mailOpt = {
-				text: text,
-				from: mailConfig.alive.from,
-				to: mailConfig.alive.to,
-				subject: mailConfig.alive.subject
-			};
+			if (method === 'get') {
 
-			//call the check alive time function to
-			//check the last sucess time of excute query is match the keep alive time.
+				url = url + '?';
 
-			var lastSuccessTime = result['time'].getTime();
+				for (var i = 0; i < baseParam.length; i++) {
 
-			try {
-				lastAliveTime = lastAliveTime.getTime();
-			} catch (err) {}
+					var baseKey = Object.keys(baseParam[i])[0];
+					var baseValue = baseParam[i][baseKey];
 
-			var checkKeepAliveTimeSuccess =
-				checkKeepAliveTime(keepAliveTimes, lastAliveTime, lastSuccessTime, timeZone);
+					url = url + baseKey + '=' + baseValue + '&';
+				}
 
-			if (checkKeepAliveTimeSuccess) {
-
-				logger.info(checkKeepAliveTimeSuccess);
-
-				lastAliveTime = new Date();
-
-				var pRetry = notification.sendMail(connectionOpt, mailOpt, 3);
-
-				when(pRetry, function(result) {
-
-					p.resolve();
-
-				});
-
+				var opt = {
+					url: url,
+					type: type
+				}
 			} else {
-				p.resolve();
+				for (var i = 0; i < baseParam.length; i++) {
+
+					var baseKey = Object.keys(baseParam[i])[0];
+					var baseValue = baseParam[i][baseKey];
+
+					param[baseKey] = baseValue;
+				}
+
+				var notiKey = Object.keys(notiParam)[0];
+				var notiValue = notiParam[notiKey];
+
+				param[notiKey] = notiValue;
+
+				var opt = {
+					url: url,
+					param: param,
+					type: type
+				}
 			}
+
+			var pRetry = notification.sendHttp(opt, 3);
+
+			when(pRetry, function(result) {
+
+				logger.debug('Result: ', result);
+
+				p.resolve(sqlResult);
+
+			});
 
 			return p;
 		}
 
+		p.resolve(sqlResult);
 		return p;
 	}
 
@@ -552,7 +525,7 @@ function runSQL() {
 	chain
 		.then(connectDatabase)
 		.then(runQueries)
-		.then(sendNotification)
+		.then(sendHttp)
 		.then(complete)
 
 	chain.resolve();
