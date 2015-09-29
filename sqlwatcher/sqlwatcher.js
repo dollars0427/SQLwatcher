@@ -396,33 +396,74 @@ function runSQL() {
 	function sendNotification(result) {
 
 		var p = new promise.defer();
+		var param = {};
 
-		if(notiConfig.type.indexOf('http') !== -1){
+		if (notiConfig.type.indexOf('http') !== -1) {
 
-			if(result['err']){
+			if (result['err']) {
 
-				var url = httpConfig.dead.callurl;
 				var type = httpConfig.dead.type;
 				var baseParam = httpConfig.dead['baseparam'];
 
-				if(httpConfig.dead.method === 'get'){
+				if (httpConfig.dead.method === 'get') {
 
-					for(var i = 0; i < baseParam.length; i++){
+					var url = httpConfig.dead.callurl + '?';
+
+					for (var i = 0; i < baseParam.length; i++) {
 
 						var key = Object.keys(baseParam[i])[0];
 						var value = baseParam[i][key];
 
-						url = url + '?' + key + '=' + value;
+						url = url + key + '=' + value + '&';
 					}
+
+					var opt = {
+						url: url,
+						type: type
+					}
+
+					var pRetry = notification.sendHttp(opt, 3);
+
+					when(pRetry, function(result) {
+
+						logger.debug(result);
+
+					});
+
+				} else {
+
+					var url = httpConfig.dead.callurl;
+
+					for (var i = 0; i < baseParam.length; i++) {
+
+						var key = Object.keys(baseParam[i])[0];
+						var value = baseParam[i][key];
+
+						param[key] = value;
+					}
+
+					var opt = {
+						url: url
+					}
+
+					//var pRetry = notification.sendHttp(opt, 3);
+
+					//when(pRetry, function(result) {
+
+					//	logger.debug(result);
+
+					//});
+
 				}
+
+			} else {
+
+				var url = httpConfig.alive.callurl;
+				var type = httpConfig.alive.type;
 			}
-
-			var url = httpConfig.alive.callurl;
-			var type = httpConfig.alive.type;
-
 		}
 
-		if(notiConfig.type.indexOf('mail') !== -1){
+		if (notiConfig.type.indexOf('mail') !== -1) {
 
 			if (result['err']) {
 
@@ -498,13 +539,13 @@ function runSQL() {
 		return p;
 	}
 
-		//Create a chain of function, let the script can run the function by order.
-		var chain = new promise.defer();
-		chain
-			.then(connectDatabase)
-			.then(runQueries)
-			.then(sendNotification)
-			.then(complete)
+	//Create a chain of function, let the script can run the function by order.
+	var chain = new promise.defer();
+	chain
+		.then(connectDatabase)
+		.then(runQueries)
+		.then(sendNotification)
+		.then(complete)
 
-		chain.resolve();
-	}
+	chain.resolve();
+}
