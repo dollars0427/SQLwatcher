@@ -27,7 +27,7 @@
 				"example2": "world"
 			}],
 			"notiparam": {
-				"example": "It is a example:alive"
+				"example_message": "It is an example(alive)"
 			}
 		},
         "dead": {
@@ -39,7 +39,7 @@
                 "example2": "world"
             }],
             "notiparam": {
-                "example_message": "It is a example:dead"
+                "example_message": "It is an example(dead)"
             }
         }
 	},
