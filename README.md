@@ -25,12 +25,18 @@ $ npm install
 Configuration
 ---
 1.Copy the configuration file and edit it: 
+
 ```bash
-$ cp ./config/option.conf.sample option.conf 
-$ vi option.conf
+$ cp ./config/option.example.json option.json 
+$ vi option.json
+
+$ cp ./config/querylist.example.json querylist.json 
+$ vi querylist.json
+
 ```
 
 2.Enter the setting of the database which you want to watch.
+
 ```json
     "database": {
         "host":"localhost",
@@ -40,7 +46,9 @@ $ vi option.conf
         "password":"Enter Your Database Password At Here."
     },
 ```
+
 3.Enter the setting of timer: 
+
 ```json
     "timer":{
         "repeattime":3000,  
@@ -57,7 +65,16 @@ mail at these times.
 
 timezoneoffset: Set the time zone offset, if it is null the script will using the default time zone offset of your system.
 
-4.Enter the setting of mail: 
+4.Change the notification setting. There are two type of notification: http(Call web API) and mail. You can use these at the same time.
+
+```json
+	"notification": {
+		"type": ["mail", "http"]
+	},
+```
+
+5.Enter the setting of mail if necessary.
+
 ```json
     "mail":{
         "server":{
@@ -86,8 +103,48 @@ timezoneoffset: Set the time zone offset, if it is null the script will using th
 
     }
 ```
+6.Enter the setting of http if necessary.
 
-5.Edit the query list ,  defaultSelectRec, defaultUpdateRec and rec for testing the database:
+```json
+	"http": {
+		"alive": {
+			"callurl": "http://example.com/message",
+            "method":"get",
+			"baseparam": [{
+				"example1": "hello"
+			}, {
+				"example2": "world"
+			}],
+			"notiparam": {
+				"example_message": "It is an example(alive)"
+			}
+		},
+        "dead": {
+            "callurl": "http://example.com/message",
+            "method":"post",
+            "baseparam": [{
+                "example1": "hello"
+            }, {
+                "example2": "world"
+            }],
+            "notiparam": {
+                "example_message": "It is an example(dead)"
+            }
+        }
+	}
+```
+
+callurl: The url of web API which should sqlWatcher send request to.
+
+method: The http request method, get or post.
+
+baseparam: The param of request, which will not contain noftication message.
+
+notiparam: The param of request, which will contain noftication message.
+
+
+7.Edit the query list for testing the database:
+
 ```json
 {
   "defaultSelectRec": 1,
@@ -137,16 +194,19 @@ Unit Test
 You can run the unit-test of this project by using nodeunit.
 
 1.Switch to the test directory . It is in the root directory of project. 
+
 ```bash
 cd ./test
 ```
 
 2.Install the dependencies:
+
 ```bash
 npm install
 ```
 
 3.Copy the configuration file and edit it: 
+
 ```bash
 $ cp ./config/option.conf.sample option.conf
 $ vi option.conf
@@ -155,6 +215,7 @@ $ vi option.conf
 It is same as configuration part.
 
 3.Run nodeunit to test each part:
+
 ```bash
 #This is just an example!
 nodeunit testcase.js
