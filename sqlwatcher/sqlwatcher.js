@@ -194,7 +194,12 @@ function runSQL() {
 
 			if (err) {
 				logger.error('Cannot Connect To Database!', err);
-				sendNotification({
+				sendHttp({
+					time: new Date(),
+					err: new Error(err),
+				});
+
+				sendMail({
 					time: new Date(),
 					err: new Error(err),
 				});
